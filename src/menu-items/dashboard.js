@@ -1,8 +1,8 @@
 // assets
-import { IconDashboard, IconBuildingStore, IconUsers, IconHome, IconClipboardList } from '@tabler/icons';
+import { IconDashboard, IconHome, IconBuildingStore, IconUsers, IconClipboardList, IconBuilding, IconSchool } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard, IconBuildingStore, IconUsers, IconHome, IconClipboardList };
+const icons = { IconDashboard, IconBuildingStore, IconUsers, IconHome, IconClipboardList, IconBuilding, IconSchool };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -16,48 +16,70 @@ const dashboard = {
             title: 'Home',
             type: 'item',
             url: '/',
-            icon: icons.IconDashboard,
-            breadcrumbs: false
-        },
-        {
-            id: 'items',
-            title: 'Products',
-            type: 'item',
-            url: '/products',
-            icon: icons.IconClipboardList,
+            icon: icons.IconHome,
             breadcrumbs: false
         },
 
         {
-            id: 'users',
-            title: 'Users',
+            id: 'departments',
+            title: 'Departments',
+            type: 'item',
+            url: '/sample-page',
+            icon: icons.IconBuilding,
+            breadcrumbs: false
+        },
+        {
+            id: 'trainings',
+            title: 'Trainings',
             type: 'collapse',
             url: '/sample-page',
-            icon: icons.IconUsers,
+            icon: icons.IconSchool,
             breadcrumbs: false,
             children: [
                 {
-                    id: 'admins',
-                    title: 'Admin',
+                    id: 'categories',
+                    title: 'Categories',
+                    url: '/sample-page',
                     type: 'item',
-                    url: '/icons/tabler-icons',
                     breadcrumbs: false
                 },
                 {
-                    id: 'editor',
-                    title: 'Editors',
+                    id: 'trainings',
+                    title: 'Trainings',
+                    url: '/sample-page',
                     type: 'item',
-                    url: '/icons/material-icons',
                     breadcrumbs: false
                 },
                 {
-                    id: 'customer',
-                    title: 'Customers',
+                    id: 'sessions',
+                    title: 'Training Sessions',
+                    url: '/sample-page',
                     type: 'item',
-                    url: '/icons/material-icons',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'trainers',
+                    title: 'Trainers',
+                    url: '/sample-page',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'facilitators',
+                    title: 'Facilitators',
+                    url: '/sample-page',
+                    type: 'item',
                     breadcrumbs: false
                 }
             ]
+        },
+        {
+            id: 'users',
+            title: 'User Management',
+            type: 'item',
+            url: '/sample-page',
+            icon: icons.IconUsers,
+            breadcrumbs: false
         }
     ]
 };

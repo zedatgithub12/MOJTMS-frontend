@@ -1,5 +1,5 @@
 // material-ui
-import { Button, Box, CircularProgress, Typography } from '@mui/material';
+import { Button, Box, CircularProgress, Typography, Stack } from '@mui/material';
 import Connections from 'api';
 import { useEffect, useState } from 'react';
 
@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import { RefreshToken } from 'utils/token-refresh';
 
+// assets
+import AddIcon from '@mui/icons-material/Add';
 // ==============================|| PRODUCT PAGE ||============================== //
 
 const Products = () => {
@@ -61,8 +63,8 @@ const Products = () => {
     }, [refreshed]);
 
     return (
-        <MainCard title="Products Card">
-            <Typography variant="body2">List of products found in the database</Typography>
+        <MainCard title="Trainings">
+            <Typography variant="body2">List of Trainings found in the database</Typography>
             <Button onClick={() => handleCategoryFetching()}> {isLoading ? <CircularProgress /> : 'Fetch Main Catgeories'} </Button>
             <Box>
                 {Catgeories.length > 0 ? (

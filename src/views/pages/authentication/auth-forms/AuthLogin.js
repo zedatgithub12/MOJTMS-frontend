@@ -251,7 +251,7 @@ const FirebaseLogin = ({ ...others }) => {
                                         checked={checked}
                                         onChange={(event) => setChecked(event.target.checked)}
                                         name="checked"
-                                        color="success"
+                                        color="secondary"
                                     />
                                 }
                                 label="Remember me"
@@ -280,7 +280,7 @@ const FirebaseLogin = ({ ...others }) => {
                                     size="large"
                                     type="submit"
                                     variant="contained"
-                                    color="success"
+                                    color="secondary"
                                 >
                                     {logSpinner ? (
                                         <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
