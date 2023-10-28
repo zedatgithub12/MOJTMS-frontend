@@ -7,7 +7,7 @@ import integrations from './integrations';
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-    items: [dashboard, integrations]
+    items: [dashboard, integrations, utilities]
 };
 
 export default menuItems;

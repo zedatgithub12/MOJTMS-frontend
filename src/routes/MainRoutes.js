@@ -7,9 +7,13 @@ import Loadable from 'ui-component/Loadable';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
+//element page routing
+const Elements = Loadable(lazy(() => import('views/elements')));
 //Products Routing
 const Products = Loadable(lazy(() => import('views/products')));
 
+//users routing
+const Users = Loadable(lazy(() => import('views/users')));
 //account routing
 const AccountSetting = Loadable(lazy(() => import('views/profile/account-setting')));
 const Changepassword = Loadable(lazy(() => import('views/profile/change-password')));
@@ -43,6 +47,12 @@ const MainRoutes = {
                 }
             ]
         },
+
+        {
+            path: 'users',
+            element: <Users />
+        },
+
         {
             path: 'utils',
             children: [
@@ -104,6 +114,10 @@ const MainRoutes = {
         {
             path: 'products',
             element: <Products />
+        },
+        {
+            path: 'elements',
+            element: <Elements />
         }
     ]
 };

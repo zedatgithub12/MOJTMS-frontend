@@ -77,7 +77,7 @@ const dashboard = {
             id: 'users',
             title: 'User Management',
             type: 'item',
-            url: '/sample-page',
+            url: '/users',
             icon: icons.IconUsers,
             breadcrumbs: false
         }

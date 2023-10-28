@@ -1,12 +1,13 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
+import { IconTypography, IconPalette, IconShadow, IconWindmill, IconGridPattern } from '@tabler/icons';
 
 // constant
 const icons = {
     IconTypography,
     IconPalette,
     IconShadow,
-    IconWindmill
+    IconWindmill,
+    IconGridPattern
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -61,6 +62,14 @@ const utilities = {
                     breadcrumbs: false
                 }
             ]
+        },
+        {
+            id: 'elements',
+            title: 'Elements',
+            type: 'item',
+            url: '/elements',
+            icon: icons.IconGridPattern,
+            breadcrumbs: false
         }
     ]
 };
