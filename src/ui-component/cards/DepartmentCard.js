@@ -1,50 +1,100 @@
 import * as React from 'react';
 import { forwardRef } from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import office from 'assets/images/office.jpg';
 import PropTypes from 'prop-types';
 import { Box, useTheme } from '@mui/material';
-import { IconMail, IconPhone } from '@tabler/icons';
+import { IconChalkboard, IconMail, IconPhone, IconUsers } from '@tabler/icons';
+import DepartmentCardSkel from './Skeleton/DepartmentCard';
 
 const DepartmentCard = forwardRef(
-    ({ children, content, contentClass, darkTitle, secondary, sx = {}, contentSX = {}, title, ...others }, ref) => {
+    (
+        {
+            children,
+            content,
+            contentClass,
+            darkTitle,
+            secondary,
+            sx = {},
+            contentSX = {},
+            isLoading,
+            image,
+            title,
+            email,
+            phone,
+            trainingcount,
+            onPress,
+            traineecount,
+            ...others
+        },
+        ref
+    ) => {
         const theme = useTheme();
         return (
-            <Card
-                ref={ref}
-                sx={{
-                    width: 280,
-                    border: '1px solid',
-                    borderColor: theme.palette.secondary.light,
-                    ':hover': {
-                        boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
-                    },
-                    ...sx
-                }}
-                {...others}
-            >
-                <CardMedia sx={{ height: 140 }} image={office} title="Departments" />
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        Communication Department
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
-                        <IconMail size={18} /> <Typography sx={{ marginX: 1 }}>zerihuntegenu5@gmail.com</Typography>{' '}
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                        <IconPhone size={18} sx={{ marginRight: 2 }} /> <Typography sx={{ marginX: 1 }}>+251949390840</Typography>{' '}
-                    </Box>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">690</Button>
-                    <Button size="small">16</Button>
-                </CardActions>
-            </Card>
+            <>
+                {isLoading ? (
+                    <DepartmentCardSkel />
+                ) : (
+                    <Card
+                        onClick={onPress}
+                        ref={ref}
+                        sx={{
+                            width: 280,
+                            border: '1px solid',
+                            borderColor: theme.palette.secondary.light,
+                            cursor: 'pointer',
+                            ':hover': {
+                                boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
+                            },
+                            ...sx
+                        }}
+                        {...others}
+                    >
+                        <CardMedia sx={{ height: 140 }} image={image} title="Departments" />
+                        <CardContent>
+                            <Typography gutterBottom variant="h4" component="div">
+                                {title}
+                            </Typography>
+                            {email && (
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
+                                    <IconMail size={18} /> <Typography sx={{ marginX: 1 }}>{email}</Typography>
+                                </Box>
+                            )}
+
+                            {phone && (
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <IconPhone size={18} sx={{ marginRight: 2 }} /> <Typography sx={{ marginX: 1 }}>{phone}</Typography>{' '}
+                                </Box>
+                            )}
+
+                            <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 4 }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                    <IconChalkboard size={18} />
+                                    <Typography variant="h5" marginLeft={1}>
+                                        {trainingcount}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginLeft: 2
+                                    }}
+                                >
+                                    <IconUsers size={18} />
+                                    <Typography variant="h5" marginLeft={1}>
+                                        {traineecount}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </CardContent>
+                    </Card>
+                )}
+            </>
         );
     }
 );
@@ -57,7 +107,14 @@ DepartmentCard.propTypes = {
     secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     sx: PropTypes.object,
     contentSX: PropTypes.object,
-    title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object])
+    isLoading: PropTypes.bool,
+    image: PropTypes.string,
+    title: PropTypes.string,
+    email: PropTypes.string,
+    phone: PropTypes.string,
+    traineecount: PropTypes.number,
+    traineecount: PropTypes.number,
+    onPress: PropTypes.func
 };
 
 DepartmentCard.defaultProps = {
