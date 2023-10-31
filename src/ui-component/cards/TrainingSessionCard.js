@@ -4,35 +4,20 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Grid, Box, useTheme, Stack, Rating } from '@mui/material';
-import TrainingCardSkel from './Skeleton/TrainingCardSkel';
+import { Grid, Box, useTheme } from '@mui/material';
+import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
+import TrainingSessionSkel from './Skeleton/TrainingSessionSkel';
 
 const TrainingSessionCard = forwardRef(
     (
-        {
-            darkTitle,
-            secondary,
-            sx = {},
-            isLoading,
-            image,
-            title,
-            language,
-            category,
-            departments,
-            sessions,
-            traineecount,
-            rating,
-            ratingcount,
-            onPress,
-            ...others
-        },
+        { darkTitle, secondary, sx = {}, isLoading, image, title, round, level, address, capacity, startdate, enddate, onPress, ...others },
         ref
     ) => {
         const theme = useTheme();
         return (
             <>
                 {isLoading ? (
-                    <TrainingCardSkel />
+                    <TrainingSessionSkel />
                 ) : (
                     <Card
                         ref={ref}
@@ -54,58 +39,75 @@ const TrainingSessionCard = forwardRef(
                                 borderRadius: 1
                             }}
                             image={image}
-                            title="Trainer photo"
+                            title="Training picture"
                         />
 
                         <Grid item paddingX={1.5}>
+                            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                                {round && (
+                                    <Typography variant="subtitle1" color="secondary">
+                                        {round}
+                                    </Typography>
+                                )}
+
+                                {level && (
+                                    <>
+                                        {' '}
+                                        <Typography variant="subtitle1" marginLeft={1} color="grey">
+                                            {'|'}
+                                        </Typography>
+                                        <Typography variant="subtitle1" marginLeft={1} color="secondary">
+                                            {level} level
+                                        </Typography>
+                                    </>
+                                )}
+                            </Box>
+
                             <Box marginY={1}>
                                 <Typography variant="h3"> {title}</Typography>
                             </Box>
 
-                            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                                <Typography variant="subtitle1">{language}</Typography>
-                                <Typography variant="subtitle1" marginLeft={1}>
-                                    {'|'}
-                                </Typography>
-                                <Typography variant="subtitle1" marginLeft={1}>
-                                    {category}
-                                </Typography>
-                            </Box>
+                            {capacity && (
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', paddingY: 1 }}>
+                                    <IconUsers size={18} />
+                                    <Typography sx={{ marginX: 1 }}>{capacity}</Typography>
+                                </Box>
+                            )}
 
-                            <Box paddingY={2} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingX: 1 }}>
-                                {departments && (
-                                    <Box>
-                                        <Typography variant="h3">{departments}</Typography>
-                                        <Typography variant="subtitle2">{departments > 0 ? 'Departments' : 'Department'} </Typography>
-                                    </Box>
-                                )}
-                                {sessions && (
-                                    <Box>
-                                        <Typography variant="h3">{sessions}</Typography>
-                                        <Typography variant="subtitle2">{sessions > 0 ? 'Sessions' : 'Session'} </Typography>
-                                    </Box>
-                                )}
-                                {traineecount && (
-                                    <Box>
-                                        <Typography variant="h3">{traineecount}</Typography>
-                                        <Typography variant="subtitle2">{traineecount > 0 ? 'Trainees' : 'Trainee'} </Typography>
-                                    </Box>
-                                )}
-                            </Box>
+                            {address && (
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', paddingY: 1.2 }}>
+                                    <IconMapPin size={18} />
+                                    <Typography sx={{ marginX: 1 }}>{address}</Typography>
+                                </Box>
+                            )}
 
-                            <Stack marginTop={2.4}>
-                                {rating ? (
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: 2 }}>
-                                        <Typography variant="h4" marginX={1}>
-                                            {rating}{' '}
-                                        </Typography>
-                                        <Rating name="read-only" value={rating} readOnly />
-                                        <Typography variant="subtitle">({ratingcount})</Typography>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    paddingBottom: 2,
+                                    paddingRight: 1,
+                                    marginTop: 1
+                                }}
+                            >
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                    <IconClockPlay size={18} />
+                                    <Box marginLeft={2}>
+                                        <Typography variant="subtitle2">From </Typography>
+                                        <Typography variant="h4">{startdate}</Typography>
                                     </Box>
-                                ) : (
-                                    <Typography variant="subtitle2">No rating yet</Typography>
-                                )}
-                            </Stack>
+                                </Box>
+
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                    <IconClockStop size={18} />
+                                    <Box marginLeft={2}>
+                                        <Typography variant="subtitle2">To </Typography>
+                                        <Typography variant="h4">{enddate}</Typography>
+                                    </Box>
+                                </Box>
+                            </Box>
                         </Grid>
                     </Card>
                 )}
@@ -122,12 +124,12 @@ TrainingSessionCard.propTypes = {
     isLoading: PropTypes.bool,
     image: PropTypes.string,
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
-    language: PropTypes.string,
-    category: PropTypes.string,
-    departments: PropTypes.number,
-    sessions: PropTypes.number,
-    rating: PropTypes.number,
-    ratingcount: PropTypes.number,
+    round: PropTypes.string,
+    level: PropTypes.string,
+    address: PropTypes.string,
+    capacity: PropTypes.string,
+    startdate: PropTypes.string.isRequired,
+    enddate: PropTypes.string.isRequired,
     onPress: PropTypes.func
 };
 

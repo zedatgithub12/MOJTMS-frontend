@@ -14,6 +14,9 @@ import TrainerCard from 'ui-component/cards/TrainerCard';
 import FacilitatorCard from 'ui-component/cards/FacilitatorCard';
 import TrainingCard from 'ui-component/cards/TrainingCard';
 import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
+import SessionDetails from 'ui-component/cards/SessionDetails';
+import { Resources } from 'dummies/SessionResources';
+import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
 
 // ==============================|| SYSTEM ELEMENTS PAGE ||============================== //
 
@@ -123,17 +126,36 @@ const Elements = () => (
                     isLoading={false}
                     image={Office}
                     title="Modern Technologies in Legal Field"
-                    language="Amharic"
-                    category="Self Development"
-                    departments={8}
-                    sessions={23}
-                    traineecount={235}
-                    rating={5.0}
-                    ratingcount={4523}
+                    round="23rd"
+                    level="Organization"
+                    address="Addis Ababa"
+                    capacity={2032}
+                    startdate="Nov 12th"
+                    enddate="Nov 22, 2023"
                     onPress={() => {
                         console.log('Training session clicked');
                     }}
                 />
+
+                <SessionDetails
+                    isLoading={false}
+                    status="Upcoming"
+                    title="Training Details"
+                    description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia, training is a cornerstone of development, empowering individuals to unlock their full potential and contribute to a prosperous and inclusive society."
+                    startdate="12-3-2023"
+                    starttime="2:30 PM"
+                    enddate="22-3-2023"
+                    endtime="6:00 PM"
+                    address="Addis Ababa"
+                    capacity="304"
+                    resources={Resources}
+                />
+            </Grid>
+        </Grid>
+
+        <Grid container sx={{ flexDirection: 'column' }}>
+            <Grid sx={{ display: 'flex', flexDirection: 'row', paddingY: 2 }}>
+                <SessionHorizontalCard address="Addis Ababa" capacity="304" startdate="Nov 12th" enddate="Nov 22, 2023" />
             </Grid>
         </Grid>
     </MainCard>

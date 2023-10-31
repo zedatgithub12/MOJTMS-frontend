@@ -1,7 +1,7 @@
 // material-ui
 import { Card, CardContent, Grid, useTheme } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
-// ==============================|| SKELETON - DEPARTMENT CARD ||============================== //
+// ==============================|| SKELETON - TRAINING CARD ||============================== //
 
 const TrainingCardSkel = () => {
     const theme = useTheme();
