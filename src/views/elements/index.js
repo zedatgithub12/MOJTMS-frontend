@@ -1,5 +1,5 @@
 // material-ui
-import { Grid, Typography } from '@mui/material';
+import { Grid, MenuItem, Typography } from '@mui/material';
 import DepartmentCard from 'ui-component/cards/DepartmentCard';
 import DepartmentDetailCard from 'ui-component/cards/DepartmentDetailCard';
 import trainer from 'assets/images/trainer.jpg';
@@ -17,6 +17,7 @@ import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
 import SessionDetails from 'ui-component/cards/SessionDetails';
 import { Resources } from 'dummies/SessionResources';
 import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
+import { IconShare } from '@tabler/icons';
 
 // ==============================|| SYSTEM ELEMENTS PAGE ||============================== //
 
@@ -155,7 +156,29 @@ const Elements = () => (
 
         <Grid container sx={{ flexDirection: 'column' }}>
             <Grid sx={{ display: 'flex', flexDirection: 'row', paddingY: 2 }}>
-                <SessionHorizontalCard address="Addis Ababa" capacity="304" startdate="Nov 12th" enddate="Nov 22, 2023" />
+                <SessionHorizontalCard
+                    isLoading={false}
+                    image={Department}
+                    title="Modern Technologies in Legal Field"
+                    description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia, training is a cornerstone of development, empowering individuals to unlock their full potential and contribute to a prosperous and inclusive society."
+                    round="23rd"
+                    level="Organization"
+                    address="Addis Ababa"
+                    capacity={2032}
+                    startdate="Nov 12th"
+                    enddate="Nov 22, 2023"
+                    option={true}
+                    optionChildrens={
+                        <>
+                            <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
+                                <IconShare size={20} />
+                                <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
+                                    Share
+                                </Typography>
+                            </MenuItem>
+                        </>
+                    }
+                />
             </Grid>
         </Grid>
     </MainCard>

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -10,8 +9,6 @@ import TrainingCardSkel from './Skeleton/TrainingCardSkel';
 const TrainingCard = forwardRef(
     (
         {
-            darkTitle,
-            secondary,
             sx = {},
             isLoading,
             image,
@@ -35,6 +32,7 @@ const TrainingCard = forwardRef(
                     <TrainingCardSkel />
                 ) : (
                     <Card
+                        onClick={onPress}
                         ref={ref}
                         sx={{
                             width: 280,
@@ -115,9 +113,6 @@ const TrainingCard = forwardRef(
 );
 
 TrainingCard.propTypes = {
-    children: PropTypes.node,
-    darkTitle: PropTypes.bool,
-    secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     sx: PropTypes.object,
     isLoading: PropTypes.bool,
     image: PropTypes.string,
@@ -126,6 +121,7 @@ TrainingCard.propTypes = {
     category: PropTypes.string,
     departments: PropTypes.number,
     sessions: PropTypes.number,
+    traineecount: PropTypes.number,
     rating: PropTypes.number,
     ratingcount: PropTypes.number,
     onPress: PropTypes.func

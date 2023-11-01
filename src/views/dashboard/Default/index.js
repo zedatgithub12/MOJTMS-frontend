@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 // material-ui
-import { Grid } from '@mui/material';
+import { Avatar, Box, Typography, Divider, Grid, ListItemIcon, MenuItem } from '@mui/material';
 
 // project imports
 import EarningCard from './EarningCard';
@@ -11,6 +11,8 @@ import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
+import { PageHeader } from 'ui-component/page-header/PageHeader';
+import { PersonAdd } from '@mui/icons-material';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -24,6 +26,36 @@ const Dashboard = () => {
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
+                    <PageHeader
+                        title="Users"
+                        back={true}
+                        option={true}
+                        optionChildrens={
+                            <>
+                                <MenuItem>
+                                    <Avatar /> Profile
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem>
+                                    <ListItemIcon>
+                                        <PersonAdd fontSize="small" />
+                                    </ListItemIcon>
+                                    Add another account
+                                </MenuItem>
+                            </>
+                        }
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Typography variant="h3">Users</Typography>
+                        </Box>
+                    </PageHeader>
                     <Grid item lg={4} md={6} sm={6} xs={12}>
                         <EarningCard isLoading={isLoading} />
                     </Grid>

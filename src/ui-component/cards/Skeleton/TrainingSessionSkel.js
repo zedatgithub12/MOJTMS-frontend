@@ -1,5 +1,5 @@
 // material-ui
-import { Card, CardContent, Grid, useTheme } from '@mui/material';
+import { Card, Grid, useTheme } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 // ==============================|| SKELETON - TRAINING SESSION CARD ||============================== //
 

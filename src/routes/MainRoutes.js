@@ -9,11 +9,16 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
+
 //Products Routing
 const Products = Loadable(lazy(() => import('views/products')));
 
+//Trainees page routing
+const Trainee = Loadable(lazy(() => import('views/trainee')));
+
 //users routing
 const Users = Loadable(lazy(() => import('views/users')));
+
 //account routing
 const AccountSetting = Loadable(lazy(() => import('views/profile/account-setting')));
 const Changepassword = Loadable(lazy(() => import('views/profile/change-password')));
@@ -118,6 +123,10 @@ const MainRoutes = {
         {
             path: 'elements',
             element: <Elements />
+        },
+        {
+            path: 'trainees',
+            element: <Trainee />
         }
     ]
 };

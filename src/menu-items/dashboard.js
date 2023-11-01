@@ -1,8 +1,28 @@
 // assets
-import { IconDashboard, IconHome, IconBuildingStore, IconUsers, IconClipboardList, IconBuilding, IconSchool } from '@tabler/icons';
+import {
+    IconDashboard,
+    IconHome,
+    IconBuildingStore,
+    IconUsers,
+    IconClipboardList,
+    IconBuilding,
+    IconSchool,
+    IconUser,
+    IconUserSearch
+} from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard, IconBuildingStore, IconUsers, IconHome, IconClipboardList, IconBuilding, IconSchool };
+const icons = {
+    IconDashboard,
+    IconBuildingStore,
+    IconUsers,
+    IconHome,
+    IconClipboardList,
+    IconBuilding,
+    IconSchool,
+    IconUser,
+    IconUserSearch
+};
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -74,11 +94,19 @@ const dashboard = {
             ]
         },
         {
+            id: 'trainees',
+            title: 'Trainees',
+            type: 'item',
+            url: '/trainees',
+            icon: icons.IconUsers,
+            breadcrumbs: false
+        },
+        {
             id: 'users',
             title: 'User Management',
             type: 'item',
             url: '/users',
-            icon: icons.IconUsers,
+            icon: icons.IconUserSearch,
             breadcrumbs: false
         }
     ]

@@ -10,7 +10,6 @@ import { IconCircleCheck, IconCircleX, IconClockPlay, IconClockStop, IconMapPin,
 import { ReadMore } from 'utils/functions';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import TrainingCardSkel from './Skeleton/TrainingCardSkel';
 import SessionDetailSkel from './Skeleton/SessionDetailsSkel';
 
 const letterConfig = {

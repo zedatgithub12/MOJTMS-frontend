@@ -1,9 +1,7 @@
-import * as React from 'react';
 import { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import office from 'assets/images/office.jpg';
 import PropTypes from 'prop-types';
 import { Grid, Box, useTheme, Stack, Link, Rating } from '@mui/material';
 import { IconCertificate, IconChalkboard, IconMapPin, IconUser } from '@tabler/icons';
@@ -12,23 +10,7 @@ import TrainerCardSkel from './Skeleton/TrainerCardSkel';
 
 const TrainerCard = forwardRef(
     (
-        {
-            darkTitle,
-            secondary,
-            sx = {},
-            isLoading,
-            image,
-            name,
-            qualification,
-            address,
-            gender,
-            title,
-            linkedin,
-            trainingcount,
-            rating,
-            onPress,
-            ...others
-        },
+        { sx = {}, isLoading, image, name, qualification, address, gender, title, linkedin, trainingcount, rating, onPress, ...others },
         ref
     ) => {
         const theme = useTheme();
@@ -38,6 +20,7 @@ const TrainerCard = forwardRef(
                     <TrainerCardSkel />
                 ) : (
                     <Card
+                        onClick={onPress}
                         ref={ref}
                         sx={{
                             width: 280,
@@ -143,9 +126,6 @@ const TrainerCard = forwardRef(
 );
 
 TrainerCard.propTypes = {
-    children: PropTypes.node,
-    darkTitle: PropTypes.bool,
-    secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     sx: PropTypes.object,
     isLoading: PropTypes.bool,
     image: PropTypes.string,

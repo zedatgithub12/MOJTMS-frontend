@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -10,27 +9,7 @@ import { IconChalkboard, IconMail, IconPhone, IconUsers } from '@tabler/icons';
 import DepartmentCardSkel from './Skeleton/DepartmentCard';
 
 const DepartmentCard = forwardRef(
-    (
-        {
-            children,
-            content,
-            contentClass,
-            darkTitle,
-            secondary,
-            sx = {},
-            contentSX = {},
-            isLoading,
-            image,
-            title,
-            email,
-            phone,
-            trainingcount,
-            onPress,
-            traineecount,
-            ...others
-        },
-        ref
-    ) => {
+    ({ sx = {}, isLoading, image, title, email, phone, trainingcount, onPress, traineecount, ...others }, ref) => {
         const theme = useTheme();
         return (
             <>
@@ -100,25 +79,15 @@ const DepartmentCard = forwardRef(
 );
 
 DepartmentCard.propTypes = {
-    children: PropTypes.node,
-    content: PropTypes.bool,
-    contentClass: PropTypes.string,
-    darkTitle: PropTypes.bool,
-    secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     sx: PropTypes.object,
-    contentSX: PropTypes.object,
     isLoading: PropTypes.bool,
     image: PropTypes.string,
     title: PropTypes.string,
     email: PropTypes.string,
     phone: PropTypes.string,
-    traineecount: PropTypes.number,
+    trainingcount: PropTypes.number,
     traineecount: PropTypes.number,
     onPress: PropTypes.func
-};
-
-DepartmentCard.defaultProps = {
-    content: true
 };
 
 export default DepartmentCard;

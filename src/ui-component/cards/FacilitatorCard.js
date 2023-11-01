@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -7,30 +6,10 @@ import PropTypes from 'prop-types';
 import { Grid, Box, useTheme, Stack, Link } from '@mui/material';
 import { IconCertificate, IconMail, IconMapPin, IconPhone, IconUser } from '@tabler/icons';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import TrainerCardSkel from './Skeleton/TrainerCardSkel';
 import FacilitatorCardSkel from './Skeleton/FacilitatorCardSkel';
 
 const FacilitatorCard = forwardRef(
-    (
-        {
-            darkTitle,
-            secondary,
-            sx = {},
-            isLoading,
-            image,
-            name,
-            qualification,
-            address,
-            gender,
-            title,
-            linkedin,
-            email,
-            phone,
-            onPress,
-            ...others
-        },
-        ref
-    ) => {
+    ({ sx = {}, isLoading, image, name, qualification, address, gender, title, linkedin, email, phone, onPress, ...others }, ref) => {
         const theme = useTheme();
         return (
             <>
@@ -49,6 +28,7 @@ const FacilitatorCard = forwardRef(
                             ...sx
                         }}
                         {...others}
+                        onClick={onPress}
                     >
                         <Grid container>
                             <Box
@@ -137,9 +117,6 @@ const FacilitatorCard = forwardRef(
 );
 
 FacilitatorCard.propTypes = {
-    children: PropTypes.node,
-    darkTitle: PropTypes.bool,
-    secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     sx: PropTypes.object,
     isLoading: PropTypes.bool,
     image: PropTypes.string,

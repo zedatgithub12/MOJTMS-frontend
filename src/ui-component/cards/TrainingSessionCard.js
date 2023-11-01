@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -9,10 +8,7 @@ import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/ico
 import TrainingSessionSkel from './Skeleton/TrainingSessionSkel';
 
 const TrainingSessionCard = forwardRef(
-    (
-        { darkTitle, secondary, sx = {}, isLoading, image, title, round, level, address, capacity, startdate, enddate, onPress, ...others },
-        ref
-    ) => {
+    ({ sx = {}, isLoading, image, title, round, level, address, capacity, startdate, enddate, onPress, ...others }, ref) => {
         const theme = useTheme();
         return (
             <>
@@ -20,6 +16,7 @@ const TrainingSessionCard = forwardRef(
                     <TrainingSessionSkel />
                 ) : (
                     <Card
+                        onClick={onPress}
                         ref={ref}
                         sx={{
                             width: 280,
@@ -117,9 +114,6 @@ const TrainingSessionCard = forwardRef(
 );
 
 TrainingSessionCard.propTypes = {
-    children: PropTypes.node,
-    darkTitle: PropTypes.bool,
-    secondary: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     sx: PropTypes.object,
     isLoading: PropTypes.bool,
     image: PropTypes.string,

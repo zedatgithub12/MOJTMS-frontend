@@ -7,7 +7,7 @@ import MainCard from 'ui-component/cards/MainCard';
 // project imports
 import { PageHeader } from 'ui-component/page-header/PageHeader';
 
-// ==============================|| Users PAGE ||============================== //
+// ==============================|| USERS PAGE ||============================== //
 
 const Users = () => {
     const theme = useTheme();
