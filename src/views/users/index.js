@@ -12,7 +12,7 @@ import { PageHeader } from 'ui-component/page-header/PageHeader';
 const Users = () => {
     const theme = useTheme();
     return (
-        <MainCard
+        <Grid
             container
             sx={{
                 borderRadius: 4,
@@ -24,6 +24,7 @@ const Users = () => {
             }}
         >
             <PageHeader
+                title="Users"
                 back={true}
                 option={true}
                 optionChildrens={
@@ -52,7 +53,7 @@ const Users = () => {
                     <Typography variant="h3">Users</Typography>
                 </Box>
             </PageHeader>
-        </MainCard>
+        </Grid>
     );
 };
 

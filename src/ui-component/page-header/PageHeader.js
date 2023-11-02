@@ -35,8 +35,6 @@ export const PageHeader = ({ children, title, back, option, optionChildrens }) =
         <Grid
             container
             sx={{
-                position: 'fixed',
-                top: 90,
                 height: customHeight,
                 transition: 'height 0.4s ease-in-out',
                 backgroundColor: theme.palette.primary[200],
