@@ -1,9 +1,9 @@
 export const users = [
     {
         id: 1,
-        name: 'User 1',
-        email: 'user1@example.com',
-        role: 'admin',
+        name: 'Zerihun Tegenu Worku',
+        email: 'zerihuntegenu5@gmail.com',
+        role: 'Admin',
         created_at: '2021-01-01',
         status: 'active'
     },

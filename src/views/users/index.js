@@ -1,7 +1,7 @@
 import { useState } from 'react';
 // material-ui
 import { PersonAdd } from '@mui/icons-material';
-import { Grid, Box, Typography, useTheme, Avatar, Divider, ListItemIcon, MenuItem } from '@mui/material';
+import { Grid, Box, Typography, useTheme, Avatar, Divider, ListItemIcon, MenuItem, IconButton, Menu } from '@mui/material';
 import { SearchFilterAdd } from './components/SearchFilterAdd';
 
 // project imports
@@ -9,8 +9,9 @@ import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { UserColumn } from 'data/tables/columns/Users';
 import { users } from 'data/tables/dummies/users';
-import MyDialog from 'ui-component/dialog';
 import AddUser from './components/AddUser';
+import { View } from './components/View';
+import { IconDotsVertical } from '@tabler/icons';
 
 // ==============================|| USERS PAGE ||============================== //
 
@@ -19,6 +20,9 @@ const Users = () => {
     const [search, setSearch] = useState('');
     const [role, setRole] = useState('Role');
     const [openDialog, setOpenDialog] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
 
     const handleSearching = () => {
         console.log('searching');
@@ -38,6 +42,18 @@ const Users = () => {
 
     const handleDialogClose = () => {
         setOpenDialog(false);
+    };
+
+    const handleUserSelection = (params) => {
+        setSelectedUser(params.row);
+    };
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
     };
 
     return (
@@ -103,13 +119,42 @@ const Users = () => {
                         slots={{
                             toolbar: GridToolbar
                         }}
+                        onRowClick={(params) => handleUserSelection(params)}
                     />
                 </Grid>
-                <Grid item xs={12} sm={12} md={12} lg={4.2} xl={4.2} position={'relative'}>
-                    <Box sx={{ position: 'fixed', boxShadow: 1, marginX: 2, padding: 2, borderRadius: 2, minWidth: 400, minHeight: 500 }}>
-                        <Typography variant="subtitle1">User Detail</Typography>
-                    </Box>
-                </Grid>
+                {selectedUser && (
+                    <Grid item xs={12} sm={12} md={12} lg={4.2} xl={4.2} position={'relative'}>
+                        <Box
+                            sx={{ position: 'fixed', boxShadow: 1, marginX: 2, padding: 2, borderRadius: 2, minWidth: 400, minHeight: 440 }}
+                        >
+                            <View user={selectedUser}>
+                                <IconButton
+                                    id="menu-button"
+                                    aria-controls={open ? 'user-menu' : undefined}
+                                    aria-haspopup="true"
+                                    aria-expanded={open ? 'true' : undefined}
+                                    onClick={handleClick}
+                                >
+                                    <IconDotsVertical size={20} />
+                                </IconButton>
+                                <Menu
+                                    id="user-menu"
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={handleClose}
+                                    MenuListProps={{
+                                        'aria-labelledby': 'menu-button'
+                                    }}
+                                >
+                                    <MenuItem onClick={handleClose}>Change role</MenuItem>
+                                    <MenuItem onClick={handleClose}>Update status</MenuItem>
+                                    <Divider />
+                                    <MenuItem onClick={handleClose}>Delete user account</MenuItem>
+                                </Menu>
+                            </View>
+                        </Box>
+                    </Grid>
+                )}
             </Grid>
 
             <AddUser open={openDialog} handleDialogClose={() => handleDialogClose()} />

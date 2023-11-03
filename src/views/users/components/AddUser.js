@@ -22,7 +22,7 @@ import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { Roles } from 'data/tables/Roles';
 import Connections from 'api';
-import axios from 'axios';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 export default function AddUser({ open, handleDialogClose }) {
     const theme = useTheme();
@@ -34,6 +34,11 @@ export default function AddUser({ open, handleDialogClose }) {
         name: Yup.string().min(2, 'Too short for name').max(50, 'Name cannot exceed 50 characters').required('Name is required'),
         email: Yup.string().email('Invalid Email').required('Email is required')
     });
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
+    };
 
     const handleSubmitting = (values) => {
         const token = sessionStorage.getItem('token');
@@ -60,13 +65,13 @@ export default function AddUser({ open, handleDialogClose }) {
             .then((response) => response.json())
             .then((response) => {
                 if (response.success) {
-                    console.log(response.message);
-                    setAdding(false);
+                    handlePrompts(response.message, 'success');
+                } else {
+                    handlePrompts(response.message, 'error');
                 }
             })
             .catch((error) => {
-                setAdding(false);
-                console.log(error);
+                handlePrompts(error.message, 'error');
             });
     };
 
@@ -196,6 +201,7 @@ export default function AddUser({ open, handleDialogClose }) {
                     </form>
                 </DialogContent>
             </Dialog>
+            <SnackbarProvider maxSnack={3} />
         </React.Fragment>
     );
 }
