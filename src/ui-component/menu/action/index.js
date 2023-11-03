@@ -4,6 +4,7 @@ import { IconDotsVertical } from '@tabler/icons';
 import PropTypes from 'prop-types';
 
 export const ActionMenu = ({ children }) => {
+    const theme = useTheme();
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -26,7 +27,7 @@ export const ActionMenu = ({ children }) => {
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                 >
-                    <IconDotsVertical />
+                    <IconDotsVertical color={theme.palette.background.default} />
                 </IconButton>
             </Tooltip>
 

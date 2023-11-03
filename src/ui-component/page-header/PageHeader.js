@@ -9,7 +9,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens }) =
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const [customHeight, setCustomHeight] = useState('180px');
+    const [customHeight, setCustomHeight] = useState('200px');
     const [isScrolledToTop, setIsScrolledToTop] = useState(false);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens }) =
             const scrollPosition = window.scrollY;
 
             if (scrollPosition === 0) {
-                setCustomHeight('180px');
+                setCustomHeight('200px');
                 setIsScrolledToTop(false); // Set your desired smaller height here
             } else {
                 setCustomHeight('50px'); // Set the default height of the component here
@@ -35,38 +35,51 @@ export const PageHeader = ({ children, title, back, option, optionChildrens }) =
         <Grid
             container
             sx={{
+                position: 'sticky',
+                top: 98,
                 height: customHeight,
-                transition: 'height 0.4s ease-in-out',
-                backgroundColor: theme.palette.primary[200],
+                transition: 'height 0.3s ease-in-out',
+                backgroundColor: theme.palette.secondary.dark,
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8
             }}
         >
             <Grid
-                item
-                xs={12}
-                sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 1 }}
+                container
+                sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingX: 2 }}
             >
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     {back && (
                         <IconButton onClick={() => navigate(-1)}>
-                            <IconArrowLeft />
+                            <IconArrowLeft color={theme.palette.background.default} />
                         </IconButton>
                     )}
 
-                    <Typography variant="h4" sx={{ opacity: isScrolledToTop ? 1 : 0, transition: 'opacity 0.4s ease-in-out', paddingX: 3 }}>
+                    <Typography
+                        color={'white'}
+                        variant="h4"
+                        sx={{ opacity: isScrolledToTop ? 1 : 0, transition: 'opacity 0.3s ease-in-out', paddingX: 1 }}
+                    >
                         {title}
                     </Typography>
                 </Box>
 
                 {option && <ActionMenu children={optionChildrens} />}
             </Grid>
-            <Grid
-                item
-                xs={12}
-                sx={{ opacity: isScrolledToTop ? 0 : 1, transition: 'opacity 0.4s ease-in-out', padding: 4, zIndex: 4, overflow: 'hidden' }}
-            >
-                {children}
+
+            <Grid container justifyContent={'center'}>
+                <Box
+                    sx={{
+                        alignSelf: 'center',
+                        opacity: isScrolledToTop ? 0 : 1,
+                        transition: 'opacity 0.3s ease-in-out',
+                        paddingY: 4,
+                        zIndex: 4,
+                        overflow: 'hidden'
+                    }}
+                >
+                    {children}
+                </Box>
             </Grid>
         </Grid>
     );
