@@ -15,14 +15,18 @@ import NavigationScroll from 'layout/NavigationScroll';
 import { AuthContext } from 'context/context';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
+import Loadable from 'ui-component/Loadable';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 // ==============================|| APP ||============================== //
-import Loadable from 'ui-component/Loadable';
+
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login')));
 const AuthRegister = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register')));
 const Forgot_Password = Loadable(lazy(() => import('views/pages/authentication/forgot-password')));
 const Reset_Password = Loadable(lazy(() => import('views/pages/authentication/reset-password')));
 const NotFound = Loadable(lazy(() => import('views/notfound')));
+
+const queryClient = new QueryClient();
 
 const App = () => {
     const customization = useSelector((state) => state.customization);
@@ -87,26 +91,28 @@ const App = () => {
     return (
         <StyledEngineProvider injectFirst>
             <AuthContext.Provider value={authContext}>
-                <ThemeProvider theme={themes(customization)}>
-                    <CssBaseline />
-                    <NavigationScroll>
-                        {loged ? (
-                            <Routes />
-                        ) : location.pathname === '/pages/register/register' ? (
-                            <AuthRegister />
-                        ) : location.pathname === '/forgot-password' ? (
-                            <Forgot_Password />
-                        ) : location.pathname === `/reset-password/${token}` ? (
-                            <Reset_Password />
-                        ) : location.pathname === '/pages/login/login' ? (
-                            <AuthLogin />
-                        ) : location.pathname === '/' ? (
-                            <AuthLogin />
-                        ) : (
-                            <NotFound />
-                        )}
-                    </NavigationScroll>
-                </ThemeProvider>
+                <QueryClientProvider client={queryClient}>
+                    <ThemeProvider theme={themes(customization)}>
+                        <CssBaseline />
+                        <NavigationScroll>
+                            {loged ? (
+                                <Routes />
+                            ) : location.pathname === '/pages/register/register' ? (
+                                <AuthRegister />
+                            ) : location.pathname === '/forgot-password' ? (
+                                <Forgot_Password />
+                            ) : location.pathname === `/reset-password/${token}` ? (
+                                <Reset_Password />
+                            ) : location.pathname === '/pages/login/login' ? (
+                                <AuthLogin />
+                            ) : location.pathname === '/' ? (
+                                <AuthLogin />
+                            ) : (
+                                <NotFound />
+                            )}
+                        </NavigationScroll>
+                    </ThemeProvider>
+                </QueryClientProvider>
             </AuthContext.Provider>
         </StyledEngineProvider>
     );

@@ -3,6 +3,7 @@ import { IconCalendar, IconMail, IconUser } from '@tabler/icons';
 import BadgeOutlinedIcon from '@mui/icons-material/BadgeOutlined';
 import NaturePeopleOutlinedIcon from '@mui/icons-material/NaturePeopleOutlined';
 import PropTypes from 'prop-types';
+import { DateFormatter } from 'utils/functions';
 
 export const View = ({ user, children }) => {
     return (
@@ -49,7 +50,7 @@ export const View = ({ user, children }) => {
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
                 <IconCalendar size={20} />
                 <Box sx={{ paddingX: 2 }}>
-                    <Typography variant="subtitle1">{user.created_at} </Typography>
+                    <Typography variant="subtitle1">{DateFormatter(user.created_at)} </Typography>
                     <Typography variant="subtitle2">Added on </Typography>
                 </Box>
             </Box>

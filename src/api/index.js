@@ -8,7 +8,10 @@ const Connections = {
     refresh_token: 'refresh-token',
 
     // users management api endpoints
-    users: 'users'
+    users: 'users',
+    searchuser: 'search-user',
+    changerole: 'change-role',
+    updatestatus: 'update-status'
 };
 
 export default Connections;

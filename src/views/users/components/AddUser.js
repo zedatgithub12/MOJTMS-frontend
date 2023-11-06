@@ -10,6 +10,7 @@ import {
     CircularProgress,
     FormControl,
     FormHelperText,
+    IconButton,
     InputLabel,
     MenuItem,
     OutlinedInput,
@@ -23,6 +24,7 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import { Roles } from 'data/tables/Roles';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { IconX } from '@tabler/icons';
 
 export default function AddUser({ open, handleDialogClose }) {
     const theme = useTheme();
@@ -41,6 +43,7 @@ export default function AddUser({ open, handleDialogClose }) {
     };
 
     const handleSubmitting = (values) => {
+        setAdding(true);
         const token = sessionStorage.getItem('token');
 
         var Api = Connections.api + Connections.users;
@@ -65,12 +68,16 @@ export default function AddUser({ open, handleDialogClose }) {
             .then((response) => response.json())
             .then((response) => {
                 if (response.success) {
+                    setAdding(false);
+                    handleDialogClose();
                     handlePrompts(response.message, 'success');
                 } else {
+                    setAdding(false);
                     handlePrompts(response.message, 'error');
                 }
             })
             .catch((error) => {
+                setAdding(false);
                 handlePrompts(error.message, 'error');
             });
     };
@@ -101,16 +108,31 @@ export default function AddUser({ open, handleDialogClose }) {
     return (
         <React.Fragment>
             <Dialog open={open} onClose={handleDialogClose}>
-                <DialogTitle variant="h4" color="white" sx={{ padding: 2, backgroundColor: theme.palette.secondary.dark }}>
-                    Add new user
-                </DialogTitle>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        paddingRight: 1,
+                        backgroundColor: theme.palette.secondary.dark
+                    }}
+                >
+                    <DialogTitle variant="h4" color="white">
+                        Add new user
+                    </DialogTitle>
+
+                    <IconButton onClick={handleDialogClose}>
+                        <IconX size={22} />
+                    </IconButton>
+                </Box>
 
                 <DialogContent sx={{ minWidth: 500 }}>
                     <form noValidate onSubmit={formik.handleSubmit}>
                         <FormControl
                             fullWidth
                             error={formik.touched.name && Boolean(formik.errors.name)}
-                            sx={{ ...theme.typography.customInput, marginTop: 4 }}
+                            sx={{ ...theme.typography.customInput, marginTop: 2 }}
                         >
                             <InputLabel htmlFor="outlined-adornment-name">Full name</InputLabel>
                             <OutlinedInput
@@ -186,15 +208,14 @@ export default function AddUser({ open, handleDialogClose }) {
                             </Button>
                             <AnimateButton>
                                 <Button
-                                    disableElevation
-                                    disabled={formik.isSubmitting}
+                                    disabled={adding ? true : false}
                                     size="small"
                                     type="submit"
                                     variant="contained"
                                     color="secondary"
                                     sx={{ paddingX: 8, paddingY: 0.8 }}
                                 >
-                                    {adding ? CircularProgress : 'Save'}
+                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Save'}
                                 </Button>
                             </AnimateButton>
                         </Box>

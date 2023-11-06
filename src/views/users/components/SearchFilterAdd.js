@@ -1,13 +1,9 @@
-import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography } from '@mui/material';
+import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import { Add } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 
-export const SearchFilterAdd = ({ searchText, onTextChange, onSubmit, role, roles, onRoleChange, onAddUser }) => {
+export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit, onAddUser }) => {
     return (
         <Grid container>
             <Grid
@@ -35,28 +31,13 @@ export const SearchFilterAdd = ({ searchText, onTextChange, onSubmit, role, role
                             inputProps={{ 'aria-label': 'search users' }}
                             value={searchText}
                             onChange={onTextChange}
+                            onSubmit={onSubmit}
                         />
                         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
                         <IconButton type="button" sx={{ p: '8px' }} aria-label="search" onClick={onSubmit}>
-                            <SearchIcon />
+                            {searching ? <CircularProgress size={20} /> : <SearchIcon />}
                         </IconButton>
                     </Paper>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center'
-                        }}
-                    >
-                        <FormControl sx={{ ml: 2, minWidth: 100 }} size="small">
-                            <Select id="role-select-autowidth" value={role} onChange={onRoleChange} autoWidth sx={{ padding: 0.5 }}>
-                                <MenuItem value="Role">Role</MenuItem>
-                                <Divider />
-                                <MenuItem value={10}>Admin</MenuItem>
-                                <MenuItem value={21}>Coordinator</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Box>
                 </Box>
                 <Box>
                     <Button variant="text" color="primary" padding={2} onClick={onAddUser}>

@@ -11,3 +11,11 @@ export const ReadMore = (content, initial, max, collapse) => {
 
     return text;
 };
+
+export const DateFormatter = (dates) => {
+    var year = dates.slice(0, 4);
+    var month = dates.slice(5, 7);
+    var day = dates.slice(8, 10);
+    const date = day + '-' + month + '-' + year;
+    return date;
+};

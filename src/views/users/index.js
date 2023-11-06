@@ -12,28 +12,88 @@ import { users } from 'data/tables/dummies/users';
 import AddUser from './components/AddUser';
 import { View } from './components/View';
 import { IconDotsVertical } from '@tabler/icons';
+import { ChangeRole } from './components/ChangeRole';
+import { UpdateStatus } from './components/UpdateStatus';
+import { Delete } from 'ui-component/delete/Delete';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import Connections from 'api';
+import { useQuery } from 'react-query';
 
 // ==============================|| USERS PAGE ||============================== //
 
 const Users = () => {
     const theme = useTheme();
+
+    const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
+    const [searching, setSearching] = useState(false);
     const [role, setRole] = useState('Role');
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
+    const [rolePanel, setRolePanel] = useState(false);
+    const [statusPanel, setStatusPanel] = useState(false);
+    const [deleteUser, setDeleteUser] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [lastPage, setLastPage] = useState(1);
+    const [rowCountState, setRowCountState] = useState(lastPage);
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 15,
+        page: 0,
+        pageCount: 0,
+        pageStartIndex: 0,
+        pageEndIndex: 0
+    });
+
+    const FetchUsers = async () => {
+        var Api = Connections.api + Connections.users + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            setLastPage(parsed.data.last_page);
+            const data = parsed.data.data;
+            setUsers(data);
+        }
+    };
+
+    const { isLoading, error } = useQuery(['data', paginationModel], () => FetchUsers(), {
+        refetchOnWindowFocus: false
+    });
 
     const handleSearching = () => {
-        console.log('searching');
-    };
+        setSearching(true);
+        var Api =
+            Connections.api + Connections.searchuser + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&name=${search}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
 
-    const handleRoleFilter = (event) => {
-        setRole(event.target.value);
-    };
-
-    const handleAddUser = () => {
-        console.log('add user clicked');
+        fetch(Api, { method: 'GET', headers: headers })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setSearching(false);
+                    setUsers(response.data.data);
+                } else {
+                    setSearching(false);
+                    handlePrompts(response.error, 'error');
+                }
+            })
+            .catch((error) => {
+                setSearching(false);
+                handlePrompts(error, 'error');
+            });
     };
 
     const handleDialogOpen = () => {
@@ -54,6 +114,43 @@ const Users = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
+    };
+
+    const DeleteUser = () => {
+        setDeleting(true);
+
+        var Api = Connections.api + Connections.users + '/' + selectedUser.id;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, {
+            method: 'DELETE',
+            headers: headers
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setDeleting(false);
+                    setDeleteUser(false);
+                    handlePrompts(response.message, 'success');
+                } else {
+                    setDeleting(false);
+                    handlePrompts(response.message, 'error');
+                }
+            })
+            .catch((error) => {
+                setDeleting(false);
+                handlePrompts(error.message, 'error');
+            });
     };
 
     return (
@@ -107,20 +204,51 @@ const Users = () => {
                 role={role}
                 onRoleChange={(event) => handleRoleFilter(event)}
                 searchText={search}
+                searching={searching}
                 onTextChange={(event) => setSearch(event.target.value)}
                 onSubmit={() => handleSearching()}
                 onAddUser={() => handleDialogOpen()}
             />
             <Grid container>
                 <Grid item xs={12} sm={12} md={12} lg={7.8} xl={7.8}>
-                    <DataGrid
-                        columns={UserColumn}
-                        rows={users}
-                        slots={{
-                            toolbar: GridToolbar
-                        }}
-                        onRowClick={(params) => handleUserSelection(params)}
-                    />
+                    {users && (
+                        <DataGrid
+                            columns={UserColumn}
+                            rows={users}
+                            slots={{
+                                toolbar: GridToolbar
+                            }}
+                            onRowClick={(params) => handleUserSelection(params)}
+                            sx={{ padding: 2 }}
+                            initialState={{
+                                pagination: {
+                                    paginationModel: {
+                                        pageSize: paginationModel.pageSize,
+                                        pageCount: lastPage,
+                                        pageEndIndex: lastPage
+                                    }
+                                }
+                            }}
+                            paginationModel={paginationModel}
+                            onPaginationModelChange={setPaginationModel}
+                            pagination={true}
+                            rowCount={rowCountState}
+                            pageSizeOptions={[15, 25, 50, 100]}
+                            onPageChange={(newPage) => {
+                                setPaginationModel({
+                                    ...paginationModel,
+                                    page: newPage
+                                });
+                            }}
+                            onPageSizeChange={(newPageSize) => {
+                                setPaginationModel({
+                                    ...paginationModel,
+                                    pageSize: newPageSize
+                                });
+                            }}
+                            hideFooterSelectedRowCount={true}
+                        />
+                    )}
                 </Grid>
                 {selectedUser && (
                     <Grid item xs={12} sm={12} md={12} lg={4.2} xl={4.2} position={'relative'}>
@@ -146,10 +274,28 @@ const Users = () => {
                                         'aria-labelledby': 'menu-button'
                                     }}
                                 >
-                                    <MenuItem onClick={handleClose}>Change role</MenuItem>
-                                    <MenuItem onClick={handleClose}>Update status</MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                            setStatusPanel(false), setRolePanel(true), setAnchorEl(false);
+                                        }}
+                                    >
+                                        Change role
+                                    </MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                            setRolePanel(false), setStatusPanel(true), setAnchorEl(false);
+                                        }}
+                                    >
+                                        Update status
+                                    </MenuItem>
                                     <Divider />
-                                    <MenuItem onClick={handleClose}>Delete user account</MenuItem>
+                                    <MenuItem
+                                        onClick={() => {
+                                            setDeleteUser(true), setAnchorEl(false);
+                                        }}
+                                    >
+                                        Delete user account
+                                    </MenuItem>
                                 </Menu>
                             </View>
                         </Box>
@@ -158,6 +304,57 @@ const Users = () => {
             </Grid>
 
             <AddUser open={openDialog} handleDialogClose={() => handleDialogClose()} />
+            {selectedUser && rolePanel && (
+                <Box
+                    sx={{
+                        minWidth: 400,
+                        minHeight: 340,
+                        position: 'fixed',
+                        bottom: 20,
+                        right: 15,
+                        background: theme.palette.background.default,
+                        boxShadow: 1,
+                        paddingX: 3,
+                        paddingY: 1,
+                        borderRadius: 4
+                    }}
+                >
+                    <ChangeRole user={selectedUser} onClosePanel={() => setRolePanel(false)} />
+                </Box>
+            )}
+
+            {selectedUser && statusPanel && (
+                <Box
+                    sx={{
+                        minWidth: 400,
+                        minHeight: 340,
+                        position: 'fixed',
+                        bottom: 20,
+                        right: 15,
+                        background: theme.palette.background.default,
+                        boxShadow: 1,
+                        paddingX: 3,
+                        paddingY: 1,
+                        borderRadius: 4
+                    }}
+                >
+                    <UpdateStatus user={selectedUser} onClosePanel={() => setStatusPanel(false)} />
+                </Box>
+            )}
+
+            {deleteUser && (
+                <Delete
+                    open={deleteUser}
+                    title="Deleting user account"
+                    description={`Are you sure you want to delete ` + selectedUser.name}
+                    onNo={() => setDeleteUser(false)}
+                    onYes={() => DeleteUser()}
+                    deleting={deleting}
+                    handleClose={() => setDeleteUser(false)}
+                />
+            )}
+
+            <SnackbarProvider maxSnack={3} style={{ zIndex: 5 }} />
         </Grid>
     );
 };
