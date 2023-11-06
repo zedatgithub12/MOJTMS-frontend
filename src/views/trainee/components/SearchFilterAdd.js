@@ -34,8 +34,8 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                     <Paper component="form" sx={{ p: '3px 4px', boxShadow: 1, display: 'flex', alignItems: 'center', width: 400 }}>
                         <InputBase
                             sx={{ ml: 1, px: 1.5, flex: 1 }}
-                            placeholder="Search users"
-                            inputProps={{ 'aria-label': 'search users' }}
+                            placeholder="Search trainees"
+                            inputProps={{ 'aria-label': 'search trainee' }}
                             value={searchText}
                             onChange={onTextChange}
                             onKeyDown={handleKeyPress}
@@ -48,9 +48,9 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                 </Box>
                 <Box>
                     <Button variant="text" color="primary" padding={2} onClick={onAddUser}>
-                        <Add size={10} />{' '}
+                        <Add size={10} />
                         <Typography marginLeft={1} variant="subtitle1">
-                            New user
+                            New Trainee
                         </Typography>
                     </Button>
                 </Box>

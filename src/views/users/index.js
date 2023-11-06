@@ -1,14 +1,25 @@
 import { useState } from 'react';
 // material-ui
 import { PersonAdd } from '@mui/icons-material';
-import { Grid, Box, Typography, useTheme, Avatar, Divider, ListItemIcon, MenuItem, IconButton, Menu } from '@mui/material';
+import {
+    Grid,
+    Box,
+    Typography,
+    useTheme,
+    Avatar,
+    Divider,
+    ListItemIcon,
+    MenuItem,
+    IconButton,
+    Menu,
+    CircularProgress
+} from '@mui/material';
 import { SearchFilterAdd } from './components/SearchFilterAdd';
 
 // project imports
 import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { UserColumn } from 'data/tables/columns/Users';
-import { users } from 'data/tables/dummies/users';
 import AddUser from './components/AddUser';
 import { View } from './components/View';
 import { IconDotsVertical } from '@tabler/icons';
@@ -27,7 +38,6 @@ const Users = () => {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
-    const [role, setRole] = useState('Role');
     const [openDialog, setOpenDialog] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -37,7 +47,7 @@ const Users = () => {
     const [deleteUser, setDeleteUser] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [lastPage, setLastPage] = useState(1);
-    const [rowCountState, setRowCountState] = useState(lastPage);
+    const [rowCountState] = useState(lastPage);
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 15,
         page: 0,
@@ -87,7 +97,6 @@ const Users = () => {
                     setUsers(response.data.data);
                 } else {
                     setSearching(false);
-                    handlePrompts(response.error, 'error');
                 }
             })
             .catch((error) => {
@@ -201,8 +210,6 @@ const Users = () => {
             </Grid>
 
             <SearchFilterAdd
-                role={role}
-                onRoleChange={(event) => handleRoleFilter(event)}
                 searchText={search}
                 searching={searching}
                 onTextChange={(event) => setSearch(event.target.value)}
@@ -210,44 +217,67 @@ const Users = () => {
                 onAddUser={() => handleDialogOpen()}
             />
             <Grid container>
-                <Grid item xs={12} sm={12} md={12} lg={7.8} xl={7.8}>
-                    {users && (
-                        <DataGrid
-                            columns={UserColumn}
-                            rows={users}
-                            slots={{
-                                toolbar: GridToolbar
-                            }}
-                            onRowClick={(params) => handleUserSelection(params)}
-                            sx={{ padding: 2 }}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: {
-                                        pageSize: paginationModel.pageSize,
-                                        pageCount: lastPage,
-                                        pageEndIndex: lastPage
+                <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={12}
+                    lg={7.8}
+                    xl={7.8}
+                    sx={{
+                        minHeight: 300,
+                        minWidth: 300,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    {error ? (
+                        <Box>
+                            <Typography>There is error rendering users</Typography>
+                        </Box>
+                    ) : isLoading ? (
+                        <CircularProgress size={24} />
+                    ) : (
+                        users && (
+                            <DataGrid
+                                columns={UserColumn}
+                                rows={users}
+                                slots={{
+                                    toolbar: GridToolbar
+                                }}
+                                onRowClick={(params) => handleUserSelection(params)}
+                                sx={{ padding: 2 }}
+                                initialState={{
+                                    pagination: {
+                                        paginationModel: {
+                                            pageSize: paginationModel.pageSize,
+                                            pageCount: lastPage,
+                                            pageEndIndex: lastPage
+                                        }
                                     }
-                                }
-                            }}
-                            paginationModel={paginationModel}
-                            onPaginationModelChange={setPaginationModel}
-                            pagination={true}
-                            rowCount={rowCountState}
-                            pageSizeOptions={[15, 25, 50, 100]}
-                            onPageChange={(newPage) => {
-                                setPaginationModel({
-                                    ...paginationModel,
-                                    page: newPage
-                                });
-                            }}
-                            onPageSizeChange={(newPageSize) => {
-                                setPaginationModel({
-                                    ...paginationModel,
-                                    pageSize: newPageSize
-                                });
-                            }}
-                            hideFooterSelectedRowCount={true}
-                        />
+                                }}
+                                paginationModel={paginationModel}
+                                onPaginationModelChange={setPaginationModel}
+                                pagination={true}
+                                rowCount={rowCountState}
+                                pageSizeOptions={[15, 25, 50, 100]}
+                                onPageChange={(newPage) => {
+                                    setPaginationModel({
+                                        ...paginationModel,
+                                        page: newPage
+                                    });
+                                }}
+                                onPageSizeChange={(newPageSize) => {
+                                    setPaginationModel({
+                                        ...paginationModel,
+                                        pageSize: newPageSize
+                                    });
+                                }}
+                                hideFooterSelectedRowCount={true}
+                            />
+                        )
                     )}
                 </Grid>
                 {selectedUser && (

@@ -1,9 +1,10 @@
-import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography, CircularProgress } from '@mui/material';
+import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography, CircularProgress, useTheme } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Add } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 
-export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit, onAddUser }) => {
+export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit, addTitle, onAdd, children }) => {
+    const theme = useTheme();
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -34,8 +35,8 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                     <Paper component="form" sx={{ p: '3px 4px', boxShadow: 1, display: 'flex', alignItems: 'center', width: 400 }}>
                         <InputBase
                             sx={{ ml: 1, px: 1.5, flex: 1 }}
-                            placeholder="Search users"
-                            inputProps={{ 'aria-label': 'search users' }}
+                            placeholder="Search"
+                            inputProps={{ 'aria-label': 'search' }}
                             value={searchText}
                             onChange={onTextChange}
                             onKeyDown={handleKeyPress}
@@ -45,12 +46,22 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                             {searching ? <CircularProgress size={20} /> : <SearchIcon />}
                         </IconButton>
                     </Paper>
+
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}
+                    >
+                        {children}
+                    </Box>
                 </Box>
                 <Box>
-                    <Button variant="text" color="primary" padding={2} onClick={onAddUser}>
-                        <Add size={10} />{' '}
-                        <Typography marginLeft={1} variant="subtitle1">
-                            New user
+                    <Button variant="contained" color="secondary" padding={2} onClick={onAdd}>
+                        <Add size={10} />
+                        <Typography marginLeft={1} variant="subtitle1" sx={{ color: theme.palette.background.default }}>
+                            {addTitle}
                         </Typography>
                     </Button>
                 </Box>
@@ -64,5 +75,7 @@ SearchFilterAdd.propTypes = {
     onTextChange: PropTypes.func,
     onSubmit: PropTypes.func,
     searching: PropTypes.bool,
-    onAddUser: PropTypes.func
+    addTitle: PropTypes.string,
+    onAdd: PropTypes.func,
+    children: PropTypes.node
 };

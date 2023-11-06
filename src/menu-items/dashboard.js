@@ -44,7 +44,7 @@ const dashboard = {
             id: 'departments',
             title: 'Departments',
             type: 'item',
-            url: '/sample-page',
+            url: '/departments',
             icon: icons.IconBuilding,
             breadcrumbs: false
         },

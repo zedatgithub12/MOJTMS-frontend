@@ -11,7 +11,15 @@ const Connections = {
     users: 'users',
     searchuser: 'search-user',
     changerole: 'change-role',
-    updatestatus: 'update-status'
+    updatestatus: 'update-status',
+
+    // trainees api endpoints
+    trainee: 'trainee',
+    searchtrainee: 'search-trainee',
+    traineestatus: 'trainee-status',
+
+    //departments api endpoints
+    departments: 'departments'
 };
 
 export default Connections;

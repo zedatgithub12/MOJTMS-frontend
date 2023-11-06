@@ -7,6 +7,12 @@ import Loadable from 'ui-component/Loadable';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
+//department routing
+const Department = Loadable(lazy(() => import('views/department')));
+const ViewDepartment = Loadable(lazy(() => import('views/department/view')));
+const AddDepartment = Loadable(lazy(() => import('views/department/add')));
+const UpdateDepartment = Loadable(lazy(() => import('views/department/update')));
+
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
 
@@ -127,6 +133,22 @@ const MainRoutes = {
         {
             path: 'trainees',
             element: <Trainee />
+        },
+        {
+            path: 'departments',
+            element: <Department />
+        },
+        {
+            path: 'department/view',
+            element: <ViewDepartment />
+        },
+        {
+            path: 'department/add',
+            element: <AddDepartment />
+        },
+        {
+            path: 'department/update',
+            element: <UpdateDepartment />
         }
     ]
 };

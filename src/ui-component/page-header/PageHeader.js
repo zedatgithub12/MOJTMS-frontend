@@ -9,7 +9,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens }) =
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const [customHeight, setCustomHeight] = useState('200px');
+    const [customHeight, setCustomHeight] = useState('160px');
     const [isScrolledToTop, setIsScrolledToTop] = useState(false);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens }) =
             const scrollPosition = window.scrollY;
 
             if (scrollPosition === 0) {
-                setCustomHeight('200px');
+                setCustomHeight('160px');
                 setIsScrolledToTop(false); // Set your desired smaller height here
             } else {
                 setCustomHeight('50px'); // Set the default height of the component here
