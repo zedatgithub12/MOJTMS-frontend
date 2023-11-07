@@ -1,9 +1,12 @@
+import { useState } from 'react';
 // material-ui
 import { Grid, Box, Typography, useTheme } from '@mui/material';
-import { useState } from 'react';
+import Connections from 'api';
+import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { SearchFilterAdd } from 'ui-component/search-add';
+import DepartmentCard from 'ui-component/cards/DepartmentCard';
 
 // project imports
 
@@ -12,12 +15,71 @@ import { SearchFilterAdd } from 'ui-component/search-add';
 const Department = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const ImageApi = Connections.thumbnails;
+
+    const [departments, setDepartments] = useState([]);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
     const [openAddDialog, setOpenAddDialog] = useState(false);
+    const [lastPage, setLastPage] = useState(1);
+    const [rowCountState] = useState(lastPage);
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 15,
+        page: 0,
+        pageCount: 0,
+        pageStartIndex: 0,
+        pageEndIndex: 0
+    });
+
+    const FetchDepartments = async () => {
+        var Api = Connections.api + Connections.departments + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            setLastPage(parsed.data.last_page);
+            const data = parsed.data.data;
+            setDepartments(data);
+        }
+    };
+
+    const { isLoading, error } = useQuery(['data', paginationModel], () => FetchDepartments(), {
+        refetchOnWindowFocus: false
+    });
 
     const handleSearching = () => {
-        alert('searching');
+        setSearching(true);
+        var Api =
+            Connections.api +
+            Connections.searchdepartment +
+            `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&name=${search}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, { method: 'GET', headers: headers })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setSearching(false);
+                    setDepartments(response.data.data);
+                } else {
+                    setSearching(false);
+                }
+            })
+            .catch((error) => {
+                setSearching(false);
+                handlePrompts(error, 'error');
+            });
     };
 
     const handleDialogOpen = () => {
@@ -61,7 +123,27 @@ const Department = () => {
                     onAdd={() => navigate('/department/add')}
                 />
 
-                <Typography variant="body2">Department childrens</Typography>
+                <Grid container>
+                    <Grid
+                        item
+                        xs={12}
+                        sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}
+                        spacing={1}
+                    >
+                        {departments.map((department) => (
+                            <DepartmentCard
+                                isLoading={isLoading}
+                                image={ImageApi + department.thumbnail}
+                                title={department.name}
+                                email={department.email}
+                                phone={department.phone}
+                                onPress={() => {
+                                    console.log('Department clicked');
+                                }}
+                            />
+                        ))}
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     );

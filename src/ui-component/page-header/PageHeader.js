@@ -20,7 +20,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                 setCustomHeight('160px');
                 setIsScrolledToTop(false); // Set your desired smaller height here
             } else {
-                setCustomHeight('50px'); // Set the default height of the component here
+                setCustomHeight('60px'); // Set the default height of the component here
                 setIsScrolledToTop(true);
             }
         };
@@ -36,7 +36,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
             container
             sx={{
                 position: 'sticky',
-                top: 98,
+                top: 76,
                 height: customHeight,
                 transition: 'height 0.3s ease-in-out',
                 borderTopLeftRadius: 8,

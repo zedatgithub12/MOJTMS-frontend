@@ -4,7 +4,6 @@ import {
     Grid,
     Box,
     Typography,
-    TextField,
     Button,
     useTheme,
     IconButton,
@@ -17,7 +16,7 @@ import {
 } from '@mui/material';
 
 // project imports
-import { Formik, Form, Field, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { IconUpload } from '@tabler/icons';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -28,6 +27,8 @@ import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import { sizes } from 'settings';
 import { useNavigate } from 'react-router';
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import Connections from 'api';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 // ==============================|| ADD DEPARTMENT PAGE ||============================== //
 const validationSchema = Yup.object().shape({
@@ -39,23 +40,72 @@ const AddDepartment = () => {
     const navigate = useNavigate();
     const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
 
-    const [thumbnail, setThumbanil] = useState(null);
+    const [thumbnail, setThumbnail] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
+    const [imageprompt, setImagePrompt] = useState({
+        status: false,
+        message: ''
+    });
     const [ImageValidation, setImageValidation] = useState();
-
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
-        setThumbanil(file);
-        setPreviewImage(URL.createObjectURL(file));
+        setThumbnail(file);
+
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                setPreviewImage(reader.result);
+            };
+        }
         const validated = validateImage(file, sizes.image);
         setImageValidation(validated);
+        setImagePrompt({
+            status: false,
+            message: ''
+        });
     };
 
     const handleSubmitting = (values) => {
         // Handle form submission here
-        setIsSubmitting(true);
-        console.log(values);
-        alert('submitted');
+
+        if (!thumbnail) {
+            setImagePrompt({
+                status: true,
+                message: 'Please upload department thumbnail'
+            });
+        } else {
+            setIsSubmitting(true);
+
+            const Api = Connections.api + Connections.departments;
+            const token = sessionStorage.getItem('token');
+            const headers = {
+                Authorization: 'Bearer' + token
+            };
+
+            const data = new FormData();
+            data.append('thumbnail', thumbnail);
+            data.append('name', values.name);
+            data.append('description', values.description);
+            data.append('email', values.email);
+            data.append('phone', values.phone);
+
+            fetch(Api, { method: 'POST', headers: headers, body: data })
+                .then((response) => response.json())
+                .then((response) => {
+                    if (response.success) {
+                        setIsSubmitting(false);
+                        handlePrompts(response.message, 'success');
+                    } else {
+                        setIsSubmitting(false);
+                        handlePrompts(response.message, 'error');
+                    }
+                })
+                .catch((error) => {
+                    setIsSubmitting(false);
+                    handlePrompts(error, 'error');
+                });
+        }
     };
 
     const formik = useFormik({
@@ -67,6 +117,11 @@ const AddDepartment = () => {
     });
 
     const [isSubmitting, setIsSubmitting] = useState(formik.isSubmitting);
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
+    };
 
     return (
         <Grid container sx={{ minHeight: 200, justifyContent: 'center' }}>
@@ -180,6 +235,11 @@ const AddDepartment = () => {
                                                         </Typography>
                                                     </label>
                                                 </>
+                                            )}
+                                            {imageprompt.status && (
+                                                <Typography variant="subtitle" color="error" marginY={2}>
+                                                    {imageprompt.message}
+                                                </Typography>
                                             )}
                                         </Box>
                                     </Grid>
@@ -333,7 +393,7 @@ const AddDepartment = () => {
                                                 type="submit"
                                                 variant="contained"
                                                 color="secondary"
-                                                sx={{ py: 1, px: 4, my: 2 }}
+                                                sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
                                             >
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
@@ -358,6 +418,7 @@ const AddDepartment = () => {
                     </Grid>
                 </Grid>
             </Grid>
+            <SnackbarProvider maxSnack={3} />
         </Grid>
     );
 };

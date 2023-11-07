@@ -8,53 +8,57 @@ import { Box, useTheme } from '@mui/material';
 import { IconChalkboard, IconMail, IconPhone, IconUsers } from '@tabler/icons';
 import DepartmentCardSkel from './Skeleton/DepartmentCard';
 
-const DepartmentCard = forwardRef(
-    ({ sx = {}, isLoading, image, title, email, phone, trainingcount, onPress, traineecount, ...others }, ref) => {
-        const theme = useTheme();
-        return (
-            <>
-                {isLoading ? (
-                    <DepartmentCardSkel />
-                ) : (
-                    <Card
-                        onClick={onPress}
-                        ref={ref}
-                        sx={{
-                            width: 280,
-                            border: '1px solid',
-                            borderColor: theme.palette.secondary.light,
-                            cursor: 'pointer',
-                            ':hover': {
-                                boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
-                            },
-                            ...sx
-                        }}
-                        {...others}
-                    >
-                        <CardMedia sx={{ height: 140 }} image={image} title="Departments" />
-                        <CardContent>
-                            <Typography gutterBottom variant="h4" component="div">
-                                {title}
-                            </Typography>
-                            {email && (
-                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
-                                    <IconMail size={18} /> <Typography sx={{ marginX: 1 }}>{email}</Typography>
-                                </Box>
-                            )}
+const DepartmentCard = forwardRef(({ sx, isLoading, image, title, email, phone, trainingcount, onPress, traineecount, ...others }, ref) => {
+    const theme = useTheme();
+    return (
+        <>
+            {isLoading ? (
+                <DepartmentCardSkel />
+            ) : (
+                <Card
+                    onClick={onPress}
+                    ref={ref}
+                    sx={{
+                        width: 280,
+                        margin: 0.5,
+                        border: '1px solid',
+                        borderColor: theme.palette.secondary.light,
+                        cursor: 'pointer',
+                        ':hover': {
+                            boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
+                        },
+                        ...sx
+                    }}
+                    {...others}
+                >
+                    <CardMedia sx={{ height: 140 }} image={image} title="Departments" />
+                    <CardContent>
+                        <Typography gutterBottom variant="h4" component="div">
+                            {title}
+                        </Typography>
+                        {email && (
+                            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
+                                <IconMail size={18} /> <Typography sx={{ marginX: 1 }}>{email}</Typography>
+                            </Box>
+                        )}
 
-                            {phone && (
-                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                    <IconPhone size={18} sx={{ marginRight: 2 }} /> <Typography sx={{ marginX: 1 }}>{phone}</Typography>{' '}
-                                </Box>
-                            )}
+                        {phone && (
+                            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                <IconPhone size={18} sx={{ marginRight: 2 }} /> <Typography sx={{ marginX: 1 }}>{phone}</Typography>{' '}
+                            </Box>
+                        )}
 
-                            <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 4 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 3 }}>
+                            {trainingcount && (
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                     <IconChalkboard size={18} />
                                     <Typography variant="h5" marginLeft={1}>
                                         {trainingcount}
                                     </Typography>
                                 </Box>
+                            )}
+
+                            {traineecount && (
                                 <Box
                                     sx={{
                                         display: 'flex',
@@ -69,14 +73,14 @@ const DepartmentCard = forwardRef(
                                         {traineecount}
                                     </Typography>
                                 </Box>
-                            </Box>
-                        </CardContent>
-                    </Card>
-                )}
-            </>
-        );
-    }
-);
+                            )}
+                        </Box>
+                    </CardContent>
+                </Card>
+            )}
+        </>
+    );
+});
 
 DepartmentCard.propTypes = {
     sx: PropTypes.object,
