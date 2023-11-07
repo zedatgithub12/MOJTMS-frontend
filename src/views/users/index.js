@@ -179,6 +179,7 @@ const Users = () => {
                     title="Users"
                     back={true}
                     option={false}
+                    sx={{ backgroundColor: theme.palette.secondary.dark }}
                     optionChildrens={
                         <>
                             <MenuItem>

@@ -19,3 +19,42 @@ export const DateFormatter = (dates) => {
     const date = day + '-' + month + '-' + year;
     return date;
 };
+
+export const convertToMB = (sizeInBytes) => {
+    const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
+    let selectedUnit = 0;
+
+    while (sizeInBytes >= 1024 && selectedUnit < units.length - 1) {
+        sizeInBytes /= 1024;
+        selectedUnit++;
+    }
+
+    return `${sizeInBytes.toFixed(2)} ${units[selectedUnit]}`;
+};
+
+export const validateImage = (file, size) => {
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const maxSizeInBytes = size * 1024 * 1024; // size in MB
+
+    if (!validTypes.includes(file.type)) {
+        return {
+            type: false,
+            message: `The uploaded file type should be JPEG, JPG, or PNG. The uploaded file type is ${file.type}`,
+            size: false
+        };
+    }
+
+    if (file.size > maxSizeInBytes) {
+        return {
+            type: true,
+            size: false,
+            message: `The uploaded image size exceed the max image size of ${size}`
+        };
+    }
+
+    return {
+        type: true,
+        size: true,
+        message: ''
+    };
+};

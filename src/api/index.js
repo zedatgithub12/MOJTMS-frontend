@@ -1,6 +1,7 @@
 const Connections = {
     api: 'http://localhost:8000/api/',
     images: 'http://localhost:8000/api/images/',
+    thumbnails: 'http://localhost:8000/api/thumbnails/',
 
     signin: 'signin',
     forgotpassword: 'forgotpassword',
@@ -19,7 +20,8 @@ const Connections = {
     traineestatus: 'trainee-status',
 
     //departments api endpoints
-    departments: 'departments'
+    departments: 'departments',
+    searchdepartment: 'department/search'
 };
 
 export default Connections;

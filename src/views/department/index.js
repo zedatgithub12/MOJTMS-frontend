@@ -36,7 +36,7 @@ const Department = () => {
                 }
             }}
         >
-            <PageHeader title="Departments" back={true}>
+            <PageHeader title="Departments" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }}>
                 <Box
                     sx={{
                         display: 'flex',

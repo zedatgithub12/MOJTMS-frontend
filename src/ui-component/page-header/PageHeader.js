@@ -5,7 +5,7 @@ import { ActionMenu } from 'ui-component/menu/action';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
-export const PageHeader = ({ children, title, back, option, optionChildrens }) => {
+export const PageHeader = ({ children, title, back, option, optionChildrens, sx }) => {
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -39,9 +39,9 @@ export const PageHeader = ({ children, title, back, option, optionChildrens }) =
                 top: 98,
                 height: customHeight,
                 transition: 'height 0.3s ease-in-out',
-                backgroundColor: theme.palette.secondary.dark,
                 borderTopLeftRadius: 8,
-                borderTopRightRadius: 8
+                borderTopRightRadius: 8,
+                ...sx
             }}
         >
             <Grid
@@ -90,5 +90,6 @@ PageHeader.propTypes = {
     title: PropTypes.string,
     children: PropTypes.node,
     option: PropTypes.bool,
-    optionChildrens: PropTypes.node
+    optionChildrens: PropTypes.node,
+    sx: PropTypes.object
 };

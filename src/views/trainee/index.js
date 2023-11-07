@@ -176,6 +176,7 @@ const Trainee = () => {
         >
             <Grid container sx={{ position: 'relative', zIndex: 4 }}>
                 <PageHeader
+                    sx={{ backgroundColor: theme.palette.secondary.dark }}
                     title="Trainees"
                     back={true}
                     option={false}
