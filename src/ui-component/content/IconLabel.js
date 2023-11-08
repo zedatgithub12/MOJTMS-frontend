@@ -2,9 +2,9 @@ import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import PropTypes from 'prop-types';
 
-export const IconLabel = ({ content, label, children }) => {
+export const IconLabel = ({ content, label, children, sx }) => {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 1.2 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 1.2, ...sx }}>
             <Box>{children}</Box>
             <Box sx={{ marginLeft: 2 }}>
                 <Typography
@@ -27,5 +27,6 @@ export const IconLabel = ({ content, label, children }) => {
 IconLabel.propTypes = {
     content: PropTypes.string,
     label: PropTypes.string,
-    children: PropTypes.node
+    children: PropTypes.node,
+    sx: PropTypes.object
 };

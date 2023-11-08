@@ -1,4 +1,4 @@
-import { Grid, Box, IconButton, Typography, useTheme } from '@mui/material';
+import { Grid, Box, IconButton, Typography, useTheme, useMediaQuery } from '@mui/material';
 import { IconArrowLeft } from '@tabler/icons';
 import { useNavigate } from 'react-router';
 import { ActionMenu } from 'ui-component/menu/action';
@@ -9,7 +9,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const [customHeight, setCustomHeight] = useState('160px');
+    const [customHeight, setCustomHeight] = useState('200px');
     const [isScrolledToTop, setIsScrolledToTop] = useState(false);
 
     useEffect(() => {
@@ -17,7 +17,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
             const scrollPosition = window.scrollY;
 
             if (scrollPosition === 0) {
-                setCustomHeight('160px');
+                setCustomHeight('200px');
                 setIsScrolledToTop(false); // Set your desired smaller height here
             } else {
                 setCustomHeight('60px'); // Set the default height of the component here
@@ -46,9 +46,16 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
         >
             <Grid
                 container
-                sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingX: 2 }}
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    paddingX: 2,
+                    pt: 1
+                }}
             >
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
                     {back && (
                         <IconButton onClick={() => navigate(-1)}>
                             <IconArrowLeft color={theme.palette.background.default} />
@@ -73,7 +80,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                         alignSelf: 'center',
                         opacity: isScrolledToTop ? 0 : 1,
                         transition: 'opacity 0.3s ease-in-out',
-                        paddingY: 4,
+                        paddingY: 1,
                         zIndex: 4,
                         overflow: 'hidden'
                     }}

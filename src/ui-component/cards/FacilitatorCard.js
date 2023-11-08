@@ -44,7 +44,8 @@ const FacilitatorCard = forwardRef(
                                     sx={{
                                         width: '100%',
                                         height: '100%',
-                                        borderRadius: 2
+                                        borderTopLeftRadius: 2,
+                                        borderRadius: 1
                                     }}
                                     image={image}
                                     title="Facilitator photo"

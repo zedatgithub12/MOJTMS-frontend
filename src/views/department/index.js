@@ -1,14 +1,13 @@
 import { useState } from 'react';
 // material-ui
 import { Grid, Box, Typography, useTheme } from '@mui/material';
+// project imports
 import Connections from 'api';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import DepartmentCard from 'ui-component/cards/DepartmentCard';
-
-// project imports
 
 // ==============================|| DEPARTMENT PAGE ||============================== //
 
@@ -20,7 +19,6 @@ const Department = () => {
     const [departments, setDepartments] = useState([]);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
-    const [openAddDialog, setOpenAddDialog] = useState(false);
     const [lastPage, setLastPage] = useState(1);
     const [rowCountState] = useState(lastPage);
     const [paginationModel, setPaginationModel] = useState({
@@ -58,7 +56,7 @@ const Department = () => {
         var Api =
             Connections.api +
             Connections.searchdepartment +
-            `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&name=${search}`;
+            `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -80,10 +78,6 @@ const Department = () => {
                 setSearching(false);
                 handlePrompts(error, 'error');
             });
-    };
-
-    const handleDialogOpen = () => {
-        setOpenAddDialog(true);
     };
 
     return (
@@ -124,12 +118,7 @@ const Department = () => {
                 />
 
                 <Grid container>
-                    <Grid
-                        item
-                        xs={12}
-                        sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap' }}
-                        spacing={1}
-                    >
+                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
                         {departments.map((department) => (
                             <DepartmentCard
                                 isLoading={isLoading}
@@ -137,9 +126,7 @@ const Department = () => {
                                 title={department.name}
                                 email={department.email}
                                 phone={department.phone}
-                                onPress={() => {
-                                    console.log('Department clicked');
-                                }}
+                                onPress={() => navigate('/department/view', { state: department })}
                             />
                         ))}
                     </Grid>

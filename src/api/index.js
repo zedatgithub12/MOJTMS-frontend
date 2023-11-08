@@ -11,6 +11,7 @@ const Connections = {
     // users management api endpoints
     users: 'users',
     searchuser: 'search-user',
+    rolebasedsearch: 'role-based-search',
     changerole: 'change-role',
     updatestatus: 'update-status',
 
@@ -21,7 +22,9 @@ const Connections = {
 
     //departments api endpoints
     departments: 'departments',
-    searchdepartment: 'department/search'
+    getusers: 'get-users',
+    searchdepartment: 'department/search',
+    assigncoordinator: 'department/assign-coordinator'
 };
 
 export default Connections;
