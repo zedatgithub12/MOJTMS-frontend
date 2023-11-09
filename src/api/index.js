@@ -2,6 +2,7 @@ const Connections = {
     api: 'http://localhost:8000/api/',
     images: 'http://localhost:8000/api/images/',
     thumbnails: 'http://localhost:8000/api/thumbnails/',
+    profiles: 'http://localhost:8000/api/profiles/',
 
     signin: 'signin',
     forgotpassword: 'forgotpassword',
@@ -24,7 +25,10 @@ const Connections = {
     departments: 'departments',
     getusers: 'get-users',
     searchdepartment: 'department/search',
-    assigncoordinator: 'department/assign-coordinator'
+    assigncoordinator: 'department/assign-coordinator',
+
+    //trainers api endpoints
+    trainers: 'trainers'
 };
 
 export default Connections;

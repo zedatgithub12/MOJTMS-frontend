@@ -148,7 +148,7 @@ const ViewDepartment = () => {
         >
             <PageHeader
                 back={true}
-                title="Departments"
+                title={state.name}
                 option={true}
                 optionChildrens={
                     <Box>

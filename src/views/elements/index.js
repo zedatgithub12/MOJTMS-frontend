@@ -18,6 +18,7 @@ import SessionDetails from 'ui-component/cards/SessionDetails';
 import { Resources } from 'dummies/SessionResources';
 import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
 import { IconShare } from '@tabler/icons';
+import { Box } from '@mui/system';
 
 // ==============================|| SYSTEM ELEMENTS PAGE ||============================== //
 
@@ -169,14 +170,14 @@ const Elements = () => (
                     enddate="Nov 22, 2023"
                     option={true}
                     optionChildrens={
-                        <>
+                        <Box>
                             <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
                                 <IconShare size={20} />
                                 <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
                                     Share
                                 </Typography>
                             </MenuItem>
-                        </>
+                        </Box>
                     }
                 />
             </Grid>

@@ -40,6 +40,7 @@ const SessionHorizontalCard = forwardRef(
                         ref={ref}
                         sx={{
                             border: '1px solid',
+                            marginTop: 1,
                             borderColor: theme.palette.secondary.light,
                             ':hover': {
                                 boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'

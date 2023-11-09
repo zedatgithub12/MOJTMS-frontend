@@ -1,23 +1,23 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, Typography, useTheme, Pagination } from '@mui/material';
+import { Grid, Box, useTheme, Pagination } from '@mui/material';
 // project imports
 import Connections from 'api';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
-import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { SearchFilterAdd } from 'ui-component/search-add';
-import DepartmentCard from 'ui-component/cards/DepartmentCard';
 import { RefreshToken } from 'utils/token-refresh';
+import { MiniHeader } from 'ui-component/page-header/miniHeader';
+import TrainerCard from 'ui-component/cards/TrainerCard';
 
-// ==============================|| DEPARTMENT PAGE ||============================== //
+// ==============================|| TRAINERS PAGE ||============================== //
 
-const Department = () => {
+const Trainers = () => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const ImageApi = Connections.thumbnails;
+    const ImageApi = Connections.profiles;
 
-    const [departments, setDepartments] = useState([]);
+    const [trainers, setTrainers] = useState([]);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
     const [lastPage, setLastPage] = useState(1);
@@ -34,14 +34,14 @@ const Department = () => {
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
             setRefreshed(true);
-            FetchDepartments();
+            FetchTrainers();
         } else {
-            FetchDepartments();
+            FetchTrainers();
         }
     };
 
-    const FetchDepartments = async () => {
-        var Api = Connections.api + Connections.departments + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+    const FetchTrainers = async () => {
+        var Api = Connections.api + Connections.trainers + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -54,7 +54,7 @@ const Department = () => {
         if (parsed.success) {
             setLastPage(parsed.data.last_page);
             const data = parsed.data.data;
-            setDepartments(data);
+            setTrainers(data);
         }
     };
 
@@ -66,8 +66,9 @@ const Department = () => {
         setSearching(true);
         var Api =
             Connections.api +
-            Connections.searchdepartment +
-            `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
+            Connections.traineestatus +
+            `/search?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
+
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -80,7 +81,7 @@ const Department = () => {
             .then((response) => {
                 if (response.success) {
                     setSearching(false);
-                    setDepartments(response.data.data);
+                    setTrainers(response.data.data);
                 } else {
                     setSearching(false);
                 }
@@ -110,20 +111,7 @@ const Department = () => {
                 }
             }}
         >
-            <PageHeader title="Departments" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }}>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <Typography variant="h3" color={'white'}>
-                        Departments
-                    </Typography>
-                </Box>
-            </PageHeader>
+            <MiniHeader title="Trainers" ፍ back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
                 <SearchFilterAdd
@@ -131,31 +119,44 @@ const Department = () => {
                     searching={searching}
                     onTextChange={(event) => setSearch(event.target.value)}
                     onSubmit={() => handleSearching()}
-                    addTitle="Add Department"
-                    onAdd={() => navigate('/department/add')}
+                    addTitle="Add Trainer"
+                    onAdd={() => navigate('/trainer/add')}
                 />
 
                 <Grid container>
                     <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
-                        {departments.map((department) => (
-                            <DepartmentCard
+                        {trainers.map((trainer) => (
+                            <TrainerCard
+                                key={trainer.id}
                                 isLoading={isLoading}
-                                image={ImageApi + department.thumbnail}
-                                title={department.name}
-                                email={department.email}
-                                phone={department.phone}
-                                onPress={() => navigate('/department/view', { state: department })}
+                                image={ImageApi + trainer.photo}
+                                title={trainer.specialisation}
+                                email={trainer.email}
+                                phone={trainer.phone}
+                                qualification={trainer.qualifications}
+                                name={trainer.name}
+                                linkedin={trainer.linkedin_profile}
+                                address={trainer.address}
+                                gender={trainer.gender}
+                                trainingcount={trainer.training}
+                                rating={trainer.rating}
+                                onPress={() => navigate('/trainer/view', { state: trainer })}
                             />
                         ))}
                     </Grid>
+                    <Box sx={{ paddingY: 4 }}>
+                        <Pagination
+                            showFirstButton
+                            showLastButton
+                            count={rowCountState}
+                            page={paginationModel.page}
+                            onChange={handleChange}
+                        />
+                    </Box>
                 </Grid>
-
-                <Box sx={{ paddingY: 4 }}>
-                    <Pagination showFirstButton showLastButton count={rowCountState} page={paginationModel.page} onChange={handleChange} />
-                </Box>
             </Grid>
         </Grid>
     );
 };
 
-export default Department;
+export default Trainers;

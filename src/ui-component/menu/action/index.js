@@ -27,7 +27,7 @@ export const ActionMenu = ({ children }) => {
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                 >
-                    <IconDotsVertical color={theme.palette.background.default} />
+                    <IconDotsVertical color={theme.palette.grey[500]} />
                 </IconButton>
             </Tooltip>
 

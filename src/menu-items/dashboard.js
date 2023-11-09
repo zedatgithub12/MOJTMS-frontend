@@ -8,7 +8,8 @@ import {
     IconBuilding,
     IconSchool,
     IconUser,
-    IconUserSearch
+    IconUserSearch,
+    IconTestPipe
 } from '@tabler/icons';
 
 // constant
@@ -21,7 +22,8 @@ const icons = {
     IconBuilding,
     IconSchool,
     IconUser,
-    IconUserSearch
+    IconUserSearch,
+    IconTestPipe
 };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -57,13 +59,6 @@ const dashboard = {
             breadcrumbs: false,
             children: [
                 {
-                    id: 'categories',
-                    title: 'Categories',
-                    url: '/sample-page',
-                    type: 'item',
-                    breadcrumbs: false
-                },
-                {
                     id: 'trainings',
                     title: 'Trainings',
                     url: '/sample-page',
@@ -71,22 +66,32 @@ const dashboard = {
                     breadcrumbs: false
                 },
                 {
-                    id: 'sessions',
-                    title: 'Training Sessions',
-                    url: '/sample-page',
-                    type: 'item',
-                    breadcrumbs: false
-                },
-                {
                     id: 'trainers',
                     title: 'Trainers',
+                    url: '/trainers',
+                    type: 'item',
+                    breadcrumbs: false
+                }
+            ]
+        },
+        {
+            id: 'evaluations',
+            title: 'Evaluations',
+            type: 'collapse',
+            url: '/sample-page',
+            icon: icons.IconTestPipe,
+            breadcrumbs: false,
+            children: [
+                {
+                    id: 'assassements',
+                    title: 'Assassements',
                     url: '/sample-page',
                     type: 'item',
                     breadcrumbs: false
                 },
                 {
-                    id: 'facilitators',
-                    title: 'Facilitators',
+                    id: 'surveys',
+                    title: 'Surveys',
                     url: '/sample-page',
                     type: 'item',
                     breadcrumbs: false

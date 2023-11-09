@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import AddTrainer from 'views/trainer/add';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -12,6 +13,9 @@ const Department = Loadable(lazy(() => import('views/department')));
 const ViewDepartment = Loadable(lazy(() => import('views/department/view')));
 const AddDepartment = Loadable(lazy(() => import('views/department/add')));
 const UpdateDepartment = Loadable(lazy(() => import('views/department/update')));
+
+//Trainers routing
+const Trainers = Loadable(lazy(() => import('views/trainer')));
 
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
@@ -148,6 +152,22 @@ const MainRoutes = {
         },
         {
             path: 'department/update',
+            element: <UpdateDepartment />
+        },
+        {
+            path: 'trainers',
+            element: <Trainers />
+        },
+        {
+            path: 'trainer/view',
+            element: <ViewDepartment />
+        },
+        {
+            path: 'trainer/add',
+            element: <AddTrainer />
+        },
+        {
+            path: 'trainer/update',
             element: <UpdateDepartment />
         }
     ]

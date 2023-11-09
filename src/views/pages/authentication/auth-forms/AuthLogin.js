@@ -244,7 +244,7 @@ const FirebaseLogin = ({ ...others }) => {
                             )}
                         </FormControl>
                         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-                            <FormControlLabel
+                            {/* <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={checked}
@@ -254,7 +254,7 @@ const FirebaseLogin = ({ ...others }) => {
                                     />
                                 }
                                 label="Remember me"
-                            />
+                            /> */}
                             <Typography
                                 variant="subtitle1"
                                 color="dark"

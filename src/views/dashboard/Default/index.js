@@ -12,6 +12,9 @@ import TotalIncomeLightCard from './TotalIncomeLightCard';
 import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
 import { PersonAdd } from '@mui/icons-material';
+import Department from 'assets/images/department.jpg';
+import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
+import { IconShare } from '@tabler/icons';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -41,15 +44,81 @@ const Dashboard = () => {
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-            </Grid>
-            <Grid item xs={12}>
-                <Grid container spacing={gridSpacing}>
-                    <Grid item xs={12} md={8}>
-                        <TotalGrowthBarChart isLoading={isLoading} />
-                    </Grid>
-                    <Grid item xs={12} md={4}>
-                        <PopularCard isLoading={isLoading} />
+
+                    <Grid container>
+                        <Grid item xs={8} sx={{ paddingY: 4, paddingX: 2 }}>
+                            <Typography variant="subtitle1">Upcoming Trainings</Typography>
+                            <SessionHorizontalCard
+                                isLoading={false}
+                                image={Department}
+                                title="Technologies in Legal Field"
+                                description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia"
+                                round="23rd"
+                                level="Organization"
+                                address="Addis Ababa"
+                                capacity={2032}
+                                startdate="Nov 12th"
+                                enddate="Nov 22, 2023"
+                                option={true}
+                                optionChildrens={
+                                    <>
+                                        <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
+                                            <IconShare size={20} />
+                                            <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
+                                                Share
+                                            </Typography>
+                                        </MenuItem>
+                                    </>
+                                }
+                            />
+                            <SessionHorizontalCard
+                                isLoading={false}
+                                image={Department}
+                                title="Technologies in Legal Field"
+                                description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia"
+                                round="23rd"
+                                level="Organization"
+                                address="Addis Ababa"
+                                capacity={2032}
+                                startdate="Nov 12th"
+                                enddate="Nov 22, 2023"
+                                option={true}
+                                optionChildrens={
+                                    <>
+                                        <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
+                                            <IconShare size={20} />
+                                            <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
+                                                Share
+                                            </Typography>
+                                        </MenuItem>
+                                    </>
+                                }
+                            />
+                            <SessionHorizontalCard
+                                isLoading={false}
+                                image={Department}
+                                title="Technologies in Legal Field"
+                                description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia"
+                                round="23rd"
+                                level="Organization"
+                                address="Addis Ababa"
+                                capacity={2032}
+                                startdate="Nov 12th"
+                                enddate="Nov 22, 2023"
+                                option={true}
+                                optionChildrens={
+                                    <>
+                                        <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
+                                            <IconShare size={20} />
+                                            <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
+                                                Share
+                                            </Typography>
+                                        </MenuItem>
+                                    </>
+                                }
+                            />
+                        </Grid>
+                        <Grid item xs={4}></Grid>
                     </Grid>
                 </Grid>
             </Grid>
