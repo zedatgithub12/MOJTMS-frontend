@@ -61,7 +61,7 @@ const dashboard = {
                 {
                     id: 'trainings',
                     title: 'Trainings',
-                    url: '/sample-page',
+                    url: '/trainings',
                     type: 'item',
                     breadcrumbs: false
                 },

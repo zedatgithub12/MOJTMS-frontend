@@ -3,7 +3,6 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
-import AddTrainer from 'views/trainer/add';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -12,16 +11,19 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const Department = Loadable(lazy(() => import('views/department')));
 const ViewDepartment = Loadable(lazy(() => import('views/department/view')));
 const AddDepartment = Loadable(lazy(() => import('views/department/add')));
-const UpdateDepartment = Loadable(lazy(() => import('views/department/update')));
+const UpdateDepartment = Loadable(lazy(() => import('views/trainer/view')));
 
 //Trainers routing
 const Trainers = Loadable(lazy(() => import('views/trainer')));
+const AddTrainer = Loadable(lazy(() => import('views/trainer/add')));
+const ViewTrainer = Loadable(lazy(() => import('views/trainer/view')));
+const UpdateTrainer = Loadable(lazy(() => import('views/trainer/update')));
+
+//Training routing
+const Training = Loadable(lazy(() => import('views/training')));
 
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
-
-//Products Routing
-const Products = Loadable(lazy(() => import('views/products')));
 
 //Trainees page routing
 const Trainee = Loadable(lazy(() => import('views/trainee')));
@@ -127,10 +129,6 @@ const MainRoutes = {
         },
 
         {
-            path: 'products',
-            element: <Products />
-        },
-        {
             path: 'elements',
             element: <Elements />
         },
@@ -138,6 +136,8 @@ const MainRoutes = {
             path: 'trainees',
             element: <Trainee />
         },
+
+        //departments
         {
             path: 'departments',
             element: <Department />
@@ -154,13 +154,15 @@ const MainRoutes = {
             path: 'department/update',
             element: <UpdateDepartment />
         },
+
+        //trainers
         {
             path: 'trainers',
             element: <Trainers />
         },
         {
             path: 'trainer/view',
-            element: <ViewDepartment />
+            element: <ViewTrainer />
         },
         {
             path: 'trainer/add',
@@ -168,7 +170,13 @@ const MainRoutes = {
         },
         {
             path: 'trainer/update',
-            element: <UpdateDepartment />
+            element: <UpdateTrainer />
+        },
+
+        //trainings
+        {
+            path: 'trainings',
+            element: <Training />
         }
     ]
 };

@@ -1,3 +1,4 @@
+import React from 'react';
 // material-ui
 import { Grid, MenuItem, Typography } from '@mui/material';
 import DepartmentCard from 'ui-component/cards/DepartmentCard';

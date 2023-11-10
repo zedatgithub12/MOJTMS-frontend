@@ -38,6 +38,7 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Trainer name is required').max(80),
     email: Yup.string().email('Enter valid email').required('Trainer email is required'),
+    specialisation: Yup.string().required('Traner specialisation is required').max(120),
     biography: Yup.string().max(180)
 });
 
@@ -101,8 +102,6 @@ const AddTrainer = () => {
             data.append('biography', values.biography);
             data.append('languages', values.languages);
             data.append('linkedin_profile', values.linkedin_profile);
-
-            console.log(data);
 
             fetch(Api, { method: 'POST', headers: headers, body: data })
                 .then((response) => response.json())
@@ -440,11 +439,11 @@ const AddTrainer = () => {
                                                     error={formik.touched.qualifications && Boolean(formik.errors.qualifications)}
                                                     sx={{ ...theme.typography.customInput, marginRight: 3 }}
                                                 >
-                                                    <InputLabel htmlFor="trainer-qualifications">Qualifications </InputLabel>
+                                                    <InputLabel htmlFor="trainer-qualifications">Education level </InputLabel>
                                                     <OutlinedInput
                                                         id="trainer-qualifications"
                                                         name="qualifications"
-                                                        label="Qualifications"
+                                                        label="Education level"
                                                         value={formik.values.qualifications}
                                                         onChange={formik.handleChange}
                                                         fullWidth
@@ -491,7 +490,7 @@ const AddTrainer = () => {
                                             <InputLabel htmlFor="trainer-bio">Biography </InputLabel>
                                             <OutlinedInput
                                                 id="trainer-bio"
-                                                name="bio"
+                                                name="biography"
                                                 label="Bio"
                                                 value={formik.values.biography}
                                                 onChange={formik.handleChange}

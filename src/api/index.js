@@ -28,7 +28,16 @@ const Connections = {
     assigncoordinator: 'department/assign-coordinator',
 
     //trainers api endpoints
-    trainers: 'trainers'
+    trainers: 'trainers',
+    trainersearch: 'trainer/search',
+
+    //training api endpoints
+    trainings: 'trainings',
+    trainingsearch: 'training/search',
+
+    //categories api endpoints
+    categories: 'categories',
+    categorsearch: 'category/search'
 };
 
 export default Connections;

@@ -2,27 +2,27 @@ import { useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination } from '@mui/material';
 // project imports
-import Connections from 'api';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import TrainerCard from 'ui-component/cards/TrainerCard';
-import noresult from 'assets/images/no_result.png';
-import errorImage from 'assets/images/error.jpg';
-import TrainerCardSkel from 'ui-component/cards/Skeleton/TrainerCardSkel';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
+import Connections from 'api';
+import noresult from 'assets/images/no_result.png';
+import errorImage from 'assets/images/error.jpg';
+import TrainingCard from 'ui-component/cards/TrainingCard';
+import TrainingCardSkel from 'ui-component/cards/Skeleton/TrainingCardSkel';
 
-// ==============================|| TRAINERS PAGE ||============================== //
+// ==============================|| TRAINING PAGE ||============================== //
 
-const Trainers = () => {
+const Training = () => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const ImageApi = Connections.profiles;
+    const ImageApi = Connections.thumbnails;
 
-    const [trainers, setTrainers] = useState([]);
+    const [trainings, setTrainings] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
@@ -33,22 +33,22 @@ const Trainers = () => {
         page: 1
     });
 
-    const handleCategoryFetching = async () => {
+    const handleFetching = async () => {
         const tokenExpiration = sessionStorage.getItem('tokenExpiration');
         const currentTime = new Date().getTime();
 
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
             setRefreshed(true);
-            FetchTrainers();
+            FetchTraining();
         } else {
-            FetchTrainers();
+            FetchTraining();
         }
     };
 
-    const FetchTrainers = async () => {
+    const FetchTraining = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.trainers + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+        var Api = Connections.api + Connections.trainings + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -61,19 +61,21 @@ const Trainers = () => {
         if (parsed.success) {
             setLastPage(parsed.data.last_page);
             const data = parsed.data.data;
-            setTrainers(data);
+            setTrainings(data);
             setLoading(false);
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel], () => handleCategoryFetching(), {
+    const { isLoading, error } = useQuery(['data', paginationModel], () => handleFetching(), {
         refetchOnWindowFocus: false
     });
 
     const handleSearching = () => {
         setSearching(true);
         var Api =
-            Connections.api + Connections.trainersearch + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
+            Connections.api +
+            Connections.trainingsearch +
+            `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
 
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -87,7 +89,7 @@ const Trainers = () => {
             .then((response) => {
                 if (response.success) {
                     setSearching(false);
-                    setTrainers(response.data.data);
+                    setTrainings(response.data.data);
                 } else {
                     setSearching(false);
                 }
@@ -117,7 +119,7 @@ const Trainers = () => {
                 }
             }}
         >
-            <MiniHeader title="Trainers" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+            <MiniHeader title="Trainings" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
                 <SearchFilterAdd
@@ -125,8 +127,8 @@ const Trainers = () => {
                     searching={searching}
                     onTextChange={(event) => setSearch(event.target.value)}
                     onSubmit={() => handleSearching()}
-                    addTitle="Add Trainer"
-                    onAdd={() => navigate('/trainer/add')}
+                    addTitle="Add Training"
+                    onAdd={() => navigate('/training/add')}
                 />
 
                 <Grid container>
@@ -135,7 +137,7 @@ const Trainers = () => {
                             <Grid container>
                                 <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
-                                        <TrainerCardSkel key={index} />
+                                        <TrainingCardSkel key={index} />
                                     ))}
                                 </Grid>
                             </Grid>
@@ -143,40 +145,38 @@ const Trainers = () => {
                             <ErrorPrompt
                                 image={errorImage}
                                 title="Server Error"
-                                message="Oooops... There is server error fetching trainers!"
+                                message="Oooops... There is server error fetching trainings!"
                                 buttontitle="Go Back"
                                 onPress={() => navigate(-1)}
                             />
-                        ) : trainers.length == 0 ? (
+                        ) : trainings.length == 0 ? (
                             <NoResult
                                 image={noresult}
                                 title="Result Not Found"
-                                message="Oooops... no trainer found in the moment!"
+                                message="Oooops... no training found in the moment!"
                                 buttontitle="Go Back"
                                 onPress={() => navigate(-1)}
                             />
                         ) : (
-                            trainers.map((trainer) => (
-                                <TrainerCard
-                                    key={trainer.id}
+                            trainings.map((training) => (
+                                <TrainingCard
+                                    key={training.id}
                                     isLoading={isLoading}
-                                    image={ImageApi + trainer.photo}
-                                    title={trainer.specialisation}
-                                    email={trainer.email}
-                                    phone={trainer.phone}
-                                    qualification={trainer.qualifications}
-                                    name={trainer.name}
-                                    linkedin={trainer.linkedin_profile}
-                                    address={trainer.address}
-                                    gender={trainer.gender}
-                                    trainingcount={trainer.training}
-                                    rating={trainer.rating}
-                                    onPress={() => navigate('/trainer/view', { state: trainer })}
+                                    image={ImageApi + training.thumbnail}
+                                    title={training.title}
+                                    language={training.language}
+                                    category={training.category}
+                                    departments={training.department}
+                                    sessions={training.sessions}
+                                    traineecount={training.trainees}
+                                    rating={training.rating}
+                                    ratingcount={training.ratingcount}
+                                    onPress={() => navigate('/training/view', { state: training })}
                                 />
                             ))
                         )}
                     </Grid>
-                    {trainers.length != 0 && (
+                    {trainings.length != 0 && (
                         <Box sx={{ paddingY: 4 }}>
                             <Pagination
                                 showFirstButton
@@ -193,4 +193,4 @@ const Trainers = () => {
     );
 };
 
-export default Trainers;
+export default Training;

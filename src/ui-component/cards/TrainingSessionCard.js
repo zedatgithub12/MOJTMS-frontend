@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -11,7 +11,7 @@ const TrainingSessionCard = forwardRef(
     ({ sx = {}, isLoading, image, title, round, level, address, capacity, startdate, enddate, onPress, ...others }, ref) => {
         const theme = useTheme();
         return (
-            <>
+            <React.Fragment>
                 {isLoading ? (
                     <TrainingSessionSkel />
                 ) : (
@@ -108,7 +108,7 @@ const TrainingSessionCard = forwardRef(
                         </Grid>
                     </Card>
                 )}
-            </>
+            </React.Fragment>
         );
     }
 );

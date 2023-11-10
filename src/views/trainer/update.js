@@ -12,7 +12,11 @@ import {
     FormControl,
     InputLabel,
     OutlinedInput,
-    FormHelperText
+    FormHelperText,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+    Radio
 } from '@mui/material';
 
 // project imports
@@ -30,26 +34,29 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
-// ==============================|| UPDATE DEPARTMENT PAGE ||============================== //
+// ==============================|| ADD DEPARTMENT PAGE ||============================== //
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Department name is required').max(80)
+    name: Yup.string().required('Trainer name is required').max(80),
+    email: Yup.string().email('Enter valid email').required('Trainer email is required'),
+    specialisation: Yup.string().required('Traner specialisation is required').max(120),
+    biography: Yup.string().max(180)
 });
 
-const UpdateDepartment = () => {
+const UpdateTrainer = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
 
     const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
-    const ImageApi = Connections.thumbnails;
+    const ImageApi = Connections.profiles;
 
     const [thumbnail, setThumbnail] = useState(null);
-    const [previewImage, setPreviewImage] = useState(state ? ImageApi + state.thumbnail : null);
+    const [previewImage, setPreviewImage] = useState(state ? ImageApi + state.photo : null);
     const [imageprompt, setImagePrompt] = useState({
         status: false,
         message: ''
     });
-    
+
     const [ImageValidation, setImageValidation] = useState();
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -75,17 +82,24 @@ const UpdateDepartment = () => {
 
         setIsSubmitting(true);
 
-        const Api = Connections.api + Connections.departments + '/' + state.id;
+        const Api = Connections.api + Connections.trainers + '/' + state.id;
         const token = sessionStorage.getItem('token');
         const headers = {
             Authorization: 'Bearer' + token
         };
 
         const data = new FormData();
+        data.append('photo', thumbnail);
         data.append('name', values.name);
-        data.append('description', values.description);
+        data.append('gender', values.gender);
         data.append('email', values.email);
         data.append('phone', values.phone);
+        data.append('address', values.address);
+        data.append('qualifications', values.qualifications);
+        data.append('specialisation', values.specialisation);
+        data.append('biography', values.biography);
+        data.append('languages', values.languages);
+        data.append('linkedin_profile', values.linkedin_profile);
 
         fetch(Api, { method: 'POST', headers: headers, body: data })
             .then((response) => response.json())
@@ -105,7 +119,18 @@ const UpdateDepartment = () => {
     };
 
     const formik = useFormik({
-        initialValues: { name: state.name, description: state.description, email: state.email, phone: state.phone },
+        initialValues: {
+            name: state.name ? state.name : '',
+            gender: state.gender ? state.gender : '',
+            email: state.email ? state.email : '',
+            phone: state.phone ? state.phone : '',
+            address: state.address ? state.address : '',
+            qualifications: state.qualifications ? state.qualifications : '',
+            specialisation: state.specialisation ? state.specialisation : '',
+            biography: state.biography ? state.biography : '',
+            languages: state.languages ? state.languages : '',
+            linkedin_profile: state.linkedin_profile ? state.linkedin_profile : ''
+        },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSubmitting(values);
@@ -138,7 +163,7 @@ const UpdateDepartment = () => {
                     }
                 }}
             >
-                <MiniHeader title="Update Department " back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+                <MiniHeader title="Update Trainer" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
 
                 <Grid container>
                     <Grid item xs={12} sx={{ padding: 2 }}>
@@ -156,7 +181,7 @@ const UpdateDepartment = () => {
                                                 justifyContent: 'center'
                                             }}
                                         >
-                                            {state.thumbnail || thumbnail ? (
+                                            {state.photo || thumbnail ? (
                                                 <Box
                                                     sx={{
                                                         width: 300,
@@ -174,7 +199,7 @@ const UpdateDepartment = () => {
                                                             resize: 'contain',
                                                             borderRadius: 4
                                                         }}
-                                                        alt="Thumbnail"
+                                                        alt="Trainer profile"
                                                     />
                                                 </Box>
                                             ) : (
@@ -204,11 +229,11 @@ const UpdateDepartment = () => {
                                                             <IconUpload size={28} color={theme.palette.primary.main} />
                                                         </IconButton>
                                                     </label>
-                                                    <Typography variant="subtitle1">Upload Thumbnail</Typography>
-                                                    <Typography variant="subtitle2">Image that emphesize the department</Typography>
+                                                    <Typography variant="subtitle1">Upload Picture</Typography>
+                                                    <Typography variant="subtitle2">Image of trainer</Typography>
                                                 </Box>
                                             )}
-                                            {state.thumbnail && (
+                                            {state.photo && (
                                                 <Box>
                                                     <input
                                                         type="file"
@@ -227,7 +252,7 @@ const UpdateDepartment = () => {
                                                                 borderRadius: 1
                                                             }}
                                                         >
-                                                            Update Thumbnail
+                                                            Update Picture
                                                         </Typography>
                                                     </label>
                                                 </Box>
@@ -292,11 +317,11 @@ const UpdateDepartment = () => {
                                             error={formik.touched.name && Boolean(formik.errors.name)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-name">Department name</InputLabel>
+                                            <InputLabel htmlFor="trainer-name">Full name</InputLabel>
                                             <OutlinedInput
-                                                id="department-name"
+                                                id="trainer-name"
                                                 name="name"
-                                                label="Department name"
+                                                label="trainer name"
                                                 value={formik.values.name}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -312,27 +337,24 @@ const UpdateDepartment = () => {
 
                                     <Grid item xs={12}>
                                         <FormControl
-                                            fullWidth
-                                            error={formik.touched.description && Boolean(formik.errors.description)}
-                                            sx={{ ...theme.typography.customInput }}
+                                            error={formik.touched.gender && Boolean(formik.errors.gender)}
+                                            sx={{ marginLeft: 1.4 }}
                                         >
-                                            <InputLabel htmlFor="department-description">Description </InputLabel>
-                                            <OutlinedInput
-                                                id="department-description"
-                                                name="description"
-                                                label="Description"
-                                                value={formik.values.description}
+                                            <FormLabel id="gender">Gender</FormLabel>
+                                            <RadioGroup
+                                                aria-labelledby="gender"
+                                                name="gender"
+                                                value={formik.values.gender}
                                                 onChange={formik.handleChange}
-                                                fullWidth
-                                                multiline
-                                                rows={6}
-                                                sx={{ marginTop: 1 }}
-                                            />
-                                            {formik.touched.description && formik.errors.description && (
-                                                <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.description}
-                                                </FormHelperText>
-                                            )}
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-around'
+                                                }}
+                                            >
+                                                <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                                <FormControlLabel value="female" control={<Radio />} label="Female" />
+                                            </RadioGroup>
                                         </FormControl>
                                     </Grid>
 
@@ -342,7 +364,7 @@ const UpdateDepartment = () => {
                                             error={formik.touched.email && Boolean(formik.errors.email)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-email">email </InputLabel>
+                                            <InputLabel htmlFor="department-email">Email </InputLabel>
                                             <OutlinedInput
                                                 id="department-email"
                                                 name="email"
@@ -382,6 +404,152 @@ const UpdateDepartment = () => {
                                         </FormControl>
                                     </Grid>
 
+                                    <Grid item xs={12}>
+                                        <FormControl
+                                            fullWidth
+                                            error={formik.touched.address && Boolean(formik.errors.address)}
+                                            sx={{ ...theme.typography.customInput }}
+                                        >
+                                            <InputLabel htmlFor="trainer-address">Address </InputLabel>
+                                            <OutlinedInput
+                                                id="trainer-address"
+                                                name="address"
+                                                label="Address"
+                                                value={formik.values.address}
+                                                onChange={formik.handleChange}
+                                                fullWidth
+                                            />
+                                            {formik.touched.address && formik.errors.address && (
+                                                <FormHelperText error id="standard-weight-helper-text-name">
+                                                    {formik.errors.address}
+                                                </FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <Grid continer sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                            <Grid item xs={12} sm={12} md={5} lg={5} xl={5}>
+                                                {' '}
+                                                <FormControl
+                                                    fullWidth
+                                                    error={formik.touched.qualifications && Boolean(formik.errors.qualifications)}
+                                                    sx={{ ...theme.typography.customInput, marginRight: 3 }}
+                                                >
+                                                    <InputLabel htmlFor="trainer-qualifications">Qualifications </InputLabel>
+                                                    <OutlinedInput
+                                                        id="trainer-qualifications"
+                                                        name="qualifications"
+                                                        label="Qualifications"
+                                                        value={formik.values.qualifications}
+                                                        onChange={formik.handleChange}
+                                                        fullWidth
+                                                    />
+                                                    {formik.touched.qualifications && formik.errors.qualifications && (
+                                                        <FormHelperText error id="standard-weight-helper-text-name">
+                                                            {formik.errors.qualifications}
+                                                        </FormHelperText>
+                                                    )}
+                                                </FormControl>
+                                            </Grid>
+
+                                            <Grid item xs={12} sm={12} md={5} lg={5} xl={5}>
+                                                <FormControl
+                                                    fullWidth
+                                                    error={formik.touched.specialisation && Boolean(formik.errors.specialisation)}
+                                                    sx={{ ...theme.typography.customInput }}
+                                                >
+                                                    <InputLabel htmlFor="trainer-specialisation">Specialisation </InputLabel>
+                                                    <OutlinedInput
+                                                        id="trainer-specialisation"
+                                                        name="specialisation"
+                                                        label="Specialisation"
+                                                        value={formik.values.specialisation}
+                                                        onChange={formik.handleChange}
+                                                        fullWidth
+                                                    />
+                                                    {formik.touched.specialisation && formik.errors.specialisation && (
+                                                        <FormHelperText error id="standard-weight-helper-text-name">
+                                                            {formik.errors.specialisation}
+                                                        </FormHelperText>
+                                                    )}
+                                                </FormControl>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FormControl
+                                            fullWidth
+                                            error={formik.touched.biography && Boolean(formik.errors.biography)}
+                                            sx={{ ...theme.typography.customInput }}
+                                        >
+                                            <InputLabel htmlFor="trainer-bio">Biography </InputLabel>
+                                            <OutlinedInput
+                                                id="trainer-bio"
+                                                name="biography"
+                                                label="Bio"
+                                                value={formik.values.biography}
+                                                onChange={formik.handleChange}
+                                                fullWidth
+                                                multiline
+                                                rows={6}
+                                                sx={{ marginTop: 1 }}
+                                            />
+                                            {formik.touched.biography && formik.errors.biography && (
+                                                <FormHelperText error id="standard-weight-helper-text-name">
+                                                    {formik.errors.biography}
+                                                </FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FormControl
+                                            fullWidth
+                                            error={formik.touched.languages && Boolean(formik.errors.languages)}
+                                            sx={{ ...theme.typography.customInput }}
+                                        >
+                                            <InputLabel htmlFor="trainer-languages">Languages </InputLabel>
+                                            <OutlinedInput
+                                                id="trainer-languages"
+                                                name="languages"
+                                                label="Languages"
+                                                value={formik.values.languages}
+                                                onChange={formik.handleChange}
+                                                fullWidth
+                                            />
+                                            {formik.touched.languages && formik.errors.languages && (
+                                                <FormHelperText error id="standard-weight-helper-text-name">
+                                                    {formik.errors.languages}
+                                                </FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FormControl
+                                            fullWidth
+                                            error={formik.touched.linkedin_profile && Boolean(formik.errors.linkedin_profile)}
+                                            sx={{ ...theme.typography.customInput }}
+                                        >
+                                            <InputLabel htmlFor="trainer-linkedin_profile">Linkedin Profile </InputLabel>
+                                            <OutlinedInput
+                                                id="trainer-linkedin_profile"
+                                                name="linkedin_profile"
+                                                label="linkedin Profile"
+                                                value={formik.values.linkedin_profile}
+                                                onChange={formik.handleChange}
+                                                fullWidth
+                                            />
+                                            {formik.touched.linkedin_profile && formik.errors.linkedin_profile && (
+                                                <FormHelperText error id="standard-weight-helper-text-name">
+                                                    {formik.errors.linkedin_profile}
+                                                </FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </Grid>
+
                                     <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row' }}>
                                         <AnimateButton>
                                             <Button
@@ -394,7 +562,7 @@ const UpdateDepartment = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Update Department'
+                                                    'Update Trainer'
                                                 )}
                                             </Button>
                                         </AnimateButton>
@@ -419,4 +587,4 @@ const UpdateDepartment = () => {
     );
 };
 
-export default UpdateDepartment;
+export default UpdateTrainer;
