@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, useTheme, Pagination } from '@mui/material';
+import { Grid, Box, useTheme, Pagination, MenuItem, ListItemIcon, Divider } from '@mui/material';
 // project imports
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
@@ -14,6 +14,8 @@ import noresult from 'assets/images/no_result.png';
 import errorImage from 'assets/images/error.jpg';
 import TrainingCard from 'ui-component/cards/TrainingCard';
 import TrainingCardSkel from 'ui-component/cards/Skeleton/TrainingCardSkel';
+import { IconEdit, IconEye, IconTrash } from '@tabler/icons';
+import Category from 'views/category';
 
 // ==============================|| TRAINING PAGE ||============================== //
 
@@ -176,6 +178,7 @@ const Training = () => {
                             ))
                         )}
                     </Grid>
+
                     {trainings.length != 0 && (
                         <Box sx={{ paddingY: 4 }}>
                             <Pagination

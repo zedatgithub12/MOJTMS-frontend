@@ -71,6 +71,13 @@ const dashboard = {
                     url: '/trainers',
                     type: 'item',
                     breadcrumbs: false
+                },
+                {
+                    id: 'categories',
+                    title: 'Categories',
+                    url: '/categories',
+                    type: 'item',
+                    breadcrumbs: false
                 }
             ]
         },
