@@ -82,13 +82,6 @@ const Category = () => {
         refetchOnWindowFocus: false
     });
 
-    const handleChange = (event, value) => {
-        setPaginationModel({
-            ...paginationModel,
-            page: value
-        });
-    };
-
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
         enqueueSnackbar(message, { variant });
@@ -112,6 +105,33 @@ const Category = () => {
     const initiateDeleteCategory = (cat) => {
         setDeleteCategory(true);
         setSelectedCategory(cat);
+    };
+
+    const handleSearching = () => {
+        setSearching(true);
+        var Api =
+            Connections.api + Connections.categorsearch + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, { method: 'GET', headers: headers })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setSearching(false);
+                    setCategories(response.data.data);
+                } else {
+                    setSearching(false);
+                }
+            })
+            .catch((error) => {
+                setSearching(false);
+                handlePrompts(error, 'error');
+            });
     };
 
     const handleDeleteCategories = () => {

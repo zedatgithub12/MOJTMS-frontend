@@ -11,7 +11,7 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 const Department = Loadable(lazy(() => import('views/department')));
 const ViewDepartment = Loadable(lazy(() => import('views/department/view')));
 const AddDepartment = Loadable(lazy(() => import('views/department/add')));
-const UpdateDepartment = Loadable(lazy(() => import('views/trainer/view')));
+const UpdateDepartment = Loadable(lazy(() => import('views/department/update')));
 
 //Trainers routing
 const Trainers = Loadable(lazy(() => import('views/trainer')));
@@ -24,6 +24,12 @@ const Category = Loadable(lazy(() => import('views/category')));
 
 //Training routing
 const Training = Loadable(lazy(() => import('views/training')));
+const AddTraining = Loadable(lazy(() => import('views/training/add')));
+const ViewTraining = Loadable(lazy(() => import('views/training/view')));
+const UpdateTraining = Loadable(lazy(() => import('views/training/update')));
+
+// Modules Routing
+const TrainingModules = Loadable(lazy(() => import('views/training/module')));
 
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
@@ -187,6 +193,23 @@ const MainRoutes = {
         {
             path: 'trainings',
             element: <Training />
+        },
+        {
+            path: 'training/add',
+            element: <AddTraining />
+        },
+        {
+            path: 'training/view',
+            element: <ViewTraining />
+        },
+        {
+            path: 'training/update',
+            element: <UpdateTraining />
+        },
+
+        {
+            path: 'training/modules',
+            element: <TrainingModules />
         }
     ]
 };

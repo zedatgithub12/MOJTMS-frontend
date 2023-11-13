@@ -9,7 +9,7 @@ const TrainingCardSkel = () => {
         <Card
             sx={{
                 width: 280,
-                margin: 1.2,
+                margin: 1,
                 border: '1px solid',
                 borderColor: theme.palette.secondary.light,
                 ':hover': {

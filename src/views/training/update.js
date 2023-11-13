@@ -12,30 +12,37 @@ import {
     FormControl,
     InputLabel,
     OutlinedInput,
-    FormHelperText
+    FormHelperText,
+    Select,
+    MenuItem
 } from '@mui/material';
 
 // project imports
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { IconUpload } from '@tabler/icons';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import InfoIcon from '@mui/icons-material/Info';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { convertToMB, validateImage } from 'utils/functions';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import { sizes } from 'settings';
 import { useLocation, useNavigate } from 'react-router';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import Connections from 'api';
+import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
-// ==============================|| UPDATE DEPARTMENT PAGE ||============================== //
+import * as Yup from 'yup';
+import AnimateButton from 'ui-component/extended/AnimateButton';
+import Connections from 'api';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import InfoIcon from '@mui/icons-material/Info';
+import TrainingLanguages from 'data/static/languages';
+
+// ==============================|| UPDATE TRAINING PAGE ||============================== //
+
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Department name is required').max(80)
+    description: Yup.string().max(200),
+    prerequisites: Yup.string().max(250)
 });
 
-const UpdateDepartment = () => {
+const UpdateTraining = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -43,14 +50,42 @@ const UpdateDepartment = () => {
     const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
     const ImageApi = Connections.thumbnails;
 
+    const [loading, setLoading] = useState(false);
     const [thumbnail, setThumbnail] = useState(null);
     const [previewImage, setPreviewImage] = useState(state ? ImageApi + state.thumbnail : null);
     const [imageprompt, setImagePrompt] = useState({
         status: false,
         message: ''
     });
-
     const [ImageValidation, setImageValidation] = useState();
+    const [categories, setCategories] = useState([]);
+
+    //fetch categories and assign them to categories state and
+    //map them on to the dropdown list
+    const FetchCategory = async () => {
+        setLoading(true);
+        var Api = Connections.api + Connections.categories;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            const data = parsed.data.data;
+            setCategories(data);
+            setLoading(false);
+        }
+    };
+
+    const { isLoading, error } = useQuery(['data'], () => FetchCategory(), {
+        refetchOnWindowFocus: false
+    });
+
+    //handle the training thumbanail upload
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         setThumbnail(file);
@@ -70,22 +105,24 @@ const UpdateDepartment = () => {
         });
     };
 
+    //submit the training to be added
     const handleSubmitting = (values) => {
         // Handle form submission here
 
         setIsSubmitting(true);
 
-        const Api = Connections.api + Connections.departments + '/' + state.id;
+        const Api = Connections.api + Connections.trainings + '/' + state.id;
         const token = sessionStorage.getItem('token');
         const headers = {
             Authorization: 'Bearer' + token
         };
 
         const data = new FormData();
-        data.append('name', values.name);
+        data.append('thumbnail', thumbnail);
+        data.append('category', values.category);
         data.append('description', values.description);
-        data.append('email', values.email);
-        data.append('phone', values.phone);
+        data.append('language', values.language);
+        data.append('prerequisites', values.prerequisites);
 
         fetch(Api, { method: 'POST', headers: headers, body: data })
             .then((response) => response.json())
@@ -105,7 +142,13 @@ const UpdateDepartment = () => {
     };
 
     const formik = useFormik({
-        initialValues: { name: state.name, description: state.description, email: state.email, phone: state.phone },
+        initialValues: {
+            category: state.category,
+            name: state.title,
+            description: state.description,
+            language: state.language,
+            prerequisites: state.prerequisites
+        },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSubmitting(values);
@@ -138,7 +181,7 @@ const UpdateDepartment = () => {
                     }
                 }}
             >
-                <MiniHeader title="Update Department " back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+                <MiniHeader title="Update Training" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
 
                 <Grid container>
                     <Grid item xs={12} sx={{ padding: 2 }}>
@@ -205,7 +248,7 @@ const UpdateDepartment = () => {
                                                         </IconButton>
                                                     </label>
                                                     <Typography variant="subtitle1">Upload Thumbnail</Typography>
-                                                    <Typography variant="subtitle2">Image that emphesize the department</Typography>
+                                                    <Typography variant="subtitle2">Image that emphesize the training</Typography>
                                                 </Box>
                                             )}
                                             {state.thumbnail && (
@@ -227,7 +270,7 @@ const UpdateDepartment = () => {
                                                                 borderRadius: 1
                                                             }}
                                                         >
-                                                            Update Thumbnail
+                                                            Update Picture
                                                         </Typography>
                                                     </label>
                                                 </Box>
@@ -291,12 +334,13 @@ const UpdateDepartment = () => {
                                             fullWidth
                                             error={formik.touched.name && Boolean(formik.errors.name)}
                                             sx={{ ...theme.typography.customInput }}
+                                            disabled
                                         >
-                                            <InputLabel htmlFor="department-name">Department name</InputLabel>
+                                            <InputLabel htmlFor="training-title">Training title</InputLabel>
                                             <OutlinedInput
-                                                id="department-name"
+                                                id="training-title"
                                                 name="name"
-                                                label="Department name"
+                                                label="Training title"
                                                 value={formik.values.name}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -313,12 +357,82 @@ const UpdateDepartment = () => {
                                     <Grid item xs={12}>
                                         <FormControl
                                             fullWidth
+                                            error={formik.touched.category && Boolean(formik.errors.category)}
+                                            sx={{ ...theme.typography.customInput }}
+                                        >
+                                            <InputLabel htmlFor="outlined-adornment-category">
+                                                {formik.values.category ? '' : 'Category'}
+                                            </InputLabel>
+                                            <Select
+                                                value={formik.values.category}
+                                                onChange={formik.handleChange}
+                                                id="outlined-adornment-category"
+                                                name="category"
+                                            >
+                                                {categories.length == 0 ? (
+                                                    <Typography variant="body2" sx={{ padding: 1 }}>
+                                                        Categories Not Found
+                                                    </Typography>
+                                                ) : (
+                                                    categories.map((category, index) => (
+                                                        <MenuItem key={index} value={category.name}>
+                                                            {category.name}
+                                                        </MenuItem>
+                                                    ))
+                                                )}
+                                            </Select>
+                                            {formik.touched.category && formik.errors.category && (
+                                                <FormHelperText error id="standard-weight-helper-text-email-login">
+                                                    {formik.errors.category}
+                                                </FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FormControl
+                                            fullWidth
+                                            error={formik.touched.language && Boolean(formik.errors.language)}
+                                            sx={{ ...theme.typography.customInput }}
+                                        >
+                                            <InputLabel htmlFor="outlined-adornment-language">
+                                                {formik.values.language ? '' : 'Language'}
+                                            </InputLabel>
+                                            <Select
+                                                value={formik.values.language}
+                                                onChange={formik.handleChange}
+                                                name="language"
+                                                id="outlined-adornment-language"
+                                            >
+                                                {TrainingLanguages.length == 0 ? (
+                                                    <Typography variant="body2" sx={{ padding: 1 }}>
+                                                        Language not found
+                                                    </Typography>
+                                                ) : (
+                                                    TrainingLanguages.map((lang, index) => (
+                                                        <MenuItem key={index} value={lang.name}>
+                                                            {lang.name}
+                                                        </MenuItem>
+                                                    ))
+                                                )}
+                                            </Select>
+                                            {formik.touched.language && formik.errors.language && (
+                                                <FormHelperText error id="standard-weight-helper-text-email-login">
+                                                    {formik.errors.language}
+                                                </FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </Grid>
+
+                                    <Grid item xs={12}>
+                                        <FormControl
+                                            fullWidth
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-description">Description </InputLabel>
+                                            <InputLabel htmlFor="training-description">Description </InputLabel>
                                             <OutlinedInput
-                                                id="department-description"
+                                                id="training-description"
                                                 name="description"
                                                 label="Description"
                                                 value={formik.values.description}
@@ -339,44 +453,24 @@ const UpdateDepartment = () => {
                                     <Grid item xs={12}>
                                         <FormControl
                                             fullWidth
-                                            error={formik.touched.email && Boolean(formik.errors.email)}
+                                            error={formik.touched.prerequisites && Boolean(formik.errors.prerequisites)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-email">email </InputLabel>
+                                            <InputLabel htmlFor="training-pre-requisites">Pre-requisites </InputLabel>
                                             <OutlinedInput
-                                                id="department-email"
-                                                name="email"
-                                                label="Email"
-                                                value={formik.values.email}
+                                                id="training-pre-requisites"
+                                                name="prerequisites"
+                                                label="Pre-requisites"
+                                                value={formik.values.prerequisites}
                                                 onChange={formik.handleChange}
                                                 fullWidth
+                                                multiline
+                                                rows={3}
+                                                sx={{ marginTop: 1 }}
                                             />
-                                            {formik.touched.email && formik.errors.email && (
+                                            {formik.touched.prerequisites && formik.errors.prerequisites && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.email}
-                                                </FormHelperText>
-                                            )}
-                                        </FormControl>
-                                    </Grid>
-
-                                    <Grid item xs={12}>
-                                        <FormControl
-                                            fullWidth
-                                            error={formik.touched.phone && Boolean(formik.errors.phone)}
-                                            sx={{ ...theme.typography.customInput }}
-                                        >
-                                            <InputLabel htmlFor="department-phone">Phone </InputLabel>
-                                            <OutlinedInput
-                                                id="department-phone"
-                                                name="phone"
-                                                label="Phone"
-                                                value={formik.values.phone}
-                                                onChange={formik.handleChange}
-                                                fullWidth
-                                            />
-                                            {formik.touched.phone && formik.errors.phone && (
-                                                <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.phone}
+                                                    {formik.errors.prerequisites}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -394,7 +488,7 @@ const UpdateDepartment = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Update Department'
+                                                    'Update Training'
                                                 )}
                                             </Button>
                                         </AnimateButton>
@@ -419,4 +513,4 @@ const UpdateDepartment = () => {
     );
 };
 
-export default UpdateDepartment;
+export default UpdateTraining;

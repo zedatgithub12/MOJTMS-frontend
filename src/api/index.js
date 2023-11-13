@@ -37,7 +37,11 @@ const Connections = {
 
     //categories api endpoints
     categories: 'categories',
-    categorsearch: 'category/search'
+    categorsearch: 'category/search',
+
+    //modeules api endpoints
+    modules: 'modules',
+    modulesearch: 'module/search'
 };
 
 export default Connections;

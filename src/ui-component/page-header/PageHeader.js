@@ -37,7 +37,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
             sx={{
                 position: 'sticky',
                 top: 76,
-                height: customHeight,
+                minHeight: customHeight,
                 transition: 'height 0.3s ease-in-out',
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,

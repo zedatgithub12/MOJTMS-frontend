@@ -110,7 +110,11 @@ const Department = () => {
                 }
             }}
         >
-            <PageHeader title="Departments" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }}>
+            <PageHeader
+                title="Departments"
+                back={true}
+                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+            >
                 <Box
                     sx={{
                         display: 'flex',

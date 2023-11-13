@@ -164,7 +164,7 @@ const ViewDepartment = () => {
                             <ListItemIcon>
                                 <IconEdit size={18} />
                             </ListItemIcon>
-                            Edit
+                            Update
                         </MenuItem>
 
                         <Divider />
@@ -176,7 +176,7 @@ const ViewDepartment = () => {
                         </MenuItem>
                     </Box>
                 }
-                sx={{ backgroundColor: theme.palette.secondary.dark }}
+                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
             >
                 <Box
                     sx={{
@@ -193,7 +193,7 @@ const ViewDepartment = () => {
                         ) : (
                             <Typography variant="h4">Department name</Typography>
                         )}
-                        {state.name && (
+                        {state.description && (
                             <Typography
                                 variant="subtitle1"
                                 marginTop={1}
