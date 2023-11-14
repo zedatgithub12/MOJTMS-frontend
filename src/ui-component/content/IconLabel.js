@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import PropTypes from 'prop-types';
 
-export const IconLabel = ({ content, label, children, sx }) => {
+export const IconLabel = ({ content, onTitleClick, label, children, sx }) => {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 1.2, ...sx }}>
             <Box>{children}</Box>
@@ -15,6 +15,7 @@ export const IconLabel = ({ content, label, children, sx }) => {
                         textOverflow: 'ellipsis',
                         whiteSpace: 'nowrap'
                     }}
+                    onClick={onTitleClick}
                 >
                     {content}
                 </Typography>
@@ -26,6 +27,7 @@ export const IconLabel = ({ content, label, children, sx }) => {
 
 IconLabel.propTypes = {
     content: PropTypes.string,
+    onTitleClick: PropTypes.func,
     label: PropTypes.string,
     children: PropTypes.node,
     sx: PropTypes.object

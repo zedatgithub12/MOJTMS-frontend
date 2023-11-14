@@ -1,15 +1,66 @@
-import React, { useState } from 'react';
-import { Grid, Typography } from '@mui/material';
+import { useState } from 'react';
+import { Grid, Pagination } from '@mui/material';
 import PropTypes from 'prop-types';
 import { SearchAdd } from './components/searchadd';
 import Connections from 'api';
-import CreateModule from './components/addmodule';
+import CreateModule from './components/createmodule';
+import ModuleList from './components/modulelist';
+import { useQuery } from 'react-query';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { Box } from '@mui/system';
 
 const TrainingModules = ({ training_id }) => {
+    const [modules, setModules] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
-
     const [create, setCreate] = useState(false);
+    const [lastPage, setLastPage] = useState(1);
+    const [rowCountState] = useState(lastPage);
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 20,
+        page: 1
+    });
+
+    //a function that checks if the token is expired
+    //if the token is expired refresh token
+    //else fetch a modules
+    const handleFetching = async () => {
+        const tokenExpiration = sessionStorage.getItem('tokenExpiration');
+        const currentTime = new Date().getTime();
+
+        if (tokenExpiration && currentTime >= tokenExpiration) {
+            await RefreshToken();
+            setRefreshed(true);
+            FetchModules();
+        } else {
+            FetchModules();
+        }
+    };
+
+    const FetchModules = async () => {
+        setLoading(true);
+        var Api = Connections.api + Connections.modules + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            setLastPage(parsed.data.last_page);
+            const data = parsed.data.data;
+            setModules(data);
+            setLoading(false);
+        }
+    };
+
+    const { error } = useQuery(['data', paginationModel], () => handleFetching(), {
+        refetchOnWindowFocus: false
+    });
 
     const handleSearching = () => {
         setSearching(true);
@@ -28,7 +79,7 @@ const TrainingModules = ({ training_id }) => {
             .then((response) => {
                 if (response.success) {
                     setSearching(false);
-                    setTrainings(response.data.data);
+                    setModules(response.data.data);
                 } else {
                     setSearching(false);
                 }
@@ -39,6 +90,17 @@ const TrainingModules = ({ training_id }) => {
             });
     };
 
+    const handlePageChange = (event, value) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: value
+        });
+    };
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
+    };
     return (
         <Grid container>
             <Grid item xs={12}>
@@ -56,7 +118,23 @@ const TrainingModules = ({ training_id }) => {
                         sx={{ opacity: create ? 1 : 0, transition: 'all 0.5s ease-in forward' }}
                     />
                 )}
+
+                <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} />
+
+                {/* the pagination will be shown when the number of modules exceed five */}
+                {modules.length > 5 && (
+                    <Box sx={{ paddingY: 4 }}>
+                        <Pagination
+                            showFirstButton
+                            showLastButton
+                            count={rowCountState}
+                            page={paginationModel.page}
+                            onChange={() => handlePageChange()}
+                        />
+                    </Box>
+                )}
             </Grid>
+            <SnackbarProvider maxSnack={3} />
         </Grid>
     );
 };

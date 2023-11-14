@@ -8,17 +8,24 @@ import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
+import PropTypes from 'prop-types';
+import DialogTypes from 'data/static/dialogTypes';
+import { Box } from '@mui/system';
 
-export const Delete = ({ open, title, description, handleClose, onNo, onYes, deleting }) => {
+export const Delete = ({ type, open, title, description, handleClose, onNo, onYes, deleting }) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-
+    const Icon = DialogTypes.find((types) => types.name == type);
     return (
         <React.Fragment>
             <Dialog fullScreen={fullScreen} open={open} onClose={handleClose} aria-labelledby="responsive-dialog-title">
-                <DialogTitle variant="h4" color="primaey" id="responsive-dialog-title">
-                    {title}
-                </DialogTitle>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingLeft: 2 }}>
+                    {Icon && Icon.icon}
+                    <DialogTitle variant="h5" color="grey" id="responsive-dialog-title">
+                        {title}
+                    </DialogTitle>
+                </Box>
+
                 <DialogContent>
                     <DialogContentText variant="body1">{description}</DialogContentText>
                 </DialogContent>
@@ -33,4 +40,15 @@ export const Delete = ({ open, title, description, handleClose, onNo, onYes, del
             </Dialog>
         </React.Fragment>
     );
+};
+
+Delete.propTypes = {
+    type: PropTypes.string,
+    open: PropTypes.bool,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    handleClose: PropTypes.func,
+    onNo: PropTypes.func,
+    onYes: PropTypes.func,
+    deleting: PropTypes.bool
 };

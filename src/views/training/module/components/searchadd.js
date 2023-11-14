@@ -1,4 +1,4 @@
-import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography, CircularProgress, useTheme } from '@mui/material';
+import { Grid, Box, Paper, InputBase, Divider, IconButton, CircularProgress, useTheme } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Add } from '@mui/icons-material';
 import PropTypes from 'prop-types';
@@ -71,6 +71,7 @@ export const SearchAdd = ({ searchText, searching, onTextChange, onSubmit, onAdd
                         color="secondary"
                         sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
                         onClick={onAdd}
+                        title="Create module"
                     >
                         <Add size={12} />
                     </IconButton>

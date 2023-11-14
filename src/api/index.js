@@ -41,7 +41,8 @@ const Connections = {
 
     //modeules api endpoints
     modules: 'modules',
-    modulesearch: 'module/search'
+    modulesearch: 'module/search',
+    modulestatus: 'module/status/'
 };
 
 export default Connections;

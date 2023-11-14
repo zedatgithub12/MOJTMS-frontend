@@ -1,16 +1,5 @@
-import React, { useState } from 'react';
-import {
-    Box,
-    Button,
-    CircularProgress,
-    FormControl,
-    FormHelperText,
-    Grid,
-    TextField,
-    Typography,
-    useMediaQuery,
-    useTheme
-} from '@mui/material';
+import { useState } from 'react';
+import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, TextField, Typography, useTheme } from '@mui/material';
 import Connections from 'api';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -18,16 +7,15 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import PropTypes from 'prop-types';
 
-//============================= ADD MODULE COMPONENT ===========================//
+//============================= CREATE MODULE COMPONENT ===========================//
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Module name is required').max(120),
-    description: Yup.string().max(200)
+    description: Yup.string().max(250)
 });
 
 const CreateModule = ({ training_id, sx, handleClosePanel }) => {
     const theme = useTheme();
-    const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
 
     //submit the module to be create
     const handleSubmitting = (values) => {

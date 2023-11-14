@@ -296,6 +296,7 @@ const ViewDepartment = () => {
 
             {deleteUser && (
                 <Delete
+                    type="Delete"
                     open={deleteUser}
                     title="Deleting Department"
                     description={`Are you sure you want to delete ` + state.name}
