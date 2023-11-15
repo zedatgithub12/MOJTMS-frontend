@@ -48,7 +48,8 @@ const Connections = {
     materials: 'materials',
     modulematerials: 'module/materials/',
     materialsearch: 'material/search',
-    materialstatus: 'material/status/'
+    materialstatus: 'material/status/',
+    materialdownload: 'material/download'
 };
 
 export default Connections;

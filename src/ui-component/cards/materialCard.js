@@ -5,11 +5,10 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { Box, CircularProgress, Divider, IconButton, ListItemIcon, MenuItem, useTheme } from '@mui/material';
 import { IconArchive, IconArchiveOff, IconDownload, IconEdit, IconPaperclip } from '@tabler/icons';
-import { ActionMenu } from 'ui-component/menu/action';
 import FileTypes from 'data/static/fileTypes';
 import { MaterialMenu } from 'ui-component/menu/material';
 
-const MaterialCard = forwardRef(({ material, sx = {} }, ref) => {
+const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUnarchive, onDownload }, ref) => {
     const theme = useTheme();
 
     const getFileTypeIcon = (fileTypeName) => {
@@ -51,7 +50,7 @@ const MaterialCard = forwardRef(({ material, sx = {} }, ref) => {
                             <MaterialMenu
                                 children={
                                     <Box>
-                                        <MenuItem onClick={() => alert('okay i will un update')}>
+                                        <MenuItem onClick={onUpdate}>
                                             <ListItemIcon>
                                                 <IconEdit size={18} />
                                             </ListItemIcon>
@@ -59,15 +58,15 @@ const MaterialCard = forwardRef(({ material, sx = {} }, ref) => {
                                         </MenuItem>
 
                                         <Divider />
-                                        {material.status === 'archive' ? (
-                                            <MenuItem onClick={() => alert('okay i will un archive')}>
+                                        {material.status === 'archived' ? (
+                                            <MenuItem onClick={onArchive}>
                                                 <ListItemIcon>
                                                     <IconArchiveOff size={18} />
                                                 </ListItemIcon>
                                                 Un Archive
                                             </MenuItem>
                                         ) : (
-                                            <MenuItem onClick={() => alert('okay i will  archive')}>
+                                            <MenuItem onClick={onUnarchive}>
                                                 <ListItemIcon>
                                                     <IconArchive size={18} />
                                                 </ListItemIcon>
@@ -138,7 +137,7 @@ const MaterialCard = forwardRef(({ material, sx = {} }, ref) => {
                                     </Box>
                                 </Box>
                             </Box>
-                            <IconButton>
+                            <IconButton onClick={onDownload}>
                                 <IconDownload size={20} />
                             </IconButton>
                         </Box>
@@ -153,7 +152,11 @@ const MaterialCard = forwardRef(({ material, sx = {} }, ref) => {
 
 MaterialCard.propTypes = {
     sx: PropTypes.object,
-    material: PropTypes.object
+    material: PropTypes.object,
+    onUpdate: PropTypes.func,
+    onArchive: PropTypes.func,
+    onUnarchive: PropTypes.func,
+    onDownload: PropTypes.func
 };
 
 export default MaterialCard;

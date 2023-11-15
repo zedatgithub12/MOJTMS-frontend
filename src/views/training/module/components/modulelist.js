@@ -16,6 +16,7 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { AddMaterial } from 'views/materials/addmaterial';
 import MaterialCard from 'ui-component/cards/materialCard';
 import { useNavigate } from 'react-router';
+import { UpdateMaterial } from 'views/materials/updatematerial';
 
 const ModuleList = ({ modules, loading, error, sx }) => {
     const theme = useTheme();
@@ -31,6 +32,11 @@ const ModuleList = ({ modules, loading, error, sx }) => {
 
     const [modMaterials, setModMaterials] = useState([]);
     const [modMaterialLoading, setModMaterialLoading] = useState(false);
+
+    const [updateMaterial, setUpdateMaterial] = useState(false);
+    const [selectedMaterial, setSelectedMaterial] = useState(null);
+
+    const [changingStatus, setChangeStatus] = useState(false);
 
     const handleExpnadCollapse = (mod) => {
         if (expand && selectedModule && selectedModule.id == mod.id) {
@@ -146,6 +152,78 @@ const ModuleList = ({ modules, loading, error, sx }) => {
     const handleAddMaterial = () => {
         setAddMaterial(!addMaterial);
     };
+
+    //handle adding material to the module
+    const handleUpdateMaterial = (material) => {
+        setUpdateMaterial(true);
+        setSelectedMaterial(material);
+    };
+
+    // Handle material status change  here
+    const handleMateriaStatus = (material) => {
+        setChangeStatus(true);
+        const Api = Connections.api + Connections.materialstatus + material.id;
+        const token = sessionStorage.getItem('token');
+        const headers = {
+            Authorization: 'Bearer' + token
+        };
+
+        const status = material.status === 'active' ? 'archived' : 'active';
+
+        const data = new FormData();
+        data.append('status', status);
+
+        fetch(Api, { method: 'POST', headers: headers, body: data })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setChangeStatus(false);
+                    handlePrompts(response.message, 'success');
+                } else {
+                    setChangeStatus(false);
+                    handlePrompts(response.message, 'error');
+                }
+            })
+            .catch((error) => {
+                setChangeStatus(false);
+                handlePrompts(error, 'error');
+            });
+    };
+
+    // handle material download
+    const handleFileDownload = (material) => {
+        const folderName = material.file_type;
+        const fileName = material.file;
+
+        const Api = Connections.api + Connections.materialdownload + `?folderName=${folderName}&fileName=${fileName}`;
+
+        fetch(Api, { method: 'GET', responseType: 'blob' })
+            .then((response) => {
+                if (response.status === 200) {
+                    // Create a temporary URL for the blob
+                    // const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const url = response.url;
+                    // Create a temporary link element to trigger the download
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', fileName);
+                    document.body.appendChild(link);
+                    link.click();
+
+                    // Clean up the temporary objects after download
+                    link.parentNode.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    // Handle error response
+                    throw new Error('File download failed');
+                }
+            })
+            .catch((error) => {
+                // Handle fetch or download error
+                console.error(error);
+            });
+    };
+
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
         enqueueSnackbar(message, { variant });
@@ -220,14 +298,16 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                     )}
                                 </Box>
                             </Box>
-                            {expand && selectedModule && selectedModule.id == module.id && module.module_description && (
+                            {expand && selectedModule && selectedModule.id == module.id && (
                                 <Box sx={{ paddingLeft: 1, paddingY: 0.5 }}>
-                                    <Box>
-                                        <Typography variant="subtitle2" marginY={0.5}>
-                                            Module description
-                                        </Typography>
-                                        <Typography variant="body2">{module.module_description}</Typography>
-                                    </Box>
+                                    {module.module_description && (
+                                        <Box>
+                                            <Typography variant="subtitle2" marginY={0.5}>
+                                                Module description
+                                            </Typography>
+                                            <Typography variant="body2">{module.module_description}</Typography>
+                                        </Box>
+                                    )}
 
                                     <Box
                                         sx={{
@@ -257,7 +337,18 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                                 message="Oooops... No material found in the moment!"
                                             />
                                         ) : (
-                                            modMaterials.slice(0, 5).map((item) => <MaterialCard key={item.id} material={item} />)
+                                            modMaterials
+                                                .slice(0, 5)
+                                                .map((item) => (
+                                                    <MaterialCard
+                                                        key={item.id}
+                                                        material={item}
+                                                        onUpdate={() => handleUpdateMaterial(item)}
+                                                        onArchive={() => handleMateriaStatus(item)}
+                                                        onUnarchive={() => handleMateriaStatus(item)}
+                                                        onDownload={() => handleFileDownload(item)}
+                                                    />
+                                                ))
                                         )}
 
                                         {modMaterials && modMaterials.length > 5 && (
@@ -307,12 +398,18 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                 />
             )}
 
-            <AddMaterial
-                open={addMaterial}
-                handleClose={() => setAddMaterial(false)}
-                sx={{}}
-                module_id={selectedModule ? selectedModule.id : null}
-            />
+            {selectedModule && (
+                <AddMaterial open={addMaterial} handleClose={() => setAddMaterial(false)} sx={{}} module_id={selectedModule} />
+            )}
+
+            {selectedModule && selectedMaterial && (
+                <UpdateMaterial
+                    open={updateMaterial}
+                    handleClose={() => setUpdateMaterial(false)}
+                    sx={{}}
+                    materialInfo={selectedMaterial}
+                />
+            )}
 
             <SnackbarProvider maxSnack={3} />
         </Grid>

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     Grid,
     Dialog,
@@ -21,7 +22,6 @@ import FileTypes from 'data/static/fileTypes';
 import TrainingLanguages from 'data/static/languages';
 import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import LinearProgressWithLabel from 'utils/components/LinearProgressWithValue';
 import { convertToMB } from 'utils/functions';
@@ -35,12 +35,12 @@ const validationSchema = Yup.object().shape({
     description: Yup.string()
 });
 
-export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
+export const UpdateMaterial = ({ materialInfo, open, handleClose, sx }) => {
     const theme = useTheme();
     const [material, setMaterial] = useState(null);
-    const [type, setType] = useState('upload');
+    const [type, setType] = useState(materialInfo.file_type);
     const [extension, setExtension] = useState();
-    const [size, setSize] = useState();
+    const [size, setSize] = useState(materialInfo.file_size);
     const [fileValidation, setFileValidation] = useState({
         status: true,
         message: ''
@@ -91,22 +91,21 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
 
     const MaterialType = FileTypes.find((file) => file.name === type);
 
-    //submit the material to be added
+    //submit the material to be updated
     const handleSubmitting = (values) => {
         // Handle form submission here
-        if (material && fileValidation.status) {
+        if (fileValidation.status) {
             setIsSubmitting(true);
 
-            const Api = Connections.api + Connections.materials;
-            const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+            const Api = Connections.api + Connections.materials + '/' + materialInfo.id;
+
             const token = sessionStorage.getItem('token');
             const headers = {
                 Authorization: 'Bearer' + token
             };
 
             const data = new FormData();
-            data.append('module_id', module_id);
-            data.append('added_by', ActiveUser.user.id);
+            data.append('module_id', materialInfo.module_id);
             data.append('title', values.name);
             data.append('description', values.description);
             data.append('language', values.language);
@@ -136,12 +135,12 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                     handlePrompts(error.message, 'error');
                 });
         } else {
-            handlePrompts('Please upload a file.', 'error');
+            handlePrompts('Please upload a valid file.', 'error');
         }
     };
 
     const formik = useFormik({
-        initialValues: { name: '', description: '', language: '' },
+        initialValues: { name: materialInfo.title, description: materialInfo.description, language: materialInfo.language },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSubmitting(values);
@@ -169,7 +168,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                             background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})`
                         }}
                     >
-                        <Typography variant="h4">Add material</Typography>{' '}
+                        <Typography variant="h4">Update material</Typography>{' '}
                         <IconButton onClick={handleClose} sx={{ position: 'absolute', top: 6, right: 10 }}>
                             <IconX size={22} />
                         </IconButton>
@@ -213,7 +212,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                             </label>
                         </Box>
 
-                        {material && (
+                        {material ? (
                             <Box sx={{ margin: 1.6 }}>
                                 <Typography variant="subtitle1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                     {material.name.length > 60 ? `${material.name.slice(0, 50)}...` : material.name}
@@ -232,6 +231,31 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                     )}
                                     <Typography variant="body2" sx={{}}>
                                         {size}
+                                    </Typography>
+                                </Box>
+
+                                <FormHelperText error id="standard-weight-helper-text">
+                                    {fileValidation.message}
+                                </FormHelperText>
+                            </Box>
+                        ) : (
+                            <Box sx={{ margin: 1.6 }}>
+                                <Typography variant="subtitle1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {materialInfo.title.length > 60 ? `${materialInfo.title.slice(0, 50)}...` : materialInfo.title}
+                                </Typography>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingY: 1
+                                    }}
+                                >
+                                    {materialInfo.file_size && (
+                                        <Divider orientation="vertical" flexItem sx={{ color: theme.palette.primary.main, marginX: 2 }} />
+                                    )}
+                                    <Typography variant="body2" sx={{}}>
+                                        {materialInfo.file_size}
                                     </Typography>
                                 </Box>
 
@@ -354,7 +378,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                             color="secondary"
                                             sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
                                         >
-                                            Add Material
+                                            Update
                                         </Button>
                                     </AnimateButton>
                                 </Box>
@@ -368,8 +392,8 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
     );
 };
 
-AddMaterial.propTypes = {
-    module_id: PropTypes.number,
+UpdateMaterial.propTypes = {
+    materialInfo: PropTypes.object,
     open: PropTypes.bool,
     handleClose: PropTypes.func,
     sx: PropTypes.object
