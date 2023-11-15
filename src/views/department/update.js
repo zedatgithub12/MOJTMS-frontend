@@ -24,7 +24,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { convertToMB, validateImage } from 'utils/functions';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import { sizes } from 'settings';
+import { sizes } from 'constants';
 import { useLocation, useNavigate } from 'react-router';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';

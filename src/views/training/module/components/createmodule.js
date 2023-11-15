@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Module name is required').max(120),
-    description: Yup.string().max(250)
+    description: Yup.string().max(500)
 });
 
 const CreateModule = ({ training_id, sx, handleClosePanel }) => {

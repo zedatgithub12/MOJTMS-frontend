@@ -16,6 +16,7 @@ export const MiniHeader = ({ title, back, option, optionChildrens, sx }) => {
                 transition: 'height 0.3s ease-in-out',
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
+                zIndex: 1,
                 ...sx
             }}
         >

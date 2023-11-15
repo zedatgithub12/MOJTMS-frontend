@@ -10,18 +10,18 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
     const navigate = useNavigate();
 
     const [customHeight, setCustomHeight] = useState('200px');
-    const [isScrolledToTop, setIsScrolledToTop] = useState(false);
+    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
     useEffect(() => {
         const handleScroll = () => {
             const scrollPosition = window.scrollY;
 
-            if (scrollPosition === 0) {
-                setCustomHeight('200px');
-                setIsScrolledToTop(false); // Set your desired smaller height here
-            } else {
+            if (scrollPosition >= 3) {
                 setCustomHeight('60px'); // Set the default height of the component here
                 setIsScrolledToTop(true);
+            } else {
+                setIsScrolledToTop(false); // Set your desired smaller height here
+                setCustomHeight('200px');
             }
         };
 
@@ -37,8 +37,9 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
             sx={{
                 position: 'sticky',
                 top: 76,
+                zIndex: 1,
                 minHeight: customHeight,
-                transition: 'height 0.3s ease-in-out',
+                transition: 'all 0.9s ease-in-out',
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
                 ...sx
@@ -50,12 +51,12 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                     display: 'flex',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    alignItems: 'flex-start',
+                    alignItems: isScrolledToTop ? 'center' : 'flex-start',
                     paddingX: 2,
                     pt: 1
                 }}
             >
-                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: isScrolledToTop ? 'center' : 'flex-start' }}>
                     {back && (
                         <IconButton onClick={() => navigate(-1)}>
                             <IconArrowLeft color={theme.palette.background.default} />
@@ -65,7 +66,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                     <Typography
                         color={'white'}
                         variant="h4"
-                        sx={{ opacity: isScrolledToTop ? 1 : 0, transition: 'opacity 0.3s ease-in-out', paddingX: 1 }}
+                        sx={{ opacity: isScrolledToTop ? 1 : 0, transition: 'opacity 0.8s ease-in-out', paddingX: 1 }}
                     >
                         {title}
                     </Typography>
@@ -79,13 +80,13 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                     sx={{
                         alignSelf: 'center',
                         opacity: isScrolledToTop ? 0 : 1,
-                        transition: 'opacity 0.3s ease-in-out',
+                        transition: 'opacity 0.8s ease-in-out',
                         paddingY: 1,
                         zIndex: 4,
                         overflow: 'hidden'
                     }}
                 >
-                    {children}
+                    {!isScrolledToTop && children}
                 </Box>
             </Grid>
         </Grid>

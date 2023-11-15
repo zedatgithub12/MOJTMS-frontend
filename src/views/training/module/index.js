@@ -18,7 +18,7 @@ const TrainingModules = ({ training_id }) => {
     const [lastPage, setLastPage] = useState(1);
     const [rowCountState] = useState(lastPage);
     const [paginationModel, setPaginationModel] = useState({
-        pageSize: 20,
+        pageSize: 10,
         page: 1
     });
 
@@ -103,7 +103,7 @@ const TrainingModules = ({ training_id }) => {
     };
     return (
         <Grid container>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{ paddingTop: 2 }}>
                 <SearchAdd
                     searchText={search}
                     searching={searching}
@@ -122,7 +122,7 @@ const TrainingModules = ({ training_id }) => {
                 <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} />
 
                 {/* the pagination will be shown when the number of modules exceed five */}
-                {modules.length > 5 && (
+                {modules.length > 10 && (
                     <Box sx={{ paddingY: 4 }}>
                         <Pagination
                             showFirstButton

@@ -39,10 +39,16 @@ const Connections = {
     categories: 'categories',
     categorsearch: 'category/search',
 
-    //modeules api endpoints
+    //modules api endpoints
     modules: 'modules',
     modulesearch: 'module/search',
-    modulestatus: 'module/status/'
+    modulestatus: 'module/status/',
+
+    //material api endpoints
+    materials: 'materials',
+    modulematerials: 'module/materials/',
+    materialsearch: 'material/search',
+    materialstatus: 'material/status/'
 };
 
 export default Connections;

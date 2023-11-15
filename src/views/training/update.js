@@ -23,7 +23,7 @@ import { IconUpload } from '@tabler/icons';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { convertToMB, validateImage } from 'utils/functions';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import { sizes } from 'settings';
+import { sizes } from 'constants';
 import { useLocation, useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
@@ -38,8 +38,8 @@ import TrainingLanguages from 'data/static/languages';
 // ==============================|| UPDATE TRAINING PAGE ||============================== //
 
 const validationSchema = Yup.object().shape({
-    description: Yup.string().max(200),
-    prerequisites: Yup.string().max(250)
+    description: Yup.string().max(800),
+    prerequisites: Yup.string().max(750)
 });
 
 const UpdateTraining = () => {

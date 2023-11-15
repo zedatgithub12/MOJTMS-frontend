@@ -23,7 +23,7 @@ import { IconUpload } from '@tabler/icons';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { convertToMB, validateImage } from 'utils/functions';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import { sizes } from 'settings';
+import { sizes } from 'constants';
 import { useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
@@ -39,10 +39,10 @@ import TrainingLanguages from 'data/static/languages';
 
 const validationSchema = Yup.object().shape({
     category: Yup.string().required('Training category is required'),
-    name: Yup.string().required('Training name is required').max(80),
+    name: Yup.string().required('Training title is required').max(80),
     language: Yup.string().required('Training language is required'),
-    description: Yup.string().max(200),
-    prerequisites: Yup.string().max(250)
+    description: Yup.string().max(800),
+    prerequisites: Yup.string().max(750)
 });
 
 const AddTraining = () => {

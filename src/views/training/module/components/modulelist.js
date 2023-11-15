@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, useTheme, CircularProgress, IconButton, Typography } from '@mui/material';
+import { Grid, Box, useTheme, CircularProgress, IconButton, Typography, Divider, Button } from '@mui/material';
 // project imports
 import noresult from 'assets/images/no_result.png';
 import errorImage from 'assets/images/error.jpg';
@@ -13,9 +13,13 @@ import UpdateModule from './updatemodule';
 import { Delete } from 'ui-component/delete/Delete';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { AddMaterial } from 'views/materials/addmaterial';
+import MaterialCard from 'ui-component/cards/materialCard';
+import { useNavigate } from 'react-router';
 
 const ModuleList = ({ modules, loading, error, sx }) => {
     const theme = useTheme();
+    const navigate = useNavigate();
 
     const [selectedModule, setSelectedModule] = useState(null);
     const [update, setUpdate] = useState(false);
@@ -23,11 +27,16 @@ const ModuleList = ({ modules, loading, error, sx }) => {
     const [archive, setArchive] = useState(false);
     const [archiving, setArchiving] = useState(false);
     const [activating, setActivating] = useState(false);
+    const [addMaterial, setAddMaterial] = useState(false);
+
+    const [modMaterials, setModMaterials] = useState([]);
+    const [modMaterialLoading, setModMaterialLoading] = useState(false);
 
     const handleExpnadCollapse = (mod) => {
         if (expand && selectedModule && selectedModule.id == mod.id) {
             setExpand(false);
         } else {
+            handleFeatchingMaterials(mod);
             setSelectedModule(mod);
             setExpand(true);
         }
@@ -75,7 +84,9 @@ const ModuleList = ({ modules, loading, error, sx }) => {
 
     //activate the archived modules
     const handleActivating = (module) => {
+        setSelectedModule(module);
         setActivating(true);
+
         const Api = Connections.api + Connections.modulestatus + module.id;
         const token = sessionStorage.getItem('token');
         const headers = {
@@ -103,6 +114,38 @@ const ModuleList = ({ modules, loading, error, sx }) => {
             });
     };
 
+    //fetch a training materials
+    const handleFeatchingMaterials = (mod) => {
+        setModMaterialLoading(true);
+        var Api = Connections.api + Connections.modulematerials + mod.id;
+
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, { method: 'GET', headers: headers })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setModMaterialLoading(false);
+                    setModMaterials(response.data);
+                } else {
+                    setModMaterialLoading(false);
+                }
+            })
+            .catch((error) => {
+                setModMaterialLoading(false);
+                handlePrompts(error, 'error');
+            });
+    };
+
+    //handle adding material to the module
+    const handleAddMaterial = () => {
+        setAddMaterial(!addMaterial);
+    };
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
         enqueueSnackbar(message, { variant });
@@ -162,9 +205,13 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                         <IconButton
                                             onClick={() => handleActivating(module)}
                                             title="Un archive"
-                                            disabled={activating ? true : false}
+                                            disabled={selectedModule.id == module.id && activating ? true : false}
                                         >
-                                            {activating ? <CircularProgress size={20} /> : <IconArchiveOff size={18} />}
+                                            {selectedModule.id == module.id && activating ? (
+                                                <CircularProgress size={20} />
+                                            ) : (
+                                                <IconArchiveOff size={18} />
+                                            )}
                                         </IconButton>
                                     ) : (
                                         <IconButton onClick={() => handleArchivingPanel(module)} title="Archive">
@@ -174,11 +221,58 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                 </Box>
                             </Box>
                             {expand && selectedModule && selectedModule.id == module.id && module.module_description && (
-                                <Box sx={{ paddingLeft: 7, paddingY: 0.5 }}>
-                                    <Typography variant="subtitle2" marginY={0.5}>
-                                        Module description
-                                    </Typography>
-                                    <Typography variant="body2">{module.module_description}</Typography>
+                                <Box sx={{ paddingLeft: 1, paddingY: 0.5 }}>
+                                    <Box>
+                                        <Typography variant="subtitle2" marginY={0.5}>
+                                            Module description
+                                        </Typography>
+                                        <Typography variant="body2">{module.module_description}</Typography>
+                                    </Box>
+
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            marginTop: 2
+                                        }}
+                                    >
+                                        <Typography variant="subtitle1">Training Materials</Typography>
+                                        <Button variant="text" color="primary" onClick={() => handleAddMaterial()}>
+                                            Add New
+                                        </Button>
+                                    </Box>
+                                    <Divider sx={{ marginY: 0.8 }} />
+
+                                    <Box>
+                                        {modMaterialLoading ? (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8 }}>
+                                                <CircularProgress size={22} />
+                                            </Box>
+                                        ) : modMaterials.length == 0 ? (
+                                            <NoResult
+                                                image={noresult}
+                                                title="Result Not Found"
+                                                message="Oooops... No material found in the moment!"
+                                            />
+                                        ) : (
+                                            modMaterials.slice(0, 5).map((item) => <MaterialCard key={item.id} material={item} />)
+                                        )}
+
+                                        {modMaterials && modMaterials.length > 5 && (
+                                            <Button
+                                                variant="outlined"
+                                                color="primary"
+                                                sx={{ maxWidth: 180, py: 1, px: 4, my: 4 }}
+                                                onClick={() =>
+                                                    navigate('/training/module/materials', { state: selectedModule ? selectedModule : {} })
+                                                }
+                                            >
+                                                More Materials
+                                            </Button>
+                                        )}
+                                    </Box>
                                 </Box>
                             )}
                         </Box>
@@ -212,6 +306,13 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                     handleClose={() => setArchive(false)}
                 />
             )}
+
+            <AddMaterial
+                open={addMaterial}
+                handleClose={() => setAddMaterial(false)}
+                sx={{}}
+                module_id={selectedModule ? selectedModule.id : null}
+            />
 
             <SnackbarProvider maxSnack={3} />
         </Grid>

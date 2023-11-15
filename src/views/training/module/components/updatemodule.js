@@ -23,7 +23,7 @@ import { IconX } from '@tabler/icons';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().max(120),
-    description: Yup.string().max(250)
+    description: Yup.string().max(500)
 });
 
 const UpdateModule = ({ module, sx, handleClosePanel }) => {

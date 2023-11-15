@@ -138,20 +138,19 @@ const ViewTraining = () => {
                     }}
                 >
                     {state.thumbnail && bigDevice && (
-                        <Box>
-                            <CardMedia
-                                sx={{
-                                    width: 120,
-                                    height: 120,
-                                    boxShadow: 2,
-                                    borderRadius: 6,
-                                    border: 4,
-                                    borderColor: theme.palette.secondary.light
-                                }}
-                                image={ImageApi + state.thumbnail}
-                                title={state.name}
-                            />
-                        </Box>
+                        <CardMedia
+                            sx={{
+                                width: 120,
+                                height: 120,
+                                boxShadow: 2,
+                                borderRadius: 6,
+                                border: 4,
+                                borderColor: theme.palette.secondary.light,
+                                aspectRatio: 1
+                            }}
+                            image={ImageApi + state.thumbnail}
+                            title={state.name}
+                        />
                     )}
 
                     <Box sx={{ marginX: 3, padding: 0.2 }}>
@@ -212,14 +211,24 @@ const ViewTraining = () => {
                 </Box>
             </PageHeader>
 
-            <Grid container sx={{ minHeight: 200, padding: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
+            <Grid
+                container
+                sx={{
+                    minHeight: 200,
+                    padding: 1,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    justifyContent: 'space-around'
+                }}
+            >
                 <Grid
                     item
                     xs={12}
                     sm={12}
-                    md={3}
-                    lg={3}
-                    xl={3}
+                    md={4}
+                    lg={3.6}
+                    xl={3.6}
                     sx={{
                         alignItems: 'center',
                         justifyContent: 'center',
