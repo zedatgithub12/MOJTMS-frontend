@@ -31,8 +31,7 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Material name is required').max(80),
-    language: Yup.string().required('Material language is required'),
-    description: Yup.string()
+    language: Yup.string().required('Material language is required')
 });
 
 export const UpdateMaterial = ({ materialInfo, open, handleClose, sx }) => {

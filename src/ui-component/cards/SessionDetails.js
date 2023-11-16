@@ -131,7 +131,7 @@ const SessionDetails = forwardRef(
                                 </Box>
                             )}
                             {resources && (
-                                <>
+                                <Box>
                                     <Divider />
                                     <Button
                                         variant="text"
@@ -146,7 +146,7 @@ const SessionDetails = forwardRef(
                                             <KeyboardArrowDownOutlinedIcon size={20} />
                                         )}
                                     </Button>
-                                </>
+                                </Box>
                             )}
 
                             {showResources && (

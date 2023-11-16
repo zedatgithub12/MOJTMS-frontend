@@ -36,8 +36,6 @@ const ModuleList = ({ modules, loading, error, sx }) => {
     const [updateMaterial, setUpdateMaterial] = useState(false);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
 
-    const [changingStatus, setChangeStatus] = useState(false);
-
     const handleExpnadCollapse = (mod) => {
         if (expand && selectedModule && selectedModule.id == mod.id) {
             setExpand(false);
@@ -161,7 +159,6 @@ const ModuleList = ({ modules, loading, error, sx }) => {
 
     // Handle material status change  here
     const handleMateriaStatus = (material) => {
-        setChangeStatus(true);
         const Api = Connections.api + Connections.materialstatus + material.id;
         const token = sessionStorage.getItem('token');
         const headers = {
@@ -177,15 +174,15 @@ const ModuleList = ({ modules, loading, error, sx }) => {
             .then((response) => response.json())
             .then((response) => {
                 if (response.success) {
-                    setChangeStatus(false);
+                    const newData = modMaterials.filter((item) => item.id !== material.id);
+                    setModMaterials(newData); //remove the archived item from the material list
+
                     handlePrompts(response.message, 'success');
                 } else {
-                    setChangeStatus(false);
                     handlePrompts(response.message, 'error');
                 }
             })
             .catch((error) => {
-                setChangeStatus(false);
                 handlePrompts(error, 'error');
             });
     };
@@ -330,7 +327,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8 }}>
                                                 <CircularProgress size={22} />
                                             </Box>
-                                        ) : modMaterials.length == 0 ? (
+                                        ) : !modMaterialLoading && modMaterials.length == 0 ? (
                                             <NoResult
                                                 image={noresult}
                                                 title="Result Not Found"
@@ -351,14 +348,12 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                                 ))
                                         )}
 
-                                        {modMaterials && modMaterials.length > 5 && (
+                                        {selectedModule && modMaterials && modMaterials.length > 5 && (
                                             <Button
                                                 variant="outlined"
                                                 color="primary"
                                                 sx={{ maxWidth: 180, py: 1, px: 4, my: 4 }}
-                                                onClick={() =>
-                                                    navigate('/training/module/materials', { state: selectedModule ? selectedModule : {} })
-                                                }
+                                                onClick={() => navigate('/training/module/materials', { state: selectedModule })}
                                             >
                                                 More Materials
                                             </Button>

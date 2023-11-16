@@ -40,7 +40,8 @@ const TrainingModules = ({ training_id }) => {
 
     const FetchModules = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.modules + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+        var Api =
+            Connections.api + Connections.trainingModules + training_id + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -58,14 +59,17 @@ const TrainingModules = ({ training_id }) => {
         }
     };
 
-    const { error } = useQuery(['data', paginationModel], () => handleFetching(), {
+    const { isLoading, error } = useQuery(['data', paginationModel], () => handleFetching(), {
         refetchOnWindowFocus: false
     });
 
     const handleSearching = () => {
         setSearching(true);
         var Api =
-            Connections.api + Connections.modulesearch + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
+            Connections.api +
+            Connections.modulesearch +
+            training_id +
+            `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
 
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -119,7 +123,7 @@ const TrainingModules = ({ training_id }) => {
                     />
                 )}
 
-                <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} />
+                <ModuleList modules={modules} loading={isLoading} error={error} sx={{ marginTop: 1.5 }} />
 
                 {/* the pagination will be shown when the number of modules exceed five */}
                 {modules.length > 10 && (

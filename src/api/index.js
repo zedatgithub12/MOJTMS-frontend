@@ -41,12 +41,14 @@ const Connections = {
 
     //modules api endpoints
     modules: 'modules',
-    modulesearch: 'module/search',
+    modulesearch: 'module/search/',
     modulestatus: 'module/status/',
+    trainingModules: 'training/modules/',
 
     //material api endpoints
     materials: 'materials',
     modulematerials: 'module/materials/',
+    allmaterials: 'training/module/materials/',
     materialsearch: 'material/search',
     materialstatus: 'material/status/',
     materialdownload: 'material/download'

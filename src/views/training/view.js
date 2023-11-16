@@ -64,43 +64,6 @@ const ViewTraining = () => {
         setTab(newValue);
     };
 
-    const DeleteDepartment = () => {
-        setDeleting(true);
-
-        var Api = Connections.api + Connections.departments + '/' + state.id;
-        const token = sessionStorage.getItem('token');
-        var headers = {
-            Authorization: `Bearer` + token,
-            accept: 'application/json',
-            'Content-Type': 'application/json'
-        };
-
-        fetch(Api, {
-            method: 'DELETE',
-            headers: headers
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.success) {
-                    setDeleting(false);
-                    setSelectedRecord(false);
-                    navigate(-1);
-                    handlePrompts(response.message, 'success');
-                } else {
-                    setDeleting(false);
-                    handlePrompts(response.message, 'error');
-                }
-            })
-            .catch((error) => {
-                setDeleting(false);
-                handlePrompts(error.message, 'error');
-            });
-    };
-
-    const handlePrompts = (message, severity) => {
-        enqueueSnackbar(message, { severity });
-    };
-
     return (
         <Grid
             container

@@ -4,3 +4,8 @@ export const sizes = {
     video: 100,
     audio: 100
 };
+
+export const letterLength = {
+    startfrom: 0,
+    endat: 220
+};

@@ -1,6 +1,7 @@
 import { Button, Grid, Typography } from '@mui/material';
 import React from 'react';
 import PropTypes from 'prop-types';
+import noresult from 'assets/images/no_result.png';
 
 export const NoResult = ({ image, title, message, buttontitle, onPress }) => {
     return (
