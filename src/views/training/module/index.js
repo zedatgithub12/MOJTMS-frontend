@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Grid, Pagination } from '@mui/material';
 import PropTypes from 'prop-types';
-import { SearchAdd } from './components/searchadd';
+import { SearchAdd } from './searchadd';
 import Connections from 'api';
-import CreateModule from './components/createmodule';
-import ModuleList from './components/modulelist';
+import CreateModule from './createmodule';
+import ModuleList from './modulelist';
 import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Box } from '@mui/system';

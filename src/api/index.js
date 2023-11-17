@@ -51,7 +51,18 @@ const Connections = {
     allmaterials: 'training/module/materials/',
     materialsearch: 'material/search',
     materialstatus: 'material/status/',
-    materialdownload: 'material/download'
+    materialdownload: 'material/download',
+
+    //assassement api endpoints
+    assessments: 'assessments',
+    assessmentStatus: 'assessment/status/',
+    assessmentSearch: 'assessment/search',
+
+    //questions api endpoints
+    questions: 'questions',
+
+    //options api endpoints
+    options: 'question-options'
 };
 
 export default Connections;

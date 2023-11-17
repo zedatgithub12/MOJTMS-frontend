@@ -58,7 +58,7 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                     </Box>
                 </Box>
                 <Box>
-                    <Button variant="contained" color="secondary" padding={2} onClick={onAdd}>
+                    <Button variant="contained" color="primary" padding={3} onClick={onAdd}>
                         <Add size={10} />
                         <Typography marginLeft={1} variant="subtitle1" sx={{ color: theme.palette.background.default }}>
                             {addTitle}

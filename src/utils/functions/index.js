@@ -58,3 +58,19 @@ export const validateImage = (file, size) => {
         message: ''
     };
 };
+
+export const TimeFormatter = (number) => {
+    if (number === 0) {
+        return '0 m';
+    } else if (number < 0) {
+        return 'Invalid time';
+    } else if (number === 60) {
+        return '1 hour';
+    } else if (number > 60) {
+        const hours = Math.floor(number / 60);
+        const minutes = number % 60;
+        return `${hours}:${minutes.toString().padStart(2, '0')} m`;
+    } else {
+        return `${number} m`;
+    }
+};

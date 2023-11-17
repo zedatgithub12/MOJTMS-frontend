@@ -92,7 +92,7 @@ const dashboard = {
                 {
                     id: 'assassements',
                     title: 'Assassements',
-                    url: '/sample-page',
+                    url: '/assessments',
                     type: 'item',
                     breadcrumbs: false
                 },

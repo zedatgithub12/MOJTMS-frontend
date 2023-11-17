@@ -49,11 +49,6 @@ const ViewTraining = () => {
     const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
 
     const [tab, setTab] = useState(0);
-    const [open, setOpen] = useState(false);
-    const [search, setSearch] = useState('');
-    const [searching, setSearching] = useState(false);
-    const [deleteRecord, setSelectedRecord] = useState(false);
-    const [deleting, setDeleting] = useState(false);
     const [collapse, setCollapse] = useState(true);
 
     const ExpndText = () => {

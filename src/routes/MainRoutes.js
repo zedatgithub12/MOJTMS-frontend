@@ -31,6 +31,12 @@ const UpdateTraining = Loadable(lazy(() => import('views/training/update')));
 // Modules Routing
 const TrainingModules = Loadable(lazy(() => import('views/training/module')));
 
+//Assessments Routing
+const Assessment = Loadable(lazy(() => import('views/evaluations/assessment')));
+const CreateAssessment = Loadable(lazy(() => import('views/evaluations/assessment/create')));
+const UpdateAssessment = Loadable(lazy(() => import('views/evaluations/assessment/update')));
+const ViewAssessement = Loadable(lazy(() => import('views/evaluations/assessment/view')));
+
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
 
@@ -210,6 +216,25 @@ const MainRoutes = {
         {
             path: 'training/modules',
             element: <TrainingModules />
+        },
+
+        //evaluations
+
+        {
+            path: 'assessments',
+            element: <Assessment />
+        },
+        {
+            path: 'assessment/create',
+            element: <CreateAssessment />
+        },
+        {
+            path: 'assessment/update',
+            element: <UpdateAssessment />
+        },
+        {
+            path: 'assessment/view',
+            element: <ViewAssessement />
         }
     ]
 };
