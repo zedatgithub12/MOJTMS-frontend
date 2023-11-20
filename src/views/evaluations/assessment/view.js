@@ -10,17 +10,19 @@ import {
     Checkbox,
     FormControlLabel,
     Radio,
-    RadioGroup
+    RadioGroup,
+    IconButton
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { TimeFormatter } from 'utils/functions';
 import ViewHeader from './components/viewHeader';
-import { IconArchive, IconArchiveOff, IconEdit, IconPlus } from '@tabler/icons';
+import { IconArchive, IconArchiveOff, IconEdit, IconPlus, IconTrash } from '@tabler/icons';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import CreateQuestion from './components/createQuestion';
 import CreateOptions from './components/createOptions';
 import { useQuery } from 'react-query';
+import { Delete } from 'ui-component/delete/Delete';
 
 const ViewAssessement = () => {
     const theme = useTheme();
@@ -35,6 +37,10 @@ const ViewAssessement = () => {
     const [creatingQuestion, setCreatingQuestion] = useState(false);
     const [QuestionInfo, setQuestionInfo] = useState([]);
     const [addingOption, setAddingOption] = useState(false);
+
+    const [selectedQuestion, setSelectedQuestion] = useState();
+    const [deleteQue, setDeleteQue] = useState(false);
+    const [deleting, setDeleting] = useState(false);
 
     //handle data fetching
     const handleDataFetching = async () => {
@@ -72,11 +78,6 @@ const ViewAssessement = () => {
     const { isLoading, error } = useQuery(['data'], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
-
-    const handleOpenOption = (question) => {
-        setDisplay('option');
-        setQuestionInfo(question);
-    };
 
     // Handle assessment status change  here
     const handleAssessmentStatus = (newStatus) => {
@@ -142,10 +143,6 @@ const ViewAssessement = () => {
             });
     };
 
-    const handleCheckboxChange = (event) => {
-        console.log('checked');
-    };
-
     // handle option creation
     const handleOptionSubmission = (choices) => {
         setAddingOption(true);
@@ -161,6 +158,8 @@ const ViewAssessement = () => {
             .then((response) => {
                 if (response.success) {
                     setAddingOption(false);
+                    setDisplay('question');
+                    fetchAssessments();
                     handlePrompts(response.message, 'success');
                 } else {
                     setAddingOption(false);
@@ -170,6 +169,46 @@ const ViewAssessement = () => {
             .catch((error) => {
                 setAddingOption(false);
                 handlePrompts(error, 'error');
+            });
+    };
+
+    //initiate question deletion
+    const handleDeleteInitiation = (question) => {
+        setSelectedQuestion(question);
+        setDeleteQue(true);
+    };
+
+    //the following function handles delete question functionality
+    const DeleteQuestion = (que_Id) => {
+        setDeleting(true);
+
+        var Api = Connections.api + Connections.questions + '/' + que_Id;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, {
+            method: 'DELETE',
+            headers: headers
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setDeleting(false);
+                    setDeleteQue(false);
+                    fetchAssessments();
+                    handlePrompts(response.message, 'success');
+                } else {
+                    setDeleting(false);
+                    handlePrompts(response.message, 'error');
+                }
+            })
+            .catch((error) => {
+                setDeleting(false);
+                handlePrompts(error.message, 'error');
             });
     };
 
@@ -272,18 +311,31 @@ const ViewAssessement = () => {
                 )}
 
                 {questions.map((question, index) => (
-                    <Box key={question.id} sx={{ marginTop: 2, paddingX: 1 }} onClick={() => handleOpenOption(question)}>
+                    <Box key={question.id} sx={{ marginTop: 6, paddingX: 1 }}>
                         <Box
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'row',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
                             }}
                         >
-                            <Typography variant="subtitle1">{(index += 1)}.</Typography>
-                            <Typography variant="subtitle1" marginLeft={1.6}>
-                                {question.question_text}
-                            </Typography>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                <Typography variant="subtitle1">{(index += 1)}.</Typography>
+                                <Typography variant="subtitle1" marginLeft={1.6}>
+                                    {question.question_text}
+                                </Typography>
+                            </Box>
+
+                            <IconButton onClick={() => handleDeleteInitiation(question.id)}>
+                                <IconTrash size={18} color={theme.palette.error.main} />
+                            </IconButton>
                         </Box>
 
                         <Box>
@@ -298,9 +350,7 @@ const ViewAssessement = () => {
                                       >
                                           <FormControlLabel
                                               key={option.id}
-                                              control={
-                                                  <Checkbox checked={option.is_correct} onChange={handleCheckboxChange} color="primary" />
-                                              }
+                                              control={<Checkbox checked={option.is_correct} color="primary" />}
                                               label={option.option_text}
                                           />
                                       </Box>
@@ -310,7 +360,8 @@ const ViewAssessement = () => {
                                           sx={{
                                               display: 'flex',
                                               flexDirection: 'row',
-                                              alignItems: 'center'
+                                              alignItems: 'center',
+                                              marginTop: 1
                                           }}
                                       >
                                           <RadioGroup aria-label="selection" name="selection">
@@ -329,6 +380,20 @@ const ViewAssessement = () => {
                     </Box>
                 ))}
             </Grid>
+
+            {deleteQue && (
+                <Delete
+                    type="Delete"
+                    open={deleteQue}
+                    title="Deleting Question"
+                    description={`Are you sure you want to delete the question`}
+                    onNo={() => setDeleteQue(false)}
+                    onYes={() => DeleteQuestion(selectedQuestion)}
+                    deleting={deleting}
+                    handleClose={() => setDeleteQue(false)}
+                />
+            )}
+
             <SnackbarProvider maxSnack={3} />
         </Grid>
     );

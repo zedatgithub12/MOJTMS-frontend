@@ -6,6 +6,7 @@ import {
     FormControl,
     FormControlLabel,
     FormHelperText,
+    IconButton,
     InputLabel,
     OutlinedInput,
     Radio,
@@ -17,7 +18,7 @@ import { Box } from '@mui/system';
 import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { IconCheck } from '@tabler/icons';
+import { IconCheck, IconMinus, IconX } from '@tabler/icons';
 import { useState } from 'react';
 
 const validationSchema = Yup.object().shape({
@@ -27,11 +28,12 @@ const validationSchema = Yup.object().shape({
 const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
     const theme = useTheme();
 
-    const options = []; //an array the contains a question options
+    const [options, setOptions] = useState([]); //an array the contains a question options
     const [truefalse, setTrueFalse] = useState([
         { question_id: question.id, option_text: 'True', is_correct: false },
         { question_id: question.id, option_text: 'False', is_correct: false }
-    ]); //an array the contains a question options for true or false question types
+    ]); //an array the contains a question options for true or false question type
+
     const [selection, setSelection] = useState('');
     const [answered, setAnswered] = useState(false);
 
@@ -48,12 +50,36 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
         setSelection(event.target.value);
     };
 
-    const hasAnswer = (option) => {
-        return option.some((item) => item.is_correct === true);
+    const handleOptionChange = (event) => {
+        const updatedArray = options.map((item) => {
+            if (item.option_text === event.target.value) {
+                return { ...item, is_correct: true };
+            }
+            setAnswered(true);
+            return { ...item, is_correct: false };
+        });
+
+        setOptions(updatedArray);
+        setSelection(event.target.value);
     };
 
-    const handleCheckboxChange = (event) => {
-        console.log('checked');
+    const handleCheckboxChange = (index) => {
+        const updatedOptions = options.map((option, i) => {
+            if (i === index) {
+                return {
+                    ...option,
+                    is_correct: !option.is_correct
+                };
+            }
+            return option;
+        });
+
+        setAnswered(true);
+        setOptions(updatedOptions);
+    };
+
+    const hasAnswer = (option) => {
+        return option.some((item) => item.is_correct == true);
     };
 
     const handleOptionAddition = (formik, question) => {
@@ -62,7 +88,14 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
             option_text: formik.values.option,
             is_correct: false
         };
-        options.push(newOption);
+
+        const updatedOptions = [...options, newOption];
+        setOptions(updatedOptions);
+    }; // append new option to existing arrayof options
+
+    const handleOptionRemoving = (index) => {
+        const newOptions = options.filter((item, i) => i !== index);
+        setOptions(newOptions);
     };
 
     //submit the question to be added
@@ -98,20 +131,36 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
                         </RadioGroup>
                     </FormControl>
                 ) : question.question_type === 'multiple-choice' ? (
-                    <Box>
-                        {options.map((option) => (
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        {options.map((option, index) => (
                             <FormControlLabel
-                                key={option.id}
-                                control={<Checkbox checked={option.is_correct} onChange={handleCheckboxChange} color="primary" />}
-                                label={option.question_text}
+                                key={index}
+                                control={
+                                    <Checkbox checked={option.is_correct} onChange={() => handleCheckboxChange(index)} color="primary" />
+                                }
+                                label={option.option_text}
                             />
                         ))}
                     </Box>
                 ) : (
                     <FormControl component="fieldset">
-                        <RadioGroup aria-label="selection" name="selection" value={selection} onChange={handleSelectionChange}>
-                            {options.map((option) => (
-                                <FormControlLabel value={option.option_text} control={<Radio />} label={option.option_text} />
+                        <RadioGroup aria-label="selection" name="selection" value={selection} onChange={handleOptionChange}>
+                            {options.map((option, index) => (
+                                <Box
+                                    key={index}
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        marginY: 1
+                                    }}
+                                >
+                                    <FormControlLabel value={option.option_text} control={<Radio />} label={option.option_text} />
+                                    <IconButton onClick={() => handleOptionRemoving(index)}>
+                                        <IconX size={16} color={theme.palette.grey[400]} />
+                                    </IconButton>
+                                </Box>
                             ))}
                         </RadioGroup>
                     </FormControl>
