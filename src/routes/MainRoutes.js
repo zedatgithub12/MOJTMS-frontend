@@ -37,6 +37,12 @@ const CreateAssessment = Loadable(lazy(() => import('views/evaluations/assessmen
 const UpdateAssessment = Loadable(lazy(() => import('views/evaluations/assessment/update')));
 const ViewAssessement = Loadable(lazy(() => import('views/evaluations/assessment/view')));
 
+//surveys Routing
+const Survey = Loadable(lazy(() => import('views/evaluations/survey')));
+const CreateSurvey = Loadable(lazy(() => import('views/evaluations/survey/create')));
+const UpdateSurvey = Loadable(lazy(() => import('views/evaluations/survey/update')));
+const ViewSurvey = Loadable(lazy(() => import('views/evaluations/survey/view')));
+
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
 
@@ -235,6 +241,23 @@ const MainRoutes = {
         {
             path: 'assessment/view',
             element: <ViewAssessement />
+        },
+
+        {
+            path: 'survey',
+            element: <Survey />
+        },
+        {
+            path: 'survey/create',
+            element: <CreateSurvey />
+        },
+        {
+            path: 'survey/update',
+            element: <UpdateSurvey />
+        },
+        {
+            path: 'survey/view',
+            element: <ViewSurvey />
         }
     ]
 };

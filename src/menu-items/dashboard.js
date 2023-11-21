@@ -82,6 +82,14 @@ const dashboard = {
             ]
         },
         {
+            id: 'trainees',
+            title: 'Trainees',
+            type: 'item',
+            url: '/trainees',
+            icon: icons.IconUsers,
+            breadcrumbs: false
+        },
+        {
             id: 'evaluations',
             title: 'Evaluations',
             type: 'collapse',
@@ -99,20 +107,13 @@ const dashboard = {
                 {
                     id: 'surveys',
                     title: 'Surveys',
-                    url: '/sample-page',
+                    url: '/survey',
                     type: 'item',
                     breadcrumbs: false
                 }
             ]
         },
-        {
-            id: 'trainees',
-            title: 'Trainees',
-            type: 'item',
-            url: '/trainees',
-            icon: icons.IconUsers,
-            breadcrumbs: false
-        },
+
         {
             id: 'users',
             title: 'User Management',

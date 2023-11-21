@@ -31,7 +31,7 @@ export const MediumHeader = ({ title, back, option, optionChildrens, sx }) => {
                         </IconButton>
                     )}
 
-                    <Typography color={'white'} variant="h3" sx={{ paddingX: 1 }}>
+                    <Typography color={'white'} variant="h4" sx={{ paddingX: 1 }}>
                         {title}
                     </Typography>
                 </Box>

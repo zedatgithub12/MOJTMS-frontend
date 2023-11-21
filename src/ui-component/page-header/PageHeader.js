@@ -12,33 +12,29 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
     const [customHeight, setCustomHeight] = useState('200px');
     const [isScrolledToTop, setIsScrolledToTop] = useState(true);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY;
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //         const scrollPosition = window.scrollY;
 
-            if (scrollPosition >= 3) {
-                setCustomHeight('60px'); // Set the default height of the component here
-                setIsScrolledToTop(true);
-            } else {
-                setIsScrolledToTop(false); // Set your desired smaller height here
-                setCustomHeight('200px');
-            }
-        };
+    //         if (scrollPosition >= 3) {
+    //             setCustomHeight('60px'); // Set the default height of the component here
+    //             setIsScrolledToTop(true);
+    //         } else {
+    //             setIsScrolledToTop(false); // Set your desired smaller height here
+    //             setCustomHeight('200px');
+    //         }
+    //     };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+    //     window.addEventListener('scroll', handleScroll);
+    //     return () => {
+    //         window.removeEventListener('scroll', handleScroll);
+    //     };
+    // }, []);
 
     return (
         <Grid
             container
             sx={{
-                position: 'sticky',
-                top: 76,
-                zIndex: 1,
-                minHeight: customHeight,
                 transition: 'all 0.9s ease-in-out',
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
@@ -63,13 +59,13 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                         </IconButton>
                     )}
 
-                    <Typography
+                    {/* <Typography
                         color={'white'}
                         variant="h4"
                         sx={{ opacity: isScrolledToTop ? 1 : 0, transition: 'opacity 0.8s ease-in-out', paddingX: 1 }}
                     >
                         {title}
-                    </Typography>
+                    </Typography> */}
                 </Box>
 
                 {option && <ActionMenu children={optionChildrens} />}
@@ -79,14 +75,13 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                 <Box
                     sx={{
                         alignSelf: 'center',
-                        opacity: isScrolledToTop ? 0 : 1,
                         transition: 'opacity 0.8s ease-in-out',
                         paddingY: 1,
                         zIndex: 4,
                         overflow: 'hidden'
                     }}
                 >
-                    {!isScrolledToTop && children}
+                    {children}
                 </Box>
             </Grid>
         </Grid>

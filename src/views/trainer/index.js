@@ -117,7 +117,11 @@ const Trainers = () => {
                 }
             }}
         >
-            <MiniHeader title="Trainers" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+            <MiniHeader
+                title="Trainers"
+                back={true}
+                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+            />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
                 <SearchFilterAdd

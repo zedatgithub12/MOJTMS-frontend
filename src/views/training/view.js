@@ -63,6 +63,7 @@ const ViewTraining = () => {
         <Grid
             container
             sx={{
+                minHeight: '80dvh',
                 borderRadius: 4,
                 border: '1px solid',
                 borderColor: theme.palette.primary[200] + 25,
@@ -162,7 +163,12 @@ const ViewTraining = () => {
                             />
                             <Typography variant="body2">{'(3243)'}</Typography>
                         </Box>
-                        <Button variant="contained" color="primary" sx={{ marginY: 3, paddingX: 5, paddingY: 1.4, borderRadius: 50 }}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ marginY: 3, paddingX: 5, paddingY: 1.4, borderRadius: 50 }}
+                            onClick={() => navigate('/training/session/create')}
+                        >
                             Create new session
                         </Button>
                     </Box>
@@ -282,7 +288,7 @@ const ViewTraining = () => {
                             </Tabs>
                         </Box>
                         <TabPanel value={tab} index={0}>
-                            Training list
+                            <Box sx={{ paddingY: 2 }}>A list of this training sessions will be listed here</Box>
                         </TabPanel>
                         <TabPanel value={tab} index={1}>
                             <TrainingModules training_id={state.id} />

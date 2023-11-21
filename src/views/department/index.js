@@ -1,14 +1,17 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, Typography, useTheme, Pagination } from '@mui/material';
+import { Grid, Box, Typography, useTheme, Pagination, CircularProgress } from '@mui/material';
 // project imports
 import Connections from 'api';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
-import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import DepartmentCard from 'ui-component/cards/DepartmentCard';
 import { RefreshToken } from 'utils/token-refresh';
+import { MediumHeader } from 'ui-component/page-header/mediumHeader';
+import { NoResult } from 'utils/components/noresult';
+import { ErrorPrompt } from 'utils/components/errorprompt';
+import noresult from 'assets/images/no_result.png';
 
 // ==============================|| DEPARTMENT PAGE ||============================== //
 
@@ -110,24 +113,12 @@ const Department = () => {
                 }
             }}
         >
-            <PageHeader
+            <MediumHeader
                 title="Departments"
                 back={true}
+                option={false}
                 sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
-            >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <Typography variant="h3" color={'white'}>
-                        Departments
-                    </Typography>
-                </Box>
-            </PageHeader>
+            />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
                 <SearchFilterAdd
@@ -141,22 +132,40 @@ const Department = () => {
 
                 <Grid container>
                     <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
-                        {departments.map((department) => (
-                            <DepartmentCard
-                                isLoading={isLoading}
-                                image={ImageApi + department.thumbnail}
-                                title={department.name}
-                                email={department.email}
-                                phone={department.phone}
-                                onPress={() => navigate('/department/view', { state: department })}
-                            />
-                        ))}
+                        {isLoading ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8 }}>
+                                <CircularProgress size={22} />
+                            </Box>
+                        ) : error ? (
+                            <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the departments!" />
+                        ) : !isLoading && departments.length == 0 ? (
+                            <NoResult image={noresult} title="Result Not Found" message="Oooops... No department found!" />
+                        ) : (
+                            departments.map((department) => (
+                                <DepartmentCard
+                                    isLoading={isLoading}
+                                    image={ImageApi + department.thumbnail}
+                                    title={department.name}
+                                    email={department.email}
+                                    phone={department.phone}
+                                    onPress={() => navigate('/department/view', { state: department })}
+                                />
+                            ))
+                        )}
                     </Grid>
                 </Grid>
 
-                <Box sx={{ paddingY: 4 }}>
-                    <Pagination showFirstButton showLastButton count={rowCountState} page={paginationModel.page} onChange={handleChange} />
-                </Box>
+                {departments.length > paginationModel.pageSize && (
+                    <Box sx={{ paddingY: 4 }}>
+                        <Pagination
+                            showFirstButton
+                            showLastButton
+                            count={rowCountState}
+                            page={paginationModel.page}
+                            onChange={handleChange}
+                        />
+                    </Box>
+                )}
             </Grid>
         </Grid>
     );

@@ -1,8 +1,17 @@
 const Connections = {
+    //local endpoints
+
     api: 'http://localhost:8000/api/',
     images: 'http://localhost:8000/api/images/',
     thumbnails: 'http://localhost:8000/api/thumbnails/',
     profiles: 'http://localhost:8000/api/profiles/',
+
+    //remote endpoints
+
+    // api: 'https://tms.afrominadigitals.com/backend/api/',
+    // images: 'https://tms.afrominadigitals.com/backend/api/images/',
+    // thumbnails: 'https://tms.afrominadigitals.com/backend/api/thumbnails/',
+    // profiles: 'https://tms.afrominadigitals.com/backend/api/profiles/',
 
     signin: 'signin',
     forgotpassword: 'forgotpassword',
@@ -53,16 +62,19 @@ const Connections = {
     materialstatus: 'material/status/',
     materialdownload: 'material/download',
 
-    //assassement api endpoints
+    //assassement, question and option api endpoints
     assessments: 'assessments',
     assessmentStatus: 'assessment/status/',
     assessmentSearch: 'assessment/search',
-
-    //questions api endpoints
     questions: 'questions',
+    options: 'question-options',
 
-    //options api endpoints
-    options: 'question-options'
+    //survey, survey question and survey option api endpoints
+    surveys: 'surveys',
+    surveysearch: 'survey/search',
+    surveyStatus: 'survey/status/',
+    surveyquestions: 'survey-questions',
+    surveyoptions: 'survey-options'
 };
 
 export default Connections;

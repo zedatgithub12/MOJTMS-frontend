@@ -29,6 +29,7 @@ import { Delete } from 'ui-component/delete/Delete';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import Connections from 'api';
 import { useQuery } from 'react-query';
+import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 
 // ==============================|| USERS PAGE ||============================== //
 
@@ -175,39 +176,12 @@ const Users = () => {
             }}
         >
             <Grid container sx={{ position: 'relative', zIndex: 4 }}>
-                <PageHeader
+                <MediumHeader
                     title="Users"
                     back={true}
                     option={false}
-                    sx={{ backgroundColor: theme.palette.secondary.dark }}
-                    optionChildrens={
-                        <>
-                            <MenuItem>
-                                <Avatar /> Profile
-                            </MenuItem>
-                            <Divider />
-                            <MenuItem>
-                                <ListItemIcon>
-                                    <PersonAdd fontSize="small" />
-                                </ListItemIcon>
-                                Add another account
-                            </MenuItem>
-                        </>
-                    }
-                >
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <Typography variant="h3" color={'white'}>
-                            Users
-                        </Typography>
-                    </Box>
-                </PageHeader>
+                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+                />
             </Grid>
 
             <SearchFilterAdd

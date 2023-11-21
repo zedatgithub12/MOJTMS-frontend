@@ -185,6 +185,23 @@ const ViewDepartment = () => {
                         justifyContent: 'space-between'
                     }}
                 >
+                    {state.thumbnail && bigDevice && (
+                        <Box>
+                            <CardMedia
+                                sx={{
+                                    width: 120,
+                                    height: 120,
+                                    boxShadow: 2,
+                                    borderRadius: 6,
+                                    border: 4,
+                                    borderColor: theme.palette.secondary.light
+                                }}
+                                image={ImageApi + state.thumbnail}
+                                title={state.name}
+                            />
+                        </Box>
+                    )}
+
                     <Box sx={{ marginX: 3, padding: 0.2 }}>
                         {state.name ? (
                             <Typography variant="h3" color="white">
@@ -217,23 +234,6 @@ const ViewDepartment = () => {
                             )}
                         </Box>
                     </Box>
-
-                    {state.thumbnail && bigDevice && (
-                        <Box>
-                            <CardMedia
-                                sx={{
-                                    width: 120,
-                                    height: 120,
-                                    boxShadow: 2,
-                                    borderRadius: 6,
-                                    border: 4,
-                                    borderColor: theme.palette.secondary.light
-                                }}
-                                image={ImageApi + state.thumbnail}
-                                title={state.name}
-                            />
-                        </Box>
-                    )}
                 </Box>
             </PageHeader>
 

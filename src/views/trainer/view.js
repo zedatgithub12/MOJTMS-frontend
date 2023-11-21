@@ -142,7 +142,7 @@ const ViewTrainer = () => {
                         </MenuItem>
                     </Box>
                 }
-                sx={{ backgroundColor: theme.palette.secondary.dark }}
+                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
             />
 
             <Grid container sx={{ minHeight: 200, padding: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>

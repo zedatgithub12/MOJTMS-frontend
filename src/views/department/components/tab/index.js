@@ -31,10 +31,10 @@ export default function TMSTab({ tabsfor }) {
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                Training list
+                A list of trainings this department involved in will be listed here
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Traineer list
+                A list of trainees in this department will be listed here
             </TabPanel>
         </Box>
     );

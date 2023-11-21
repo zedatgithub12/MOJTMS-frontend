@@ -30,19 +30,18 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
 
     const [options, setOptions] = useState([]); //an array the contains a question options
     const [truefalse, setTrueFalse] = useState([
-        { question_id: question.id, option_text: 'True', is_correct: false },
-        { question_id: question.id, option_text: 'False', is_correct: false }
+        { surveyq_id: question.id, option_text: 'True', is_correct: false },
+        { surveyq_id: question.id, option_text: 'False', is_correct: false }
     ]); //an array the contains a question options for true or false question type
 
     const [selection, setSelection] = useState('');
-    const [answered, setAnswered] = useState(false);
 
     const handleSelectionChange = (event) => {
         const updatedArray = truefalse.map((item) => {
             if (item.option_text === event.target.value) {
                 return { ...item, is_correct: true };
             }
-            setAnswered(true);
+
             return { ...item, is_correct: false };
         });
 
@@ -55,7 +54,7 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
             if (item.option_text === event.target.value) {
                 return { ...item, is_correct: true };
             }
-            setAnswered(true);
+
             return { ...item, is_correct: false };
         });
 
@@ -74,17 +73,12 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
             return option;
         });
 
-        setAnswered(true);
         setOptions(updatedOptions);
-    };
-
-    const hasAnswer = (option) => {
-        return option.some((item) => item.is_correct == true);
     };
 
     const handleOptionAddition = (formik, question) => {
         const newOption = {
-            question_id: question.id,
+            surveyq_id: question.id,
             option_text: formik.values.option,
             is_correct: false
         };
@@ -102,9 +96,7 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
     const handleSubmitting = () => {
         // Handle form submission here
         const theOption = question.question_type === 'true/false' ? truefalse : options;
-        if (hasAnswer(theOption)) {
-            handleSubmission(theOption);
-        }
+        handleSubmission(theOption);
     };
 
     const formik = useFormik({
@@ -133,13 +125,31 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
                 ) : question.question_type === 'multiple-choice' ? (
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         {options.map((option, index) => (
-                            <FormControlLabel
+                            <Box
                                 key={index}
-                                control={
-                                    <Checkbox checked={option.is_correct} onChange={() => handleCheckboxChange(index)} color="primary" />
-                                }
-                                label={option.option_text}
-                            />
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginY: 1
+                                }}
+                            >
+                                <FormControlLabel
+                                    key={index}
+                                    control={
+                                        <Checkbox
+                                            checked={option.is_correct}
+                                            onChange={() => handleCheckboxChange(index)}
+                                            color="primary"
+                                        />
+                                    }
+                                    label={option.option_text}
+                                />
+                                <IconButton onClick={() => handleOptionRemoving(index)}>
+                                    <IconX size={16} color={theme.palette.grey[400]} />
+                                </IconButton>
+                            </Box>
                         ))}
                     </Box>
                 ) : (
@@ -204,7 +214,7 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
                 )}
 
                 <Button
-                    disabled={!answered || isSubmitting ? true : false}
+                    disabled={isSubmitting ? true : false}
                     type="submit"
                     variant="contained"
                     color="primary"

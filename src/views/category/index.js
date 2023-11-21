@@ -178,7 +178,11 @@ const Category = () => {
                 }
             }}
         >
-            <MiniHeader title="Categories" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+            <MiniHeader
+                title="Categories"
+                back={true}
+                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+            />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
                 <SearchFilterAdd

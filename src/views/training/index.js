@@ -1,12 +1,11 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, useTheme, Pagination, MenuItem, ListItemIcon, Divider } from '@mui/material';
+import { Grid, Box, useTheme, Pagination } from '@mui/material';
 // project imports
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
-import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import Connections from 'api';
@@ -14,8 +13,7 @@ import noresult from 'assets/images/no_result.png';
 import errorImage from 'assets/images/error.jpg';
 import TrainingCard from 'ui-component/cards/TrainingCard';
 import TrainingCardSkel from 'ui-component/cards/Skeleton/TrainingCardSkel';
-import { IconEdit, IconEye, IconTrash } from '@tabler/icons';
-import Category from 'views/category';
+import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 
 // ==============================|| TRAINING PAGE ||============================== //
 
@@ -121,7 +119,12 @@ const Training = () => {
                 }
             }}
         >
-            <MiniHeader title="Trainings" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+            <MediumHeader
+                title="Trainings"
+                back={true}
+                option={false}
+                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+            />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
                 <SearchFilterAdd

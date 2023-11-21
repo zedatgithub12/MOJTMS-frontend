@@ -169,8 +169,6 @@ const Assessment = () => {
                         </Box>
                     ) : error ? (
                         <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the assessments!" />
-                    ) : !isLoading && data.length == 0 ? (
-                        <NoResult image={noresult} title="Result Not Found" message="Oooops... No assessment found!" />
                     ) : (
                         data.map((item) => (
                             <AssessmentCard
