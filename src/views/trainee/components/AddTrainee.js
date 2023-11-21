@@ -20,27 +20,47 @@ import {
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { Roles } from 'data/tables/Roles';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
+import { useQuery } from 'react-query';
 
-export default function AddUser({ open, handleDialogClose }) {
+const TraineeScheme = Yup.object().shape({
+    name: Yup.string().min(2, 'Too short for name').max(50, 'Name cannot exceed 50 characters').required('Name is required'),
+    email: Yup.string().email('Invalid Email').required('Email is required'),
+    department: Yup.string().required('Trainee is required')
+});
+
+export default function AddTrainee({ open, handleDialogClose }) {
     const theme = useTheme();
 
-    const [department, setDepartment] = useState();
-    const [role, setRole] = useState('Trainee');
-    const [password, setPassword] = useState('trainee12345');
+    const [department, setDepartment] = useState([]);
+    const role = 'Trainee';
+    const password = 'trainee12345';
+    const [loading, setLoading] = useState(false);
 
-    const AddUserScheme = Yup.object().shape({
-        name: Yup.string().min(2, 'Too short for name').max(50, 'Name cannot exceed 50 characters').required('Name is required'),
-        email: Yup.string().email('Invalid Email').required('Email is required')
-    });
+    const FetchDepartments = async () => {
+        setLoading(true);
+        var Api = Connections.api + Connections.departments;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
 
-    const handlePrompts = (message, variant) => {
-        // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            const data = parsed.data.data;
+            setDepartment(data);
+            setLoading(false);
+        }
     };
+
+    const { isLoading, error } = useQuery(['data'], () => FetchDepartments(), {
+        refetchOnWindowFocus: false
+    });
 
     const handleSubmitting = (values) => {
         setAdding(true);
@@ -57,7 +77,7 @@ export default function AddUser({ open, handleDialogClose }) {
             name: values.name,
             email: values.email,
             password: password,
-            department: department,
+            department_id: values.department,
             role: role
         };
 
@@ -87,9 +107,10 @@ export default function AddUser({ open, handleDialogClose }) {
         initialValues: {
             name: '',
             email: '',
-            role: 'Trainee'
+            role: 'Trainee',
+            department: ''
         },
-        validationSchema: AddUserScheme,
+        validationSchema: TraineeScheme,
         onSubmit: (values) => {
             handleSubmitting(values);
         }
@@ -97,15 +118,10 @@ export default function AddUser({ open, handleDialogClose }) {
 
     const [adding, setAdding] = useState(formik.isSubmitting);
 
-    const handleRoleSelection = (event) => {
-        setRole(event.target.value);
-        if (event.target.value == 'Admin') {
-            setPassword('admin12345');
-        } else if (event.target.value == 'Coordinator') {
-            setPassword('coordinator12345');
-        }
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
     };
-
     return (
         <React.Fragment>
             <Dialog open={open} onClose={handleDialogClose}>
@@ -116,7 +132,7 @@ export default function AddUser({ open, handleDialogClose }) {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         paddingRight: 1,
-                        backgroundColor: theme.palette.secondary.dark
+                        background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})`
                     }}
                 >
                     <DialogTitle variant="h4" color="white">
@@ -174,7 +190,38 @@ export default function AddUser({ open, handleDialogClose }) {
                             )}
                         </FormControl>
 
-                        <Box component={'paper'}>
+                        <FormControl
+                            fullWidth
+                            error={formik.touched.department && Boolean(formik.errors.department)}
+                            sx={{ ...theme.typography.customInput }}
+                        >
+                            <InputLabel htmlFor="outlined-adornment-department">{formik.values.department ? '' : 'Department'}</InputLabel>
+                            <Select
+                                value={formik.values.department}
+                                onChange={formik.handleChange}
+                                id="outlined-adornment-department"
+                                name="department"
+                            >
+                                {department.length === 0 ? (
+                                    <Typography variant="body2" sx={{ padding: 1 }}>
+                                        Department is not found
+                                    </Typography>
+                                ) : (
+                                    department.map((item, index) => (
+                                        <MenuItem key={index} value={item.id}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))
+                                )}
+                            </Select>
+                            {formik.touched.department && formik.errors.department && (
+                                <FormHelperText error id="standard-weight-helper-text">
+                                    {formik.errors.department}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
+
+                        <Box>
                             <Typography variant="subtitle2" marginLeft={1} marginTop={1}>
                                 Default password for {role}
                             </Typography>
@@ -184,7 +231,7 @@ export default function AddUser({ open, handleDialogClose }) {
                         </Box>
 
                         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 2 }}>
-                            <Button onClick={handleDialogClose} variant="text" color="secondary" sx={{ marginRight: 3 }}>
+                            <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginRight: 3 }}>
                                 Cancel
                             </Button>
                             <AnimateButton>
@@ -193,7 +240,7 @@ export default function AddUser({ open, handleDialogClose }) {
                                     size="small"
                                     type="submit"
                                     variant="contained"
-                                    color="secondary"
+                                    color="primary"
                                     sx={{ paddingX: 8, paddingY: 0.8 }}
                                 >
                                     {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Save'}
@@ -208,7 +255,7 @@ export default function AddUser({ open, handleDialogClose }) {
     );
 }
 
-AddUser.propTypes = {
+AddTrainee.propTypes = {
     open: PropTypes.bool,
     handleDialogClose: PropTypes.func
 };

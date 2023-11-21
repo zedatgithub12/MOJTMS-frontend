@@ -26,7 +26,7 @@ const Connections = {
     updatestatus: 'update-status',
 
     // trainees api endpoints
-    trainee: 'trainee',
+    trainee: 'trainees',
     searchtrainee: 'search-trainee',
     traineestatus: 'trainee-status',
 

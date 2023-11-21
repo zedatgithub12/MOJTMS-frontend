@@ -37,11 +37,6 @@ export default function AddUser({ open, handleDialogClose }) {
         email: Yup.string().email('Invalid Email').required('Email is required')
     });
 
-    const handlePrompts = (message, variant) => {
-        // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
-    };
-
     const handleSubmitting = (values) => {
         setAdding(true);
         const token = sessionStorage.getItem('token');
@@ -103,6 +98,11 @@ export default function AddUser({ open, handleDialogClose }) {
         } else if (event.target.value == 'Coordinator') {
             setPassword('coordinator12345');
         }
+    };
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
     };
 
     return (

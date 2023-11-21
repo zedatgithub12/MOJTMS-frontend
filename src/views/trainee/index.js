@@ -1,28 +1,14 @@
 import { useState } from 'react';
 // material-ui
 import { PersonAdd } from '@mui/icons-material';
-import {
-    Grid,
-    Box,
-    Typography,
-    useTheme,
-    Avatar,
-    Divider,
-    ListItemIcon,
-    MenuItem,
-    IconButton,
-    Menu,
-    CircularProgress
-} from '@mui/material';
+import { Grid, Box, Typography, useTheme, Divider, MenuItem, IconButton, Menu, CircularProgress } from '@mui/material';
 import { SearchFilterAdd } from './components/SearchFilterAdd';
 
 // project imports
-import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { UserColumn } from 'data/tables/columns/Users';
-import AddUser from './components/AddUser';
-import { View } from './components/View';
-import { IconDotsVertical } from '@tabler/icons';
+import { saveAs } from 'file-saver';
+import ExcelJS from 'exceljs/dist/es5/exceljs.browser';
+import AddTrainee from './components/AddTrainee';
 import { ChangeRole } from './components/ChangeRole';
 import { UpdateStatus } from './components/UpdateStatus';
 import { Delete } from 'ui-component/delete/Delete';
@@ -114,23 +100,6 @@ const Trainee = () => {
         setOpenDialog(false);
     };
 
-    const handleUserSelection = (params) => {
-        setSelectedUser(params.row);
-    };
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const handlePrompts = (message, variant) => {
-        // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
-    };
-
     const DeleteUser = () => {
         setDeleting(true);
 
@@ -163,6 +132,53 @@ const Trainee = () => {
             });
     };
 
+    const columns = [
+        { field: 'id', headerName: 'ID', width: 70 },
+        { field: 'name', headerName: 'Name', width: 150 },
+        { field: 'department', headerName: 'Department', width: 200 },
+        { field: 'email', headerName: 'Email Address', width: 200 },
+        { field: 'gender', headerName: 'Gender', width: 100 },
+        { field: 'age', headerName: 'Age', width: 100 },
+        { field: 'address', headerName: 'Address', width: 200 },
+        { field: 'phone', headerName: 'Phone Number', width: 150 },
+        { field: 'status', headerName: 'Status', width: 120 }
+    ];
+
+    const calculateAge = (dateOfBirth) => {
+        if (!dateOfBirth) {
+            return 'N/A';
+        }
+
+        const birthDate = new Date(dateOfBirth);
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDifference = today.getMonth() - birthDate.getMonth();
+
+        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age;
+    };
+
+    const rows = users.map((data) => ({
+        id: data.id,
+        name: data.user.name,
+        department: data.department.name,
+        email: data.user.email,
+        gender: data.gender || 'N/A',
+        age: calculateAge(data.date_of_birth),
+        address: data.address || 'N/A',
+        phone: data.phone || 'N/A',
+        status: data.user.status
+    }));
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
+    };
+
     return (
         <Grid
             container
@@ -175,12 +191,12 @@ const Trainee = () => {
                 }
             }}
         >
-            <Grid container sx={{ position: 'relative', zIndex: 4 }}>
+            <Grid container sx={{ position: 'relative', zIndex: 4, marginBottom: 1 }}>
                 <MediumHeader
                     title="Trainees"
                     back={true}
                     option={false}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})` }}
                 />
             </Grid>
 
@@ -191,124 +207,39 @@ const Trainee = () => {
                 onSubmit={() => handleSearching()}
                 onAddUser={() => handleDialogOpen()}
             />
-            <Grid container>
-                <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    md={12}
-                    lg={7.8}
-                    xl={7.8}
-                    sx={{
-                        minHeight: 300,
-                        minWidth: 300,
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    {error ? (
-                        <Box>
-                            <Typography>There is error rendering trainess</Typography>
-                        </Box>
-                    ) : isLoading ? (
-                        <CircularProgress size={24} />
-                    ) : (
-                        users && (
-                            <DataGrid
-                                columns={UserColumn}
-                                rows={users}
-                                slots={{
-                                    toolbar: GridToolbar
-                                }}
-                                onRowClick={(params) => handleUserSelection(params)}
-                                sx={{ padding: 2 }}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: {
-                                            pageSize: paginationModel.pageSize,
-                                            pageCount: lastPage,
-                                            pageEndIndex: lastPage
-                                        }
-                                    }
-                                }}
-                                paginationModel={paginationModel}
-                                onPaginationModelChange={setPaginationModel}
-                                pagination={true}
-                                rowCount={rowCountState}
-                                pageSizeOptions={[15, 25, 50, 100]}
-                                onPageChange={(newPage) => {
-                                    setPaginationModel({
-                                        ...paginationModel,
-                                        page: newPage
-                                    });
-                                }}
-                                onPageSizeChange={(newPageSize) => {
-                                    setPaginationModel({
-                                        ...paginationModel,
-                                        pageSize: newPageSize
-                                    });
-                                }}
-                                hideFooterSelectedRowCount={true}
-                            />
-                        )
-                    )}
+            <Grid container sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 1 }}>
+                <Grid item xs={12} sm={12} md={12} sx={{}}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            backgroundColor: theme.palette.secondary.light,
+                            padding: 2,
+                            borderRadius: 2
+                        }}
+                    >
+                        <Typography variant="body2">Sort A-Z</Typography>
+                    </Box>
+                    <Typography variant="h1">Trainees</Typography>
+
+                    <div style={{ height: 400, width: '100%' }}>
+                        <DataGrid
+                            rows={rows}
+                            columns={columns}
+                            checkboxSelection
+                            pagination
+                            pageSize={10}
+                            rowsPerPageOptions={[10, 25, 50]}
+                            disableSelectionOnClick
+                            density="comfortable"
+                        />
+                    </div>
                 </Grid>
-                {selectedUser && (
-                    <Grid item xs={12} sm={12} md={12} lg={4.2} xl={4.2} position={'relative'}>
-                        <Box
-                            sx={{ position: 'fixed', boxShadow: 1, marginX: 2, padding: 2, borderRadius: 2, minWidth: 400, minHeight: 440 }}
-                        >
-                            <View user={selectedUser}>
-                                <IconButton
-                                    id="menu-button"
-                                    aria-controls={open ? 'user-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={open ? 'true' : undefined}
-                                    onClick={handleClick}
-                                >
-                                    <IconDotsVertical size={20} />
-                                </IconButton>
-                                <Menu
-                                    id="user-menu"
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClose={handleClose}
-                                    MenuListProps={{
-                                        'aria-labelledby': 'menu-button'
-                                    }}
-                                >
-                                    <MenuItem
-                                        onClick={() => {
-                                            setStatusPanel(false), setRolePanel(true), setAnchorEl(false);
-                                        }}
-                                    >
-                                        Change role
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={() => {
-                                            setRolePanel(false), setStatusPanel(true), setAnchorEl(false);
-                                        }}
-                                    >
-                                        Update status
-                                    </MenuItem>
-                                    <Divider />
-                                    <MenuItem
-                                        onClick={() => {
-                                            setDeleteUser(true), setAnchorEl(false);
-                                        }}
-                                    >
-                                        Delete user account
-                                    </MenuItem>
-                                </Menu>
-                            </View>
-                        </Box>
-                    </Grid>
-                )}
             </Grid>
 
-            <AddUser open={openDialog} handleDialogClose={() => handleDialogClose()} />
+            {openDialog && <AddTrainee open={openDialog} handleDialogClose={() => handleDialogClose()} />}
             {selectedUser && rolePanel && (
                 <Box
                     sx={{
