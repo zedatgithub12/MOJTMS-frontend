@@ -81,14 +81,7 @@ const dashboard = {
                 }
             ]
         },
-        {
-            id: 'trainees',
-            title: 'Trainees',
-            type: 'item',
-            url: '/trainees',
-            icon: icons.IconUsers,
-            breadcrumbs: false
-        },
+
         {
             id: 'evaluations',
             title: 'Evaluations',
@@ -113,7 +106,14 @@ const dashboard = {
                 }
             ]
         },
-
+        {
+            id: 'trainees',
+            title: 'Trainees',
+            type: 'item',
+            url: '/trainees',
+            icon: icons.IconUsers,
+            breadcrumbs: false
+        },
         {
             id: 'users',
             title: 'User Management',

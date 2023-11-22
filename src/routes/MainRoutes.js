@@ -48,7 +48,8 @@ const Elements = Loadable(lazy(() => import('views/elements')));
 
 //Trainees page routing
 const Trainee = Loadable(lazy(() => import('views/trainee')));
-
+const TraineeDetails = Loadable(lazy(() => import('views/trainee/detail')));
+const UpdateTrainee = Loadable(lazy(() => import('views/trainee/update')));
 //users routing
 const Users = Loadable(lazy(() => import('views/users')));
 
@@ -157,6 +158,11 @@ const MainRoutes = {
             path: 'trainees',
             element: <Trainee />
         },
+        {
+            path: 'trainee/details',
+            element: <TraineeDetails />
+        },
+        { path: 'trainee/update', element: <UpdateTrainee /> },
 
         //departments
         {

@@ -27,8 +27,10 @@ const Connections = {
 
     // trainees api endpoints
     trainee: 'trainees',
-    searchtrainee: 'search-trainee',
+    searchtrainee: 'trainee/search',
     traineestatus: 'trainee-status',
+    traineename: 'trainee/name',
+    updateProfile: 'trainee/profile/',
 
     //departments api endpoints
     departments: 'departments',

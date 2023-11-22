@@ -59,6 +59,33 @@ export const validateImage = (file, size) => {
     };
 };
 
+export const ProfileValidator = (file, size) => {
+    const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    const maxSizeInBytes = size * 1024 * 1024; // size in MB
+
+    if (!validTypes.includes(file.type)) {
+        return {
+            type: false,
+            message: `The profile should be JPEG, JPG, or PNG file`,
+            size: false
+        };
+    }
+
+    if (file.size > maxSizeInBytes) {
+        return {
+            type: true,
+            size: false,
+            message: `The uploaded image size exceed the max image size of ${size}`
+        };
+    }
+
+    return {
+        type: true,
+        size: true,
+        message: ''
+    };
+};
+
 export const TimeFormatter = (number) => {
     if (number === 0) {
         return '0 m';

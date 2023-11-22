@@ -1,23 +1,9 @@
 import { useState } from 'react';
 // material-ui
-import { PersonAdd } from '@mui/icons-material';
-import {
-    Grid,
-    Box,
-    Typography,
-    useTheme,
-    Avatar,
-    Divider,
-    ListItemIcon,
-    MenuItem,
-    IconButton,
-    Menu,
-    CircularProgress
-} from '@mui/material';
+import { Grid, Box, Typography, useTheme, Divider, MenuItem, IconButton, Menu, CircularProgress } from '@mui/material';
 import { SearchFilterAdd } from './components/SearchFilterAdd';
 
 // project imports
-import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { UserColumn } from 'data/tables/columns/Users';
 import AddUser from './components/AddUser';
@@ -126,11 +112,6 @@ const Users = () => {
         setAnchorEl(null);
     };
 
-    const handlePrompts = (message, variant) => {
-        // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
-    };
-
     const DeleteUser = () => {
         setDeleting(true);
 
@@ -161,6 +142,11 @@ const Users = () => {
                 setDeleting(false);
                 handlePrompts(error.message, 'error');
             });
+    };
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
     };
 
     return (
