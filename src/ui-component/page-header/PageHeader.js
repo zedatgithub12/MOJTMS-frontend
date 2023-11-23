@@ -55,7 +55,7 @@ export const PageHeader = ({ children, title, back, option, optionChildrens, sx 
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: isScrolledToTop ? 'center' : 'flex-start' }}>
                     {back && (
                         <IconButton onClick={() => navigate(-1)}>
-                            <IconArrowLeft color={theme.palette.background.default} />
+                            <IconArrowLeft />
                         </IconButton>
                     )}
 

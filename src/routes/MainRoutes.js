@@ -27,6 +27,8 @@ const Training = Loadable(lazy(() => import('views/training')));
 const AddTraining = Loadable(lazy(() => import('views/training/add')));
 const ViewTraining = Loadable(lazy(() => import('views/training/view')));
 const UpdateTraining = Loadable(lazy(() => import('views/training/update')));
+const CreateSession = Loadable(lazy(() => import('views/training/session/create')));
+const SessionDetails = Loadable(lazy(() => import('views/training/session/details')));
 
 // Modules Routing
 const TrainingModules = Loadable(lazy(() => import('views/training/module')));
@@ -228,6 +230,14 @@ const MainRoutes = {
         {
             path: 'training/modules',
             element: <TrainingModules />
+        },
+        {
+            path: 'training/session/create',
+            element: <CreateSession />
+        },
+        {
+            path: 'training/session/detail',
+            element: <SessionDetails />
         },
 
         //evaluations

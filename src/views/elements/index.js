@@ -15,7 +15,7 @@ import TrainerCard from 'ui-component/cards/TrainerCard';
 import FacilitatorCard from 'ui-component/cards/FacilitatorCard';
 import TrainingCard from 'ui-component/cards/TrainingCard';
 import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
-import SessionDetails from 'ui-component/cards/SessionDetails';
+import SessionDetailCard from 'ui-component/cards/SessionDetailCard';
 import { Resources } from 'dummies/SessionResources';
 import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
 import { IconShare } from '@tabler/icons';
@@ -140,7 +140,7 @@ const Elements = () => (
                     }}
                 />
 
-                <SessionDetails
+                <SessionDetailCard
                     isLoading={false}
                     status="Upcoming"
                     title="Training Details"

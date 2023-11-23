@@ -101,3 +101,59 @@ export const TimeFormatter = (number) => {
         return `${number} m`;
     }
 };
+
+export const formatDate = (inputDate) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const date = new Date(inputDate);
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+    return `${formattedDate} | ${formattedTime}`;
+};
+
+//round count formatter
+export const FormattedRound = (number) => {
+    var count;
+
+    switch (number) {
+        case 1:
+            count = 'st';
+            break;
+        case 2:
+            count = 'nd';
+            break;
+        case 3:
+            count = 'rd';
+            break;
+        default:
+            count = 'th';
+            break;
+    }
+    return count;
+};
+
+export const FormatStatus = (statusInput) => {
+    var statusColor;
+
+    switch (statusInput) {
+        case 'draft':
+            statusColor = '#808080';
+            break;
+        case 'upcoming':
+            statusColor = '#007bff';
+            break;
+        case 'scheduled':
+            statusColor = '#656666';
+            break;
+        case 'inprogress':
+            statusColor = '#21a300';
+            break;
+        case 'cancelled':
+            statusColor = '#c20013';
+            break;
+        default:
+            statusColor = '#1a1a1a';
+            break;
+    }
+    return statusColor;
+};

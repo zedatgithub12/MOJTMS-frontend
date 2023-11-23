@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { Box, Divider, Stack, useTheme } from '@mui/material';
 import { IconCircleCheck, IconCircleX, IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
-import { ReadMore } from 'utils/functions';
+import { FormatStatus, ReadMore } from 'utils/functions';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import SessionDetailSkel from './Skeleton/SessionDetailsSkel';
@@ -17,7 +17,7 @@ const letterConfig = {
     endat: 180
 };
 
-const SessionDetails = forwardRef(
+const SessionDetailCard = forwardRef(
     (
         { sx = {}, isLoading, status, title, startdate, starttime, enddate, endtime, address, capacity, resources, description, ...others },
         ref
@@ -31,7 +31,7 @@ const SessionDetails = forwardRef(
             setCollapse(!collapse);
         };
         return (
-            <>
+            <React.Fragment>
                 {isLoading ? (
                     <SessionDetailSkel />
                 ) : (
@@ -51,10 +51,7 @@ const SessionDetails = forwardRef(
                         <CardContent>
                             {status && (
                                 <Stack>
-                                    <Typography
-                                        variant="subtitle2"
-                                        color={status === 'Upcoming' ? theme.palette.success.dark : theme.palette.grey[600]}
-                                    >
+                                    <Typography variant="subtitle1" color={FormatStatus(status)} sx={{ textTransform: 'capitalize' }}>
                                         {status}
                                     </Typography>
                                 </Stack>
@@ -69,9 +66,7 @@ const SessionDetails = forwardRef(
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
                                     <IconClockPlay size={20} />
                                     <Box sx={{ paddingX: 2 }}>
-                                        <Typography variant="subtitle1">
-                                            {startdate} | {starttime}{' '}
-                                        </Typography>
+                                        <Typography variant="subtitle1">{startdate}</Typography>
                                         <Typography variant="subtitle2">Start date & time </Typography>
                                     </Box>
                                 </Box>
@@ -81,9 +76,7 @@ const SessionDetails = forwardRef(
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
                                     <IconClockStop size={20} />
                                     <Box sx={{ paddingX: 2 }}>
-                                        <Typography variant="subtitle1">
-                                            {enddate} | {endtime}{' '}
-                                        </Typography>
+                                        <Typography variant="subtitle1">{enddate}</Typography>
                                         <Typography variant="subtitle2">End date & time </Typography>
                                     </Box>
                                 </Box>
@@ -121,7 +114,7 @@ const SessionDetails = forwardRef(
                                                 <Typography
                                                     component={'div'}
                                                     onClick={() => ExpndText()}
-                                                    sx={{ marginTop: 1, color: theme.palette.primary.main }}
+                                                    sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                                                 >
                                                     {collapse ? 'Read More' : 'Read Less'}
                                                 </Typography>
@@ -136,7 +129,7 @@ const SessionDetails = forwardRef(
                                     <Button
                                         variant="text"
                                         color="primary"
-                                        sx={{ marginTop: 1 }}
+                                        sx={{ marginTop: 1, cursor: 'pointer' }}
                                         onClick={() => setShowResources(!showResources)}
                                     >
                                         Resources provided{' '}
@@ -168,12 +161,12 @@ const SessionDetails = forwardRef(
                         </CardContent>
                     </Card>
                 )}
-            </>
+            </React.Fragment>
         );
     }
 );
 
-SessionDetails.propTypes = {
+SessionDetailCard.propTypes = {
     sx: PropTypes.object,
     isLoading: PropTypes.bool,
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
@@ -188,4 +181,4 @@ SessionDetails.propTypes = {
     resources: PropTypes.array
 };
 
-export default SessionDetails;
+export default SessionDetailCard;
