@@ -3,5 +3,9 @@ export const Roles = [
     {
         id: 2,
         name: 'Coordinator'
+    },
+    {
+        id: 3,
+        name: 'Trainee'
     }
 ];

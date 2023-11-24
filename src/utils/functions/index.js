@@ -157,3 +157,13 @@ export const FormatStatus = (statusInput) => {
     }
     return statusColor;
 };
+
+export const convertDateTime = (datetime) => {
+    const date = new Date(datetime);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const period = hours >= 12 ? 'pm' : 'am';
+
+    const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+    return convertedTime;
+};

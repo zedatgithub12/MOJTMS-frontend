@@ -1,20 +1,11 @@
 import { useState } from 'react';
-import { Grid, Box, Typography, useTheme, useMediaQuery, MenuItem, ListItemIcon, Tabs, Tab } from '@mui/material';
+import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon } from '@mui/material';
 import { useLocation } from 'react-router';
 import { IconEdit } from '@tabler/icons';
-import Connections from 'api';
 import DetailHeader from './components/DetailHeader';
 import SessionDetailCard from 'ui-component/cards/SessionDetailCard';
 import { formatDate } from 'utils/functions';
-import { SessionsTabs } from 'data/tabs/sessions';
-import { TabPanel } from '../components/tabpanel';
-
-function a11yProps(index) {
-    return {
-        id: `training-tab-${index}`,
-        'aria-controls': `training-tabpanel-${index}`
-    };
-}
+import TabOne from './components/Tabone';
 
 const SessionDetails = () => {
     const theme = useTheme();
@@ -191,20 +182,16 @@ const SessionDetails = () => {
                                 md={8.6}
                                 lg={8.6}
                                 xl={8.6}
-                                sx={{ paddingX: 2, borderRadius: 2, backgroundColor: theme.palette.background.default, marginTop: -6 }}
+                                sx={{
+                                    minHeight: 400,
+                                    paddingX: 2,
+                                    borderRadius: 2,
+                                    backgroundColor: theme.palette.background.default,
+                                    marginTop: -6
+                                }}
                             >
-                                <Tabs value={tab} onChange={handleChange} aria-label="tabs">
-                                    {SessionsTabs.map((tab, index) => (
-                                        <Tab label={tab.name} {...a11yProps(index)} />
-                                    ))}
-                                </Tabs>
-                                <TabPanel value={tab} index={0}>
-                                    <Typography variant="body2">Schedules</Typography>
-                                </TabPanel>
-
-                                <TabPanel value={tab} index={1}>
-                                    <Typography variant="body2">Trainers</Typography>
-                                </TabPanel>
+                                {/* tabone for session details */}
+                                <TabOne training_id={state.training_id} session_id={state.id} />
                             </Grid>
 
                             <Grid item xs={12} sm={12} md={3.1} lg={3.1} xl={3.1} sx={{ paddingX: 2, marginTop: -29 }}>

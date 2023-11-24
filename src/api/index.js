@@ -44,6 +44,8 @@ const Connections = {
     round: 'training/round/',
     trainingsession: 'training-sessions',
     sessions: 'training/sessions/',
+    schedules: 'session-schedules',
+    roundschedule: 'round-schedules/',
 
     //training api endpoints
     trainings: 'trainings',
