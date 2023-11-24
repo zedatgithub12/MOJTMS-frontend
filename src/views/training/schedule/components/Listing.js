@@ -22,7 +22,7 @@ const ScheduleListing = ({ isLoading, schedules, updateSchedules }) => {
     const [deleteSchedule, setDeleteSchedule] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
-    //initiate question deletion
+    //initiate schedule deletion
     const handleDeleteInitiation = (itemid) => {
         setSelectedSchedule(itemid);
         setDeleteSchedule(true);
@@ -163,8 +163,9 @@ const ScheduleListing = ({ isLoading, schedules, updateSchedules }) => {
 };
 
 ScheduleListing.propTypes = {
+    isLoading: PropTypes.bool,
     schedules: PropTypes.array,
-    isLoading: PropTypes.bool
+    updateSchedules: PropTypes.func
 };
 
 export default ScheduleListing;

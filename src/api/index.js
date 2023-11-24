@@ -44,6 +44,7 @@ const Connections = {
     round: 'training/round/',
     trainingsession: 'training-sessions',
     sessions: 'training/sessions/',
+    sessionStatus: 'session/status/',
     schedules: 'session-schedules',
     roundschedule: 'round-schedules/',
 

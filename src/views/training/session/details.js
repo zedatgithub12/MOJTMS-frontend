@@ -1,46 +1,109 @@
 import { useState } from 'react';
-import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon } from '@mui/material';
-import { useLocation } from 'react-router';
-import { IconEdit } from '@tabler/icons';
+import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router';
+import { IconEdit, IconTrash } from '@tabler/icons';
 import DetailHeader from './components/DetailHeader';
 import SessionDetailCard from 'ui-component/cards/SessionDetailCard';
-import { formatDate } from 'utils/functions';
+import { FormattedRound, formatDate } from 'utils/functions';
 import TabOne from './components/Tabone';
+import Connections from 'api';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { Delete } from 'ui-component/delete/Delete';
+import { SessionStatus } from 'data/static/SessionStatus';
+import ChangeStatus from './components/ChangeStatus';
 
 const SessionDetails = () => {
     const theme = useTheme();
     const { state } = useLocation();
+    const navigate = useNavigate();
 
-    const [tab, setTab] = useState(0);
-    const [collapse, setCollapse] = useState(true);
+    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
 
-    const ExpndText = () => {
-        setCollapse(!collapse);
+    const activeIndex = SessionStatus.findIndex((item) => item === state.status); //find the index that match with current status of session
+
+    const [status, setStatus] = useState(state ? state.status : '');
+    const [selectedIndex, setSelectedIndex] = useState(activeIndex);
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [deleteSession, setDeleteSession] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+
+    //the following function handles delete session operation
+    const handleDeleting = () => {
+        setDeleting(true);
+
+        var Api = Connections.api + Connections.trainingsession + '/' + state.id;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, {
+            method: 'DELETE',
+            headers: headers
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setDeleting(false);
+                    setDeleteSession(false);
+                    handlePrompts(response.message, 'success');
+                    navigate(-1);
+                } else {
+                    setDeleting(false);
+                    handlePrompts(response.message, 'error');
+                }
+            })
+            .catch((error) => {
+                setDeleting(false);
+                handlePrompts(error.message, 'error');
+            });
     };
 
-    const handleChange = (event, newValue) => {
-        setTab(newValue);
+    // Handle session status change here
+    const handleSessionStatus = (newStatus) => {
+        setIsUpdating(true);
+        const Api = Connections.api + Connections.sessionStatus + state.id;
+        const token = sessionStorage.getItem('token');
+        const headers = {
+            Authorization: 'Bearer' + token
+        };
+
+        const formData = new FormData();
+        formData.append('status', newStatus);
+
+        fetch(Api, { method: 'POST', headers: headers, body: formData })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setStatus(newStatus);
+                    const index = SessionStatus.findIndex((item) => item === newStatus);
+                    setSelectedIndex(index);
+
+                    handlePrompts(response.message, 'success');
+                    setIsUpdating(false);
+                } else {
+                    handlePrompts(response.message, 'error');
+                    setIsUpdating(false);
+                }
+            })
+            .catch((error) => {
+                handlePrompts(error, 'error');
+                setIsUpdating(false);
+            });
     };
 
-    //round count formatter
-    const FormattedRound = (number) => {
-        var count;
+    //handle status change
+    const handleStatusChange = (index) => {
+        const selectedStatus = SessionStatus[index];
+        handleSessionStatus(selectedStatus);
+    };
 
-        switch (number) {
-            case 1:
-                count = 'st';
-                break;
-            case 2:
-                count = 'nd';
-                break;
-            case 3:
-                count = 'rd';
-                break;
-            default:
-                count = 'th';
-                break;
-        }
-        return count;
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
     };
 
     return (
@@ -70,14 +133,21 @@ const SessionDetails = () => {
                     <DetailHeader
                         back={true}
                         title={state.title}
-                        option={true}
+                        option={role === 'Admin' || 'Coordinator' ? true : false}
                         optionChildrens={
                             <Box>
-                                <MenuItem onClick={() => navigate('/training/update', { state: state })}>
+                                <MenuItem onClick={() => navigate('/training/session/update', { state: state })}>
                                     <ListItemIcon>
                                         <IconEdit size={18} />
                                     </ListItemIcon>
                                     Update
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem onClick={() => setDeleteSession(true)}>
+                                    <ListItemIcon>
+                                        <IconTrash size={18} />
+                                    </ListItemIcon>
+                                    Delete
                                 </MenuItem>
                             </Box>
                         }
@@ -140,6 +210,12 @@ const SessionDetails = () => {
                                         {state.round_description}
                                     </Typography>
                                 )}
+                                <ChangeStatus
+                                    options={SessionStatus}
+                                    onPress={(event, index) => handleStatusChange(index)}
+                                    selectedIndex={selectedIndex}
+                                    isUpdating={isUpdating}
+                                />
                             </Box>
                         </Grid>
                     </DetailHeader>
@@ -197,7 +273,7 @@ const SessionDetails = () => {
                             <Grid item xs={12} sm={12} md={3.1} lg={3.1} xl={3.1} sx={{ paddingX: 2, marginTop: -29 }}>
                                 <SessionDetailCard
                                     isLoading={false}
-                                    status={state.status}
+                                    status={status}
                                     title="Training Details"
                                     startdate={formatDate(state.start_date)}
                                     enddate={formatDate(state.end_date)}
@@ -209,6 +285,21 @@ const SessionDetails = () => {
                     </Grid>
                 </Grid>
             </Grid>
+
+            {deleteSession && (
+                <Delete
+                    type="Delete"
+                    open={deleteSession}
+                    title="Deleting Training Session"
+                    description={`Are you sure you want to delete this session`}
+                    onNo={() => setDeleteSession(false)}
+                    onYes={() => handleDeleting()}
+                    deleting={deleting}
+                    handleClose={() => setDeleteSession(false)}
+                />
+            )}
+
+            <SnackbarProvider maxSnack={3} />
         </Grid>
     );
 };

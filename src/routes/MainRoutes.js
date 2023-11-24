@@ -3,7 +3,6 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
-import UpdateSchedule from 'views/training/schedule/update';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -29,11 +28,12 @@ const AddTraining = Loadable(lazy(() => import('views/training/add')));
 const ViewTraining = Loadable(lazy(() => import('views/training/view')));
 const UpdateTraining = Loadable(lazy(() => import('views/training/update')));
 const CreateSession = Loadable(lazy(() => import('views/training/session/create')));
+const UpdateSession = Loadable(lazy(() => import('views/training/session/update')));
 const SessionDetails = Loadable(lazy(() => import('views/training/session/details')));
 
 //session schedule
 const CreateSchedule = Loadable(lazy(() => import('views/training/schedule/create')));
-
+const UpdateSchedule = Loadable(lazy(() => import('views/training/schedule/update')));
 // Modules Routing
 const TrainingModules = Loadable(lazy(() => import('views/training/module')));
 
@@ -238,6 +238,10 @@ const MainRoutes = {
         {
             path: 'training/session/create',
             element: <CreateSession />
+        },
+        {
+            path: 'training/session/update',
+            element: <UpdateSession />
         },
         {
             path: 'training/session/detail',
