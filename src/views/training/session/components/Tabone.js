@@ -5,6 +5,7 @@ import { TabPanel } from 'views/training/components/tabpanel';
 import TrainingModules from 'views/training/module';
 import TrainingSchedule from 'views/training/schedule';
 import { useNavigate } from 'react-router';
+import TrainingTrainers from 'views/training/trainer';
 
 function a11yProps(index) {
     return {
@@ -56,7 +57,7 @@ const TabOne = ({ training_id, session_id }) => {
             </TabPanel>
 
             <TabPanel value={tab} index={1}>
-                <Typography variant="body2">Trainers</Typography>
+                <TrainingTrainers session_id={session_id} />
             </TabPanel>
 
             <TabPanel value={tab} index={2}>

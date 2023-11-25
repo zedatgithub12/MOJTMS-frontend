@@ -47,6 +47,9 @@ const Connections = {
     sessionStatus: 'session/status/',
     schedules: 'session-schedules',
     roundschedule: 'round-schedules/',
+    trainingtrainers: 'training-trainers/', //an api end point to perform create, updatestatus and delete record
+    trainersofsession: 'training-trainers/session/', //an api end point to fetch a trainers assigned to specific session
+    sessionoftrainers: 'training-trainers/trainers/', //an api end point to fetch a session trainer assign to
 
     //training api endpoints
     trainings: 'trainings',
