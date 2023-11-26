@@ -20,13 +20,11 @@ import { useLocation, useNavigate } from 'react-router';
 import Connections from 'api';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { IconBuilding, IconChalkboard, IconEdit, IconLanguage, IconPaperclip, IconUser } from '@tabler/icons';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { TrainingTabs } from 'data/tabs/training';
 import { TabPanel } from './components/tabpanel';
 import { StarOutline } from '@mui/icons-material';
 import { ReadMore } from 'utils/functions';
 import TrainingModules from './module';
-import { useQuery } from 'react-query';
 import SessionListing from './session/components/Listing';
 
 // ==============================|| VIEW TRAINING PAGE ||============================== //
@@ -295,7 +293,6 @@ const ViewTraining = () => {
                     )}
                 </Grid>
             </Grid>
-            <SnackbarProvider maxSnack={3} />
         </Grid>
     );
 };

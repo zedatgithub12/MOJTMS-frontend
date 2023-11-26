@@ -3,24 +3,29 @@ export const SessionsTabs = [
         id: 1,
         name: 'Schedules'
     },
+
     {
         id: 2,
-        name: 'Trainers'
-    },
-    {
-        id: 3,
         name: 'Modules'
     },
     {
-        id: 4,
-        name: 'Departments'
+        id: 3,
+        name: 'Trainers'
     },
     {
-        id: 5,
+        id: 4,
         name: 'Trainees'
     },
     {
+        id: 5,
+        name: 'Assessments'
+    },
+    {
         id: 6,
+        name: 'survey'
+    },
+    {
+        id: 7,
         name: 'Reviews'
     }
 ];

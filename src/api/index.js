@@ -51,6 +51,10 @@ const Connections = {
     trainersofsession: 'training-trainers/session/', //an api end point to fetch a trainers assigned to specific session
     sessionoftrainers: 'training-trainers/trainers/', //an api end point to fetch a session trainer assign to
 
+    traineeenrollments: 'trainee-enrollments',
+    sessionenrollments: 'trainee-enrollments/session/',
+    trainingenrollments: 'trainee-enrollments/training/',
+
     //training api endpoints
     trainings: 'trainings',
     trainingsearch: 'training/search',

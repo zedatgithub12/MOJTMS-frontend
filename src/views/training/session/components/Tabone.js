@@ -6,6 +6,7 @@ import TrainingModules from 'views/training/module';
 import TrainingSchedule from 'views/training/schedule';
 import { useNavigate } from 'react-router';
 import TrainingTrainers from 'views/training/trainer';
+import TraineeEnrollment from 'views/training/trainee';
 
 function a11yProps(index) {
     return {
@@ -27,7 +28,7 @@ const TabOne = ({ training_id, session_id }) => {
 
     return (
         <React.Fragment>
-            <Tabs value={tab} onChange={handleChange} aria-label="tabs">
+            <Tabs value={tab} onChange={handleChange} aria-label="tabs" variant="scrollable" scrollButtons="auto">
                 {SessionsTabs.map((tab, index) => (
                     <Tab label={tab.name} {...a11yProps(index)} />
                 ))}
@@ -57,19 +58,19 @@ const TabOne = ({ training_id, session_id }) => {
             </TabPanel>
 
             <TabPanel value={tab} index={1}>
-                <TrainingTrainers session_id={session_id} />
-            </TabPanel>
-
-            <TabPanel value={tab} index={2}>
                 <TrainingModules training_id={training_id} />
             </TabPanel>
 
+            <TabPanel value={tab} index={2}>
+                <TrainingTrainers session_id={session_id} />
+            </TabPanel>
+
             <TabPanel value={tab} index={3}>
-                <Typography variant="body2">Departments</Typography>
+                <TraineeEnrollment session_id={session_id} />
             </TabPanel>
 
             <TabPanel value={tab} index={4}>
-                <Typography variant="body2">Trainees</Typography>
+                <Typography variant="body2">Assessment</Typography>
             </TabPanel>
 
             <TabPanel value={tab} index={5}>
