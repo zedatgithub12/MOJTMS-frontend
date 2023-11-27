@@ -123,7 +123,7 @@ const TrainingModules = ({ training_id }) => {
                     />
                 )}
 
-                <ModuleList modules={modules} loading={isLoading} error={error} sx={{ marginTop: 1.5 }} />
+                <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} />
 
                 {/* the pagination will be shown when the number of modules exceed five */}
                 {modules.length > 10 && (

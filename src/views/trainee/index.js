@@ -172,14 +172,14 @@ const Trainee = () => {
 
     const rows = users.map((data) => ({
         id: data.id,
-        name: data.user.name,
-        department: data.department.name,
-        email: data.user.email,
+        name: data.user ? data.user.name : 'N/A',
+        department: data.department ? data.department.name : 'N/A',
+        email: data.user ? data.user.email : 'N/A',
         gender: data.gender || 'N/A',
         age: calculateAge(data.date_of_birth),
         address: data.address || 'N/A',
         phone: data.phone || 'N/A',
-        status: data.user.status
+        status: data.user ? data.user.status : 'N/A'
     }));
 
     const handleExport = async (format) => {

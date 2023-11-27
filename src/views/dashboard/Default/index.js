@@ -1,25 +1,34 @@
 import { useEffect, useState } from 'react';
 
 // material-ui
-import { Avatar, Box, Typography, Divider, Grid, ListItemIcon, MenuItem } from '@mui/material';
+import { Typography, Grid, MenuItem } from '@mui/material';
 
 // project imports
 import EarningCard from './EarningCard';
-import PopularCard from './PopularCard';
 import TotalOrderLineChartCard from './TotalOrderLineChartCard';
 import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
-import TotalGrowthBarChart from './TotalGrowthBarChart';
 import { gridSpacing } from 'store/constant';
-import { PersonAdd } from '@mui/icons-material';
 import Department from 'assets/images/department.jpg';
 import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
 import { IconShare } from '@tabler/icons';
+import { Box } from '@mui/system';
+import UpcomingTrainings from './components/UpcomingsList';
+import TrainingChart from './components/TrainingChart';
+import GenderPieChart from './components/GenderPieChart';
+import AgePieChart from './components/AgePieChart';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
     const [isLoading, setLoading] = useState(true);
+    const malesCount = 832;
+    const femalesCount = 1345;
+
+    //age chart
+    const olderThan30Count = 1680;
+    const youngerThan30Count = 547;
+
     useEffect(() => {
         setLoading(false);
     }, []);
@@ -47,78 +56,21 @@ const Dashboard = () => {
 
                     <Grid container>
                         <Grid item xs={8} sx={{ paddingY: 4, paddingX: 2 }}>
-                            <Typography variant="subtitle1">Upcoming Trainings</Typography>
-                            <SessionHorizontalCard
-                                isLoading={false}
-                                image={Department}
-                                title="Technologies in Legal Field"
-                                description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia"
-                                round="23rd"
-                                level="Organization"
-                                address="Addis Ababa"
-                                capacity={2032}
-                                startdate="Nov 12th"
-                                enddate="Nov 22, 2023"
-                                option={true}
-                                optionChildrens={
-                                    <>
-                                        <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
-                                            <IconShare size={20} />
-                                            <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
-                                                Share
-                                            </Typography>
-                                        </MenuItem>
-                                    </>
-                                }
-                            />
-                            <SessionHorizontalCard
-                                isLoading={false}
-                                image={Department}
-                                title="Technologies in Legal Field"
-                                description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia"
-                                round="23rd"
-                                level="Organization"
-                                address="Addis Ababa"
-                                capacity={2032}
-                                startdate="Nov 12th"
-                                enddate="Nov 22, 2023"
-                                option={true}
-                                optionChildrens={
-                                    <>
-                                        <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
-                                            <IconShare size={20} />
-                                            <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
-                                                Share
-                                            </Typography>
-                                        </MenuItem>
-                                    </>
-                                }
-                            />
-                            <SessionHorizontalCard
-                                isLoading={false}
-                                image={Department}
-                                title="Technologies in Legal Field"
-                                description="Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Sed in Ethiopia"
-                                round="23rd"
-                                level="Organization"
-                                address="Addis Ababa"
-                                capacity={2032}
-                                startdate="Nov 12th"
-                                enddate="Nov 22, 2023"
-                                option={true}
-                                optionChildrens={
-                                    <>
-                                        <MenuItem sx={{ padding: 1.5, paddingX: 2 }}>
-                                            <IconShare size={20} />
-                                            <Typography variant="subtitle1" sx={{ marginLeft: 2 }}>
-                                                Share
-                                            </Typography>
-                                        </MenuItem>
-                                    </>
-                                }
-                            />
+                            <Typography variant="subtitle1">Male and Female trainee in each month</Typography>
+                            <TrainingChart />
+                            <Grid container>
+                                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <GenderPieChart males={malesCount} females={femalesCount} />
+                                    <AgePieChart olderThan30={olderThan30Count} youngerThan30={youngerThan30Count} />
+                                </Grid>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={4}></Grid>
+                        <Grid item xs={4} sx={{ paddingY: 4, paddingX: 2 }}>
+                            <Typography variant="subtitle1">Upcoming Trainings</Typography>
+                            <UpcomingTrainings />
+                            <UpcomingTrainings />
+                            <UpcomingTrainings />
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>

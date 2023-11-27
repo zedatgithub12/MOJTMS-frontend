@@ -66,7 +66,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
         };
 
         const data = new FormData();
-        data.append('module_status', 'archive');
+        data.append('module_status', 'archived');
 
         fetch(Api, { method: 'POST', headers: headers, body: data })
             .then((response) => response.json())
@@ -237,7 +237,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                     </Grid>
                 ) : error ? (
                     <ErrorPrompt image={errorImage} title="Server Error" message="Oooops... There is server error fetching modules!" />
-                ) : modules.length == 0 ? (
+                ) : modules.length === 0 ? (
                     <NoResult image={noresult} title="Result Not Found" message="Oooops... No module found in the moment!" />
                 ) : (
                     modules.map((module) => (
@@ -276,7 +276,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                         <IconEdit size={18} />
                                     </IconButton>
 
-                                    {module.module_status == 'archive' ? (
+                                    {module.module_status === 'archive' ? (
                                         <IconButton
                                             onClick={() => handleActivating(module)}
                                             title="Un archive"
@@ -394,7 +394,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
             )}
 
             {selectedModule && (
-                <AddMaterial open={addMaterial} handleClose={() => setAddMaterial(false)} sx={{}} module_id={selectedModule} />
+                <AddMaterial open={addMaterial} handleClose={() => setAddMaterial(false)} sx={{}} module_id={selectedModule.id} />
             )}
 
             {selectedModule && selectedMaterial && (

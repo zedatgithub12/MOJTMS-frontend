@@ -55,7 +55,7 @@ const TrainingTrainers = ({ session_id }) => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => handleFetching(), {
+    useQuery(['data'], () => handleFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -111,7 +111,7 @@ const TrainingTrainers = ({ session_id }) => {
     const handleDeleting = (trainer) => {
         setDeleting(true);
 
-        var Api = Connections.api + Connections.trainingtrainers + trainer;
+        var Api = Connections.api + Connections.trainingtrainers + '/' + trainer;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
