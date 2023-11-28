@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
     Box,
     Button,
@@ -16,10 +15,11 @@ import { useFormik } from 'formik';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import * as Yup from 'yup';
 import SQTypes from 'data/static/SQTypes';
+import PropTypes from 'prop-types';
 
 const validationSchema = Yup.object().shape({
     question_type: Yup.string().required('Question type is required'),
-    question: Yup.string().required('Question is required').max(80)
+    question: Yup.string().required('Question is required').max(250)
 });
 
 const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
@@ -122,4 +122,9 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
     );
 };
 
+CreateQuestion.propTypes = {
+    isSubmitting: PropTypes.bool,
+    handleSubmission: PropTypes.func,
+    handleClose: PropTypes.func
+};
 export default CreateQuestion;

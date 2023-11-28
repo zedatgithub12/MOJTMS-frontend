@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 // material-ui
-import { Typography, Grid, MenuItem } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 
 // project imports
 import EarningCard from './EarningCard';
@@ -9,10 +9,6 @@ import TotalOrderLineChartCard from './TotalOrderLineChartCard';
 import TotalIncomeDarkCard from './TotalIncomeDarkCard';
 import TotalIncomeLightCard from './TotalIncomeLightCard';
 import { gridSpacing } from 'store/constant';
-import Department from 'assets/images/department.jpg';
-import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
-import { IconShare } from '@tabler/icons';
-import { Box } from '@mui/system';
 import UpcomingTrainings from './components/UpcomingsList';
 import TrainingChart from './components/TrainingChart';
 import GenderPieChart from './components/GenderPieChart';

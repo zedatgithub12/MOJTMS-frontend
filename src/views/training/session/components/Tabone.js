@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Typography, Button } from '@mui/material';
+import { Tabs, Tab, Button } from '@mui/material';
 import { SessionsTabs } from 'data/tabs/sessions';
 import { TabPanel } from 'views/training/components/tabpanel';
 import TrainingModules from 'views/training/module';
@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router';
 import TrainingTrainers from 'views/training/trainer';
 import TraineeEnrollment from 'views/training/trainee';
 import TrainingAssessment from 'views/training/assessment';
+import TrainingSurvey from 'views/training/survey';
+import PropTypes from 'prop-types';
 
 function a11yProps(index) {
     return {
@@ -75,10 +77,15 @@ const TabOne = ({ training_id, session_id }) => {
             </TabPanel>
 
             <TabPanel value={tab} index={5}>
-                <Typography variant="body2">Reviews</Typography>
+                <TrainingSurvey session_id={session_id} />
             </TabPanel>
         </React.Fragment>
     );
+};
+
+TabOne.propTypes = {
+    training_id: PropTypes.number,
+    session_id: PropTypes.number
 };
 
 export default TabOne;
