@@ -61,6 +61,9 @@ const Connections = {
     trainingsurvey: 'training-surveys',
     sessionsurvey: 'training-surveys/session/',
 
+    trainingfacilitators: 'facilitators',
+    sessionfacilitators: 'facilitators/session/',
+
     //training api endpoints
     trainings: 'trainings',
     trainingsearch: 'training/search',

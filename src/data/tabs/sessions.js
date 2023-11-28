@@ -22,6 +22,14 @@ export const SessionsTabs = [
     },
     {
         id: 6,
-        name: 'surveys'
+        name: 'Surveys'
+    },
+    {
+        id: 7,
+        name: 'Facilitators'
+    },
+    {
+        id: 8,
+        name: 'Resources'
     }
 ];
