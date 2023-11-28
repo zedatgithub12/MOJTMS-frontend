@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { Box, Divider, Stack, useTheme } from '@mui/material';
-import { IconCircleCheck, IconCircleX, IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
+import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
 import { FormatStatus, ReadMore } from 'utils/functions';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
@@ -19,7 +19,22 @@ const letterConfig = {
 
 const SessionDetailCard = forwardRef(
     (
-        { sx = {}, isLoading, status, title, startdate, starttime, enddate, endtime, address, capacity, resources, description, ...others },
+        {
+            sx = {},
+            isLoading,
+            status,
+            title,
+            startdate,
+            starttime,
+            enddate,
+            endtime,
+            address,
+            capacity,
+            description,
+            resources,
+            children,
+            ...others
+        },
         ref
     ) => {
         const theme = useTheme();
@@ -38,7 +53,7 @@ const SessionDetailCard = forwardRef(
                     <Card
                         ref={ref}
                         sx={{
-                            width: 380,
+                            minWidth: 380,
                             border: '1px solid',
                             borderColor: theme.palette.secondary.light,
                             ':hover': {
@@ -142,22 +157,7 @@ const SessionDetailCard = forwardRef(
                                 </Box>
                             )}
 
-                            {showResources && (
-                                <Box marginLeft={1} marginY={1}>
-                                    {resources.map((resource, index) => (
-                                        <Box sx={{ display: 'flex', flexDirection: 'row', marginY: 2.6, alignItems: 'center' }}>
-                                            {resource.status ? (
-                                                <IconCircleCheck size={16} color="#109e00" />
-                                            ) : (
-                                                <IconCircleX size={16} color={theme.palette.grey[500]} />
-                                            )}
-                                            <Typography key={index} variant="body2" marginLeft={1}>
-                                                {resource.resource}
-                                            </Typography>
-                                        </Box>
-                                    ))}
-                                </Box>
-                            )}
+                            {children}
                         </CardContent>
                     </Card>
                 )}
@@ -178,7 +178,8 @@ SessionDetailCard.propTypes = {
     endtime: PropTypes.string,
     address: PropTypes.string,
     capacity: PropTypes.number,
-    resources: PropTypes.array
+    resources: PropTypes.array,
+    children: PropTypes.node
 };
 
 export default SessionDetailCard;

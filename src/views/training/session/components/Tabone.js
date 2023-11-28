@@ -11,6 +11,7 @@ import TrainingAssessment from 'views/training/assessment';
 import TrainingSurvey from 'views/training/survey';
 import PropTypes from 'prop-types';
 import TrainingFacilitators from 'views/training/facilitator';
+import TrainingResources from 'views/training/resource';
 
 function a11yProps(index) {
     return {
@@ -84,7 +85,7 @@ const TabOne = ({ training_id, session_id }) => {
                 <TrainingFacilitators session_id={session_id} />
             </TabPanel>
             <TabPanel value={tab} index={7}>
-                <TrainingSurvey session_id={session_id} />
+                <TrainingResources session_id={session_id} />
             </TabPanel>
         </React.Fragment>
     );

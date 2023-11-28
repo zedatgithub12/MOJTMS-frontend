@@ -27,7 +27,7 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 // ==============================|| CREATE SURVEY PAGE ||============================== //
 
 const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Survey title is required').max(80),
+    title: Yup.string().required('Survey title is required'),
     description: Yup.string().required('Survey description is required').min(15)
 });
 

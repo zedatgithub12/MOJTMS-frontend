@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider } from '@mui/material';
+import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
-import { IconEdit, IconTrash } from '@tabler/icons';
+import { IconEdit, IconShare, IconTrash } from '@tabler/icons';
 import DetailHeader from './components/DetailHeader';
 import SessionDetailCard from 'ui-component/cards/SessionDetailCard';
 import { FormattedRound, formatDate } from 'utils/functions';
@@ -19,6 +19,8 @@ const SessionDetails = () => {
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
+
+    const smallDevice = useMediaQuery(theme.breakpoints.down('md'));
 
     const activeIndex = SessionStatus.findIndex((item) => item === state.status); //find the index that match with current status of session
 
@@ -246,9 +248,10 @@ const SessionDetails = () => {
                             container
                             sx={{
                                 display: 'flex',
-                                flexDirection: 'row',
+                                flexDirection: smallDevice ? 'column-reverse' : 'row',
                                 alignItems: 'flex-start',
-                                justifyContent: 'space-between'
+                                justifyContent: 'space-between',
+                                marginTop: -6
                             }}
                         >
                             <Grid
@@ -262,15 +265,14 @@ const SessionDetails = () => {
                                     minHeight: 400,
                                     paddingX: 2,
                                     borderRadius: 2,
-                                    backgroundColor: theme.palette.background.default,
-                                    marginTop: -6
+                                    backgroundColor: theme.palette.background.default
                                 }}
                             >
                                 {/* tabone for session details */}
                                 <TabOne training_id={state.training_id} session_id={state.id} />
                             </Grid>
 
-                            <Grid item xs={12} sm={12} md={3.1} lg={3.1} xl={3.1} sx={{ paddingX: 2, marginTop: -29 }}>
+                            <Grid item xs={12} sm={12} md={3.1} lg={3.1} xl={3.1} sx={{ paddingX: 2 }}>
                                 <SessionDetailCard
                                     isLoading={false}
                                     status={status}
@@ -280,6 +282,30 @@ const SessionDetails = () => {
                                     address={state.address}
                                     capacity={state.maximum_capacity}
                                 />
+
+                                <Box
+                                    sx={{
+                                        minWidth: 380,
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        padding: 2.2,
+                                        marginY: 2,
+                                        borderRadius: 3,
+                                        border: 1,
+                                        borderColor: theme.palette.primary[200],
+                                        backgroundColor: theme.palette.primary[200],
+                                        ':hover': {
+                                            boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
+                                        },
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <IconShare size={20} />
+                                    <Typography variant="subtitle1" color="primary" marginLeft={2}>
+                                        Share training
+                                    </Typography>
+                                </Box>
                             </Grid>
                         </Grid>
                     </Grid>
