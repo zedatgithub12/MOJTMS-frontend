@@ -12,6 +12,7 @@ import { IconX } from '@tabler/icons';
 
 const TrainingFacilitators = ({ session_id }) => {
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
 
     const [assigned, setAssigned] = useState([]);
     const [allFacailitators, setAllFacilitators] = useState([]);
@@ -171,7 +172,7 @@ const TrainingFacilitators = ({ session_id }) => {
                 ))
             )}
 
-            {allFacailitators && (
+            {role === 'Admin' && allFacailitators ? (
                 <Box>
                     <Divider />
                     {loading ? (
@@ -200,7 +201,36 @@ const TrainingFacilitators = ({ session_id }) => {
                         ))
                     )}
                 </Box>
-            )}
+            ) : role === 'Coordinator' && allFacailitators ? (
+                <Box>
+                    <Divider />
+                    {loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
+                    ) : allFacailitators.length == 0 ? (
+                        <Box paddingY={1.4} paddingX={1}>
+                            <Typography variant="subtitle1">No facilitator to be assigned found!</Typography>
+                            <Typography variant="subtitle2">Make sure you have active facilitator </Typography>
+                        </Box>
+                    ) : (
+                        allFacailitators.map((fac) => (
+                            <FacilitatorListing
+                                key={fac.id}
+                                name={fac.name}
+                                email={fac.email}
+                                status={fac.status}
+                                onAssign={() => handleAssignInit(fac.id)}
+                                isAssigning={
+                                    fac.id === selectedFacilitator && assigning ? (
+                                        <CircularProgress size={18} sx={{ color: 'white' }} />
+                                    ) : (
+                                        'Assign'
+                                    )
+                                }
+                            />
+                        ))
+                    )}
+                </Box>
+            ) : null}
 
             <SnackbarProvider maxSnack={3} />
         </Box>

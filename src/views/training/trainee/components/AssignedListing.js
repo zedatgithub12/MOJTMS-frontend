@@ -4,6 +4,10 @@ import PropTypes from 'prop-types';
 
 const AssignedListing = ({ name, education_level, job_title, status, isRemoving }) => {
     const theme = useTheme();
+
+    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
+
     return (
         <Box
             sx={{
@@ -27,22 +31,41 @@ const AssignedListing = ({ name, education_level, job_title, status, isRemoving 
                 </Box>
             </Box>
 
-            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Typography
-                    variant="body1"
-                    marginRight={2}
-                    sx={{
-                        textTransform: 'capitalize',
-                        borderRadius: 4,
-                        paddingX: 3,
-                        paddingY: 0.5,
-                        backgroundColor: status === 'rejected' ? theme.palette.error.light : theme.palette.primary[200]
-                    }}
-                >
-                    {status}
-                </Typography>
-                {isRemoving}
-            </Box>
+            {role === 'Admin' ? (
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Typography
+                        variant="body1"
+                        marginRight={2}
+                        sx={{
+                            textTransform: 'capitalize',
+                            borderRadius: 4,
+                            paddingX: 3,
+                            paddingY: 0.5,
+                            backgroundColor: status === 'rejected' ? theme.palette.error.light : theme.palette.primary[200]
+                        }}
+                    >
+                        {status}
+                    </Typography>
+                    {isRemoving}
+                </Box>
+            ) : role === 'Coordinator' ? (
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Typography
+                        variant="body1"
+                        marginRight={2}
+                        sx={{
+                            textTransform: 'capitalize',
+                            borderRadius: 4,
+                            paddingX: 3,
+                            paddingY: 0.5,
+                            backgroundColor: status === 'rejected' ? theme.palette.error.light : theme.palette.primary[200]
+                        }}
+                    >
+                        {status}
+                    </Typography>
+                    {isRemoving}
+                </Box>
+            ) : null}
         </Box>
     );
 };

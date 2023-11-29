@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
-import TraineeListing from './components/TrainerListing';
+import TraineeListing from './components/TraineeListing';
 import AssignedListing from './components/AssignedListing';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
@@ -173,7 +173,7 @@ const TraineeEnrollment = ({ session_id }) => {
                 ))
             )}
 
-            {allTrainee && (
+            {role === 'Admin' && allTrainee ? (
                 <Box>
                     <Divider />
                     {loading ? (
@@ -203,7 +203,37 @@ const TraineeEnrollment = ({ session_id }) => {
                         ))
                     )}
                 </Box>
-            )}
+            ) : role === 'Coordinator' ? (
+                <Box>
+                    <Divider />
+                    {loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
+                    ) : allTrainee.length == 0 ? (
+                        <Box paddingY={1.4} paddingX={1}>
+                            <Typography variant="subtitle1">No trainee to be assigned found!</Typography>
+                            <Typography variant="subtitle2">Make sure you have trainee in the database and they are active</Typography>
+                        </Box>
+                    ) : (
+                        allTrainee.map((trainee) => (
+                            <TraineeListing
+                                key={trainee.id}
+                                name={trainee.name}
+                                education_level={trainee.dept_name}
+                                job_title={trainee.job_title}
+                                status={trainee.enrollment_status}
+                                onAssign={() => handleAssignInit(trainee.id)}
+                                isAssigning={
+                                    trainee.id === selectedTrainee && assigning ? (
+                                        <CircularProgress size={18} sx={{ color: 'white' }} />
+                                    ) : (
+                                        'Invite'
+                                    )
+                                }
+                            />
+                        ))
+                    )}
+                </Box>
+            ) : null}
 
             <SnackbarProvider maxSnack={3} />
         </Box>

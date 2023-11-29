@@ -17,7 +17,7 @@ import { useEffect } from 'react';
 import { useMemo } from 'react';
 import Loadable from 'ui-component/Loadable';
 import { QueryClient, QueryClientProvider } from 'react-query';
-
+import { HelmetProvider } from 'react-helmet-async';
 // ==============================|| APP ||============================== //
 
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login')));
@@ -93,24 +93,26 @@ const App = () => {
             <AuthContext.Provider value={authContext}>
                 <QueryClientProvider client={queryClient}>
                     <ThemeProvider theme={themes(customization)}>
-                        <CssBaseline />
-                        <NavigationScroll>
-                            {loged ? (
-                                <Routes />
-                            ) : location.pathname === '/pages/register/register' ? (
-                                <AuthRegister />
-                            ) : location.pathname === '/forgot-password' ? (
-                                <Forgot_Password />
-                            ) : location.pathname === `/reset-password/${token}` ? (
-                                <Reset_Password />
-                            ) : location.pathname === '/pages/login/login' ? (
-                                <AuthLogin />
-                            ) : location.pathname === '/' ? (
-                                <AuthLogin />
-                            ) : (
-                                <NotFound />
-                            )}
-                        </NavigationScroll>
+                        <HelmetProvider>
+                            <CssBaseline />
+                            <NavigationScroll>
+                                {loged ? (
+                                    <Routes />
+                                ) : location.pathname === '/pages/register/register' ? (
+                                    <AuthRegister />
+                                ) : location.pathname === '/forgot-password' ? (
+                                    <Forgot_Password />
+                                ) : location.pathname === `/reset-password/${token}` ? (
+                                    <Reset_Password />
+                                ) : location.pathname === '/pages/login/login' ? (
+                                    <AuthLogin />
+                                ) : location.pathname === '/' ? (
+                                    <AuthLogin />
+                                ) : (
+                                    <NotFound />
+                                )}
+                            </NavigationScroll>
+                        </HelmetProvider>
                     </ThemeProvider>
                 </QueryClientProvider>
             </AuthContext.Provider>

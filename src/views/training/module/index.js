@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Grid, Pagination } from '@mui/material';
 import PropTypes from 'prop-types';
 import { SearchAdd } from './searchadd';
@@ -10,6 +10,9 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Box } from '@mui/system';
 
 const TrainingModules = ({ training_id }) => {
+    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
+
     const [modules, setModules] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
@@ -59,7 +62,7 @@ const TrainingModules = ({ training_id }) => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel], () => handleFetching(), {
+    const { error } = useQuery(['data', paginationModel], () => handleFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -108,20 +111,41 @@ const TrainingModules = ({ training_id }) => {
     return (
         <Grid container>
             <Grid item xs={12} sx={{ paddingTop: 2 }}>
-                <SearchAdd
-                    searchText={search}
-                    searching={searching}
-                    onTextChange={(event) => setSearch(event.target.value)}
-                    onSubmit={() => handleSearching()}
-                    onAdd={() => setCreate(!create)}
-                />
-                {create && training_id && (
-                    <CreateModule
-                        training_id={training_id}
-                        handleClosePanel={() => setCreate(false)}
-                        sx={{ opacity: create ? 1 : 0, transition: 'all 0.5s ease-in forward' }}
-                    />
-                )}
+                {role === 'Admin' ? (
+                    <React.Fragment>
+                        <SearchAdd
+                            searchText={search}
+                            searching={searching}
+                            onTextChange={(event) => setSearch(event.target.value)}
+                            onSubmit={() => handleSearching()}
+                            onAdd={() => setCreate(!create)}
+                        />
+                        {create && training_id && (
+                            <CreateModule
+                                training_id={training_id}
+                                handleClosePanel={() => setCreate(false)}
+                                sx={{ opacity: create ? 1 : 0, transition: 'all 0.5s ease-in forward' }}
+                            />
+                        )}
+                    </React.Fragment>
+                ) : role === 'Coordinator' ? (
+                    <React.Fragment>
+                        <SearchAdd
+                            searchText={search}
+                            searching={searching}
+                            onTextChange={(event) => setSearch(event.target.value)}
+                            onSubmit={() => handleSearching()}
+                            onAdd={() => setCreate(!create)}
+                        />
+                        {create && training_id && (
+                            <CreateModule
+                                training_id={training_id}
+                                handleClosePanel={() => setCreate(false)}
+                                sx={{ opacity: create ? 1 : 0, transition: 'all 0.5s ease-in forward' }}
+                            />
+                        )}
+                    </React.Fragment>
+                ) : null}
 
                 <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} />
 

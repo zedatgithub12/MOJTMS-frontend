@@ -11,6 +11,7 @@ import AddResource from './components/addresource';
 
 const TrainingResources = ({ session_id }) => {
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
 
     const [resources, setResources] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -133,8 +134,11 @@ const TrainingResources = ({ session_id }) => {
     return (
         <Grid container>
             <Grid item xs={12} padding={1}>
-                <AddResource handleSubmittion={handleAdding} isSubmitting={isSubmitting} />
-
+                {role === 'Admin' ? (
+                    <AddResource handleSubmittion={handleAdding} isSubmitting={isSubmitting} />
+                ) : role === 'Coordinator' ? (
+                    <AddResource handleSubmittion={handleAdding} isSubmitting={isSubmitting} />
+                ) : null}
                 {loading ? (
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 6 }}>
                         <CircularProgress size={22} />

@@ -22,6 +22,9 @@ const ModuleList = ({ modules, loading, error, sx }) => {
     const theme = useTheme();
     const navigate = useNavigate();
 
+    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
+
     const [selectedModule, setSelectedModule] = useState(null);
     const [update, setUpdate] = useState(false);
     const [expand, setExpand] = useState(false);
@@ -252,8 +255,8 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                     paddingX: 1.2,
                                     borderRadius: 2,
                                     border: 0.1,
-                                    borderColor: theme.palette.secondary.light,
-                                    backgroundColor: selectedModule && selectedModule.id == module.id && theme.palette.secondary.light,
+                                    borderColor: theme.palette.primary[200],
+                                    backgroundColor: selectedModule && selectedModule.id == module.id && theme.palette.primary[200],
                                     cursor: 'pointer'
                                 }}
                             >
@@ -271,29 +274,55 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                     </IconButton>
                                 </IconLabel>
 
-                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                    <IconButton onClick={() => handleUpdateInit(module)} title="Update">
-                                        <IconEdit size={18} />
-                                    </IconButton>
+                                {role === 'Admin' ? (
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                        <IconButton onClick={() => handleUpdateInit(module)} title="Update">
+                                            <IconEdit size={18} />
+                                        </IconButton>
 
-                                    {module.module_status === 'archive' ? (
-                                        <IconButton
-                                            onClick={() => handleActivating(module)}
-                                            title="Un archive"
-                                            disabled={selectedModule.id == module.id && activating ? true : false}
-                                        >
-                                            {selectedModule.id == module.id && activating ? (
-                                                <CircularProgress size={20} />
-                                            ) : (
-                                                <IconArchiveOff size={18} />
-                                            )}
+                                        {module.module_status === 'archive' ? (
+                                            <IconButton
+                                                onClick={() => handleActivating(module)}
+                                                title="Un archive"
+                                                disabled={selectedModule.id == module.id && activating ? true : false}
+                                            >
+                                                {selectedModule.id == module.id && activating ? (
+                                                    <CircularProgress size={20} />
+                                                ) : (
+                                                    <IconArchiveOff size={18} />
+                                                )}
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton onClick={() => handleArchivingPanel(module)} title="Archive">
+                                                <IconArchive size={18} />
+                                            </IconButton>
+                                        )}
+                                    </Box>
+                                ) : role === 'Coordinator' ? (
+                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                        <IconButton onClick={() => handleUpdateInit(module)} title="Update">
+                                            <IconEdit size={18} />
                                         </IconButton>
-                                    ) : (
-                                        <IconButton onClick={() => handleArchivingPanel(module)} title="Archive">
-                                            <IconArchive size={18} />
-                                        </IconButton>
-                                    )}
-                                </Box>
+
+                                        {module.module_status === 'archive' ? (
+                                            <IconButton
+                                                onClick={() => handleActivating(module)}
+                                                title="Un archive"
+                                                disabled={selectedModule.id == module.id && activating ? true : false}
+                                            >
+                                                {selectedModule.id == module.id && activating ? (
+                                                    <CircularProgress size={20} />
+                                                ) : (
+                                                    <IconArchiveOff size={18} />
+                                                )}
+                                            </IconButton>
+                                        ) : (
+                                            <IconButton onClick={() => handleArchivingPanel(module)} title="Archive">
+                                                <IconArchive size={18} />
+                                            </IconButton>
+                                        )}
+                                    </Box>
+                                ) : null}
                             </Box>
                             {expand && selectedModule && selectedModule.id == module.id && (
                                 <Box sx={{ paddingLeft: 1, paddingY: 0.5 }}>
@@ -316,9 +345,15 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                         }}
                                     >
                                         <Typography variant="subtitle1">Training Materials</Typography>
-                                        <Button variant="text" color="primary" onClick={() => handleAddMaterial()}>
-                                            Add New
-                                        </Button>
+                                        {role === 'Admin' ? (
+                                            <Button variant="text" color="primary" onClick={() => handleAddMaterial()}>
+                                                Add New
+                                            </Button>
+                                        ) : role === 'Coordinator' ? (
+                                            <Button variant="text" color="primary" onClick={() => handleAddMaterial()}>
+                                                Add New
+                                            </Button>
+                                        ) : null}
                                     </Box>
                                     <Divider sx={{ marginY: 0.8 }} />
 

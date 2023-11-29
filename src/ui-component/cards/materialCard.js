@@ -11,6 +11,9 @@ import { MaterialMenu } from 'ui-component/menu/material';
 const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUnarchive, onDownload }, ref) => {
     const theme = useTheme();
 
+    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
+
     const getFileTypeIcon = (fileTypeName) => {
         const fileType = FileTypes.find((fileType) => fileType.name === fileTypeName);
 
@@ -47,35 +50,68 @@ const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUna
                             }}
                         >
                             {material.title && <Typography variant="subtitle1">{material.title}</Typography>}
-                            <MaterialMenu
-                                children={
-                                    <Box>
-                                        <MenuItem onClick={onUpdate}>
-                                            <ListItemIcon>
-                                                <IconEdit size={18} />
-                                            </ListItemIcon>
-                                            Update
-                                        </MenuItem>
 
-                                        <Divider />
-                                        {material.status === 'archived' ? (
-                                            <MenuItem onClick={onArchive}>
+                            {role === 'Admin' ? (
+                                <MaterialMenu
+                                    children={
+                                        <Box>
+                                            <MenuItem onClick={onUpdate}>
                                                 <ListItemIcon>
-                                                    <IconArchiveOff size={18} />
+                                                    <IconEdit size={18} />
                                                 </ListItemIcon>
-                                                Un Archive
+                                                Update
                                             </MenuItem>
-                                        ) : (
-                                            <MenuItem onClick={onUnarchive}>
+
+                                            <Divider />
+                                            {material.status === 'archived' ? (
+                                                <MenuItem onClick={onArchive}>
+                                                    <ListItemIcon>
+                                                        <IconArchiveOff size={18} />
+                                                    </ListItemIcon>
+                                                    Un Archive
+                                                </MenuItem>
+                                            ) : (
+                                                <MenuItem onClick={onUnarchive}>
+                                                    <ListItemIcon>
+                                                        <IconArchive size={18} />
+                                                    </ListItemIcon>
+                                                    Archive
+                                                </MenuItem>
+                                            )}
+                                        </Box>
+                                    }
+                                />
+                            ) : role === 'Coordinator' ? (
+                                <MaterialMenu
+                                    children={
+                                        <Box>
+                                            <MenuItem onClick={onUpdate}>
                                                 <ListItemIcon>
-                                                    <IconArchive size={18} />
+                                                    <IconEdit size={18} />
                                                 </ListItemIcon>
-                                                Archive
+                                                Update
                                             </MenuItem>
-                                        )}
-                                    </Box>
-                                }
-                            />
+
+                                            <Divider />
+                                            {material.status === 'archived' ? (
+                                                <MenuItem onClick={onArchive}>
+                                                    <ListItemIcon>
+                                                        <IconArchiveOff size={18} />
+                                                    </ListItemIcon>
+                                                    Un Archive
+                                                </MenuItem>
+                                            ) : (
+                                                <MenuItem onClick={onUnarchive}>
+                                                    <ListItemIcon>
+                                                        <IconArchive size={18} />
+                                                    </ListItemIcon>
+                                                    Archive
+                                                </MenuItem>
+                                            )}
+                                        </Box>
+                                    }
+                                />
+                            ) : null}
                         </Box>
 
                         {material.description && (

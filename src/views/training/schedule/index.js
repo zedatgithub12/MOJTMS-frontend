@@ -1,11 +1,17 @@
-import { Grid } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import Connections from 'api';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import ScheduleListing from './components/Listing';
+import { useNavigate } from 'react-router';
 
 const TrainingSchedule = ({ session_id }) => {
+    const navigate = useNavigate();
+
+    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
+
     const [schedule, setSchedule] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -41,7 +47,7 @@ const TrainingSchedule = ({ session_id }) => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => handleFetching(), {
+    useQuery(['data'], () => handleFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -53,6 +59,26 @@ const TrainingSchedule = ({ session_id }) => {
     return (
         <Grid container>
             <Grid item xs={10}>
+                {role === 'Admin' ? (
+                    <Button
+                        variant="text"
+                        color="primary"
+                        sx={{ marginTop: 2 }}
+                        onClick={() => navigate('/training/schedule/create', { state: session_id })}
+                    >
+                        Add new schedule
+                    </Button>
+                ) : role === 'Coordinator' ? (
+                    <Button
+                        variant="text"
+                        color="primary"
+                        sx={{ marginTop: 2 }}
+                        onClick={() => navigate('/training/schedule/create', { state: session_id })}
+                    >
+                        Add new schedule
+                    </Button>
+                ) : null}
+
                 {schedule && <ScheduleListing isLoading={loading} schedules={schedule} updateSchedules={updateSchedules} />}
             </Grid>
         </Grid>

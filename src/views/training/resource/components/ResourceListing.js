@@ -5,6 +5,10 @@ import { PropTypes } from 'prop-types';
 
 const ResourceListing = ({ name, quantity, availability, onRemove, removing }) => {
     const theme = useTheme();
+
+    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const role = ActiveUser.user.role;
+
     return (
         <Box
             sx={{
@@ -15,7 +19,7 @@ const ResourceListing = ({ name, quantity, availability, onRemove, removing }) =
                 padding: 1.8,
                 marginTop: 1,
                 borderRadius: 3,
-                border: 2,
+                border: 1,
                 borderColor: theme.palette.primary[200]
             }}
         >
@@ -61,9 +65,15 @@ const ResourceListing = ({ name, quantity, availability, onRemove, removing }) =
                     </Typography>
                 )}
 
-                <IconButton onClick={onRemove} disabled={removing}>
-                    <IconX size={18} />
-                </IconButton>
+                {role === 'Admin' ? (
+                    <IconButton onClick={onRemove} disabled={removing}>
+                        <IconX size={18} />
+                    </IconButton>
+                ) : role === 'Coordinator' ? (
+                    <IconButton onClick={onRemove} disabled={removing}>
+                        <IconX size={18} />
+                    </IconButton>
+                ) : null}
             </Box>
         </Box>
     );

@@ -53,7 +53,7 @@ const SessionDetailCard = forwardRef(
                     <Card
                         ref={ref}
                         sx={{
-                            minWidth: 380,
+                            minWidth: 300,
                             border: '1px solid',
                             borderColor: theme.palette.secondary.light,
                             ':hover': {

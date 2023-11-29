@@ -173,35 +173,67 @@ const TrainingTrainers = ({ session_id }) => {
                 ))
             )}
 
-            <Box>
-                <Divider />
-                {loading ? (
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
-                ) : allTrainers.length == 0 ? (
-                    <Box paddingY={1.4}>
-                        <Typography variant="subtitle1">No trainer to be assigned found!</Typography>
-                        <Typography variant="subtitle2">Make sure you have trainer in the database and they are active</Typography>
-                    </Box>
-                ) : (
-                    allTrainers.map((trainer) => (
-                        <TrainerListing
-                            key={trainer.id}
-                            name={trainer.name}
-                            education_level={trainer.qualifications}
-                            specialisation={trainer.specialisation}
-                            status={trainer.status}
-                            onAssign={() => handleAssignInit(trainer.id)}
-                            isAssigning={
-                                trainer.id === selectedTrainer && assigning ? (
-                                    <CircularProgress size={18} sx={{ color: 'white' }} />
-                                ) : (
-                                    'Assign'
-                                )
-                            }
-                        />
-                    ))
-                )}
-            </Box>
+            {role === 'Admin' ? (
+                <Box>
+                    <Divider />
+                    {loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
+                    ) : allTrainers.length == 0 ? (
+                        <Box paddingY={1.4}>
+                            <Typography variant="subtitle1">No trainer to be assigned found!</Typography>
+                            <Typography variant="subtitle2">Make sure you have trainer in the database and they are active</Typography>
+                        </Box>
+                    ) : (
+                        allTrainers.map((trainer) => (
+                            <TrainerListing
+                                key={trainer.id}
+                                name={trainer.name}
+                                education_level={trainer.qualifications}
+                                specialisation={trainer.specialisation}
+                                status={trainer.status}
+                                onAssign={() => handleAssignInit(trainer.id)}
+                                isAssigning={
+                                    trainer.id === selectedTrainer && assigning ? (
+                                        <CircularProgress size={18} sx={{ color: 'white' }} />
+                                    ) : (
+                                        'Assign'
+                                    )
+                                }
+                            />
+                        ))
+                    )}
+                </Box>
+            ) : role === 'Coordinator' ? (
+                <Box>
+                    <Divider />
+                    {loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
+                    ) : allTrainers.length == 0 ? (
+                        <Box paddingY={1.4}>
+                            <Typography variant="subtitle1">No trainer to be assigned found!</Typography>
+                            <Typography variant="subtitle2">Make sure you have trainer in the database and they are active</Typography>
+                        </Box>
+                    ) : (
+                        allTrainers.map((trainer) => (
+                            <TrainerListing
+                                key={trainer.id}
+                                name={trainer.name}
+                                education_level={trainer.qualifications}
+                                specialisation={trainer.specialisation}
+                                status={trainer.status}
+                                onAssign={() => handleAssignInit(trainer.id)}
+                                isAssigning={
+                                    trainer.id === selectedTrainer && assigning ? (
+                                        <CircularProgress size={18} sx={{ color: 'white' }} />
+                                    ) : (
+                                        'Assign'
+                                    )
+                                }
+                            />
+                        ))
+                    )}
+                </Box>
+            ) : null}
 
             <SnackbarProvider maxSnack={3} />
         </Box>
