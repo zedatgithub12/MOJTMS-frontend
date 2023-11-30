@@ -9,7 +9,7 @@ const letterConfig = {
     endat: 220
 };
 
-const ReviewsListing = ({ data, photo, name, rating, date, description }) => {
+const ReviewsListing = ({ name, rating, date, description }) => {
     const theme = useTheme();
 
     const [collapse, setCollapse] = useState(true);
@@ -21,7 +21,7 @@ const ReviewsListing = ({ data, photo, name, rating, date, description }) => {
         <Grid container>
             <Grid item xs={12} paddingY={2}>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingY: 1 }}>
-                    <Avatar alt={name} />
+                    <Avatar alt={name} sx={{ width: 32, height: 32 }} />
                     <Typography variant="h4" marginLeft={2}>
                         {name}
                     </Typography>
@@ -29,7 +29,7 @@ const ReviewsListing = ({ data, photo, name, rating, date, description }) => {
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingY: 1 }}>
                     <Rating name="size-small" defaultValue={rating} readOnly size="small" />
                     <Typography variant="subtitle2" marginLeft={1}>
-                        Nov, 12, 2023
+                        {date}
                     </Typography>
                 </Box>
 
@@ -57,8 +57,6 @@ const ReviewsListing = ({ data, photo, name, rating, date, description }) => {
 };
 
 ReviewsListing.propTypes = {
-    data: PropTypes.array,
-    photo: PropTypes.string,
     name: PropTypes.string,
     rating: PropTypes.number,
     date: PropTypes.string,

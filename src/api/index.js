@@ -67,6 +67,10 @@ const Connections = {
     trainingresources: 'training-resources',
     sessionresources: 'training-resources/session/',
 
+    traineereview: 'trainee-reviews',
+    trainingreview: 'trainee-reviews/training/',
+    sessionreview: 'trainee-reviews/session/',
+
     //training api endpoints
     trainings: 'trainings',
     trainingsearch: 'training/search',

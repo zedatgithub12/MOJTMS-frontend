@@ -23,7 +23,6 @@ const SessionDetails = () => {
     const role = ActiveUser.user.role;
 
     const smallDevice = useMediaQuery(theme.breakpoints.down('md'));
-
     const activeIndex = SessionStatus.findIndex((item) => item === state.status); //find the index that match with current status of session
 
     const [openShare, setOpenShare] = useState(false);
@@ -32,10 +31,6 @@ const SessionDetails = () => {
     const [isUpdating, setIsUpdating] = useState(false);
     const [deleteSession, setDeleteSession] = useState(false);
     const [deleting, setDeleting] = useState(false);
-
-    const handleShare = () => {
-        setOpenShare(true);
-    };
 
     //handle share dialog open close functionality
     const handleShareDialogClose = () => {

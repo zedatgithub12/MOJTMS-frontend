@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 // material-ui
 import { Grid, Button, useTheme, CircularProgress, TextField, FormHelperText, Typography, Rating } from '@mui/material';
 
@@ -47,47 +47,57 @@ const AddRating = ({ handleSubmittion, isSubmitting }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 padding: 2.4,
-                marginTop: 1,
+                marginTop: 2,
+                marginX: 1.2,
+
+                backgroundColor: theme.palette.background.default,
+                boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)',
+                border: '1px solid',
                 borderRadius: 2,
-                border: '2px solid',
-                background: theme.palette.primary[200],
-                borderColor: theme.palette.primary.light
+                borderColor: theme.palette.primary[200]
             }}
         >
-            <Typography variant="subtitle1" paddingLeft={0.5}>
-                Rating & Review
-            </Typography>
-
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center'
-                }}
-            >
-                <Rating
-                    name="rating"
-                    size="large"
-                    value={rating}
-                    onChange={(event, newValue) => {
-                        setRating(newValue);
-                    }}
-                    sx={{ paddingY: 2 }}
-                />
-                <Box sx={{ ml: 2 }}>{labels[rating]}</Box>
-            </Box>
-
             <form noValidate onSubmit={formik.handleSubmit}>
+                <Grid item xs={10} sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                    <Box>
+                        <Typography variant="subtitle1" color="primary" paddingLeft={0.5}>
+                            Add your reviews
+                        </Typography>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                marginBottom: 1
+                            }}
+                        >
+                            <Rating
+                                name="rating"
+                                value={rating}
+                                onChange={(event, newValue) => {
+                                    setRating(newValue);
+                                }}
+                                sx={{ paddingY: 1 }}
+                            />
+                            {rating > 0 && <Box sx={{ ml: 1 }}>{labels[rating]}</Box>}
+                        </Box>
+                    </Box>
+
+                    <Button disabled={isSubmitting || rating == 0 ? true : false} type="submit" variant="contained" color="primary">
+                        {isSubmitting ? <CircularProgress size={20} sx={{ color: theme.palette.background.default }} /> : 'Submit'}
+                    </Button>
+                </Grid>
+
                 <Grid container spacing={2} direction={'column'}>
-                    <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
+                    <Grid item xs={12}>
                         <TextField
                             id="reviews"
                             name="review"
-                            label="Tell us your experience"
+                            label="Tell us your experience (optional)"
                             value={formik.values.review}
                             onChange={formik.handleChange}
                             fullWidth
                             multiline
-                            rows={4}
+                            rows={3}
                             error={formik.touched.review && Boolean(formik.errors.review)}
                         />
                         {formik.touched.review && formik.errors.review && (
@@ -95,18 +105,6 @@ const AddRating = ({ handleSubmittion, isSubmitting }) => {
                                 {formik.errors.review}
                             </FormHelperText>
                         )}
-                    </Grid>
-
-                    <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-                        <Button
-                            disabled={isSubmitting || rating == 0 ? true : false}
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            sx={{ py: 1, px: 8 }}
-                        >
-                            {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : 'Post'}
-                        </Button>
                     </Grid>
                 </Grid>
             </form>

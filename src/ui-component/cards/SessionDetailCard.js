@@ -18,25 +18,7 @@ const letterConfig = {
 };
 
 const SessionDetailCard = forwardRef(
-    (
-        {
-            sx = {},
-            isLoading,
-            status,
-            title,
-            startdate,
-            starttime,
-            enddate,
-            endtime,
-            address,
-            capacity,
-            description,
-            resources,
-            children,
-            ...others
-        },
-        ref
-    ) => {
+    ({ sx = {}, isLoading, status, title, startdate, enddate, address, capacity, description, resources, children, ...others }, ref) => {
         const theme = useTheme();
 
         const [collapse, setCollapse] = React.useState(true);
@@ -53,7 +35,7 @@ const SessionDetailCard = forwardRef(
                     <Card
                         ref={ref}
                         sx={{
-                            minWidth: 300,
+                            minWidth: 380,
                             border: '1px solid',
                             borderColor: theme.palette.secondary.light,
                             ':hover': {
@@ -169,13 +151,11 @@ const SessionDetailCard = forwardRef(
 SessionDetailCard.propTypes = {
     sx: PropTypes.object,
     isLoading: PropTypes.bool,
-    title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
+    title: PropTypes.string,
     description: PropTypes.string,
     status: PropTypes.string,
     startdate: PropTypes.string,
-    starttime: PropTypes.string,
     enddate: PropTypes.string,
-    endtime: PropTypes.string,
     address: PropTypes.string,
     capacity: PropTypes.number,
     resources: PropTypes.array,

@@ -102,6 +102,7 @@ export const TimeFormatter = (number) => {
     }
 };
 
+//format date and time then return it in the nov,30,2023 | 10:00am
 export const formatDate = (inputDate) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     const date = new Date(inputDate);
@@ -111,6 +112,13 @@ export const formatDate = (inputDate) => {
     return `${formattedDate} | ${formattedTime}`;
 };
 
+//format date only and return it in the nov,30,2023
+export const formatDateOnly = (inputDate) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const date = new Date(inputDate);
+    const formattedDate = date.toLocaleDateString('en-US', options);
+    return formattedDate;
+};
 //round count formatter
 export const FormattedRound = (number) => {
     var count;
