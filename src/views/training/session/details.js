@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery, Button } from '@mui/material';
+import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery, Button, IconButton } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { IconEdit, IconShare, IconTrash } from '@tabler/icons';
 import DetailHeader from './components/DetailHeader';
@@ -13,6 +13,10 @@ import { SessionStatus } from 'data/static/SessionStatus';
 import ChangeStatus from './components/ChangeStatus';
 import ShareDialog from 'ui-component/ShareDialog';
 import TraineeTabContainer from './components/TraineeTabs';
+import SessionActions from './Actions';
+import { useQuery } from 'react-query';
+import Accepted from './Actions/Accepted';
+import { RefreshToken } from 'utils/token-refresh';
 
 const SessionDetails = () => {
     const theme = useTheme();
@@ -21,6 +25,7 @@ const SessionDetails = () => {
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
+    const uid = ActiveUser.user.id;
 
     const smallDevice = useMediaQuery(theme.breakpoints.down('md'));
     const activeIndex = SessionStatus.findIndex((item) => item === state.status); //find the index that match with current status of session
@@ -32,10 +37,69 @@ const SessionDetails = () => {
     const [deleteSession, setDeleteSession] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
-    //handle share dialog open close functionality
-    const handleShareDialogClose = () => {
-        setOpenShare(false);
+    const [enrollmentstatus, setEnrollmentstatus] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
+    const [trainee, setTrainee] = useState([]);
+    const [enrollment, setEnrollment] = useState([]);
+    const [enrolledcount, setEnrolledCount] = useState(7);
+
+    //assessment related states
+    const [assessment, setAssessment] = useState({
+        type: '',
+        status: '',
+        data: []
+    });
+
+    const handleFetching = async () => {
+        const tokenExpiration = sessionStorage.getItem('tokenExpiration');
+        const currentTime = new Date().getTime();
+
+        if (tokenExpiration && currentTime >= tokenExpiration) {
+            await RefreshToken();
+            FetchSessionDetail();
+        } else {
+            FetchSessionDetail();
+        }
     };
+
+    const FetchSessionDetail = async () => {
+        setLoading(true);
+        var Api = Connections.api + Connections.trainingsession + '/' + state.id + `?uid=${uid}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            const data = parsed.data;
+            const assessments = parsed.assessment;
+            const count = data.totalcount;
+            const EnrollmentInfo = data.enrollmentInfo;
+            const TraineeInfo = data.traineeInfo;
+
+            setData(data.data);
+            setEnrolledCount(count);
+            setTrainee(TraineeInfo);
+            EnrollmentInfo && setEnrollment(EnrollmentInfo);
+            EnrollmentInfo && setEnrollmentstatus(EnrollmentInfo.enrollment_status);
+            setAssessment({
+                type: assessments.type,
+                status: assessments.status,
+                data: assessments.data
+            });
+
+            setLoading(false);
+        }
+    };
+
+    useQuery(['data'], () => handleFetching(), {
+        refetchOnWindowFocus: false
+    });
 
     // Handle session status change here
     const handleSessionStatus = (newStatus) => {
@@ -108,6 +172,11 @@ const SessionDetails = () => {
                 setDeleting(false);
                 handlePrompts(error.message, 'error');
             });
+    };
+
+    //handle share dialog open close functionality
+    const handleShareDialogClose = () => {
+        setOpenShare(false);
     };
 
     const handlePrompts = (message, variant) => {
@@ -448,13 +517,31 @@ const SessionDetails = () => {
                                             </Typography>
                                         )}
 
-                                        <Button
-                                            variant="contained"
-                                            color="primary"
-                                            sx={{ marginTop: 3, marginBottom: 1, padding: 1, paddingX: 8 }}
-                                        >
-                                            Enroll
-                                        </Button>
+                                        {enrollmentstatus === 'accepted' ? (
+                                            assessment.data && assessment.status === 'taken' ? (
+                                                <Typography variant="subtitle1" marginTop={2}>
+                                                    You have already taken {assessment.type} training assessment and
+                                                    <b style={{ color: theme.palette.primary.main, fontSize: 14, marginLeft: 2 }}>
+                                                        scored {assessment.data.score}%
+                                                    </b>
+                                                </Typography>
+                                            ) : assessment.data && assessment.status === 'not taken' ? (
+                                                <Accepted
+                                                    type={assessment.type}
+                                                    onTakeAssessment={() => navigate('/assessment/take', { state: assessment.data })}
+                                                />
+                                            ) : null
+                                        ) : (
+                                            <SessionActions
+                                                isLoading={loading}
+                                                session_id={state.id}
+                                                enrollmentstatus={enrollmentstatus}
+                                                enrolledcount={enrolledcount}
+                                                trianeeenrollment={enrollment}
+                                                trainee={trainee}
+                                                reload={FetchSessionDetail}
+                                            />
+                                        )}
                                     </Box>
                                 </Grid>
                             </DetailHeader>

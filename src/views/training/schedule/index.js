@@ -1,10 +1,10 @@
+import { useEffect, useState } from 'react';
 import { Button, Grid } from '@mui/material';
 import Connections from 'api';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { useQuery } from 'react-query';
 import ScheduleListing from './components/Listing';
 import { useNavigate } from 'react-router';
+import { RefreshToken } from 'utils/token-refresh';
 
 const TrainingSchedule = ({ session_id }) => {
     const navigate = useNavigate();
@@ -21,7 +21,6 @@ const TrainingSchedule = ({ session_id }) => {
 
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
-            setRefreshed(true);
             FetchSchedules();
         } else {
             FetchSchedules();
@@ -47,9 +46,15 @@ const TrainingSchedule = ({ session_id }) => {
         }
     };
 
-    useQuery(['data'], () => handleFetching(), {
-        refetchOnWindowFocus: false
-    });
+    const fetchData = async () => {
+        await handleFetching();
+    };
+
+    useEffect(() => {
+        setTimeout(() => {
+            fetchData();
+        }, 500);
+    }, []);
 
     // Function to update the schedules array
     const updateSchedules = (updatedSchedules) => {

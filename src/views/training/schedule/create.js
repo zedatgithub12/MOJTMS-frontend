@@ -47,7 +47,6 @@ const CreateSchedule = () => {
 
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
-            setRefreshed(true);
             FetchSession();
         } else {
             FetchSession();
@@ -71,7 +70,7 @@ const CreateSchedule = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => handleDataFetching(), {
+    useQuery(['data'], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 

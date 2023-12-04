@@ -8,7 +8,7 @@ import { RefreshToken } from 'utils/token-refresh';
 import TraineeListing from './components/TraineeListing';
 import AssignedListing from './components/AssignedListing';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import { IconX } from '@tabler/icons';
+import { IconThumbDown, IconX } from '@tabler/icons';
 
 const TraineeEnrollment = ({ session_id }) => {
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
@@ -20,6 +20,7 @@ const TraineeEnrollment = ({ session_id }) => {
     const [loading, setLoading] = useState(false);
 
     const [assigning, setAssigning] = useState(false);
+    const [isChanging, setIsChanging] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
     const handleFetching = async () => {
@@ -79,7 +80,8 @@ const TraineeEnrollment = ({ session_id }) => {
         const data = {
             trainee_id: traineeid,
             session_id: session_id,
-            enrollment_type: 'invited'
+            enrollment_type: 'invited',
+            enrollment_status: 'invited'
         };
 
         fetch(Api, { method: 'POST', headers: headers, body: JSON.stringify(data) })
@@ -98,6 +100,42 @@ const TraineeEnrollment = ({ session_id }) => {
             .catch((error) => {
                 setAssigning(false);
                 handlePrompts(error, 'error');
+            });
+    };
+
+    //handle the work that should be done before the actual remove operation
+    const handleChangeInit = (traineeid, newStatus) => {
+        setSelectedTrainee(traineeid);
+        handleStatus(traineeid, newStatus);
+    };
+
+    // Handle trainee enrollment status here
+    const handleStatus = (traineeid, newStatus) => {
+        setIsChanging(true);
+        const Api = Connections.api + Connections.enrollmentstatus + traineeid;
+        const token = sessionStorage.getItem('token');
+        const headers = {
+            Authorization: 'Bearer' + token
+        };
+
+        const formData = new FormData();
+        formData.append('newstatus', newStatus);
+
+        fetch(Api, { method: 'POST', headers: headers, body: formData })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setIsChanging(false);
+                    handlePrompts(response.message, 'success');
+                    FetchTrainees();
+                } else {
+                    handlePrompts(response.message, 'error');
+                    setIsChanging(false);
+                }
+            })
+            .catch((error) => {
+                handlePrompts(error, 'error');
+                setIsChanging(false);
             });
     };
 
@@ -164,10 +202,22 @@ const TraineeEnrollment = ({ session_id }) => {
                         education_level={trainee.dept_name}
                         job_title={trainee.job_title}
                         status={trainee.enrollment_status}
+                        onAccept={() => handleChangeInit(trainee.id, 'accepted')}
+                        isAccepting={
+                            trainee.id === selectedTrainee && isChanging ? <CircularProgress size={18} sx={{ color: 'white' }} /> : 'Accept'
+                        }
                         isRemoving={
-                            <IconButton onClick={() => handleDeleteInit(trainee.id)}>
-                                {trainee.id === selectedTrainee && deleting ? <CircularProgress size={18} /> : <IconX size={20} />}
-                            </IconButton>
+                            <Box>
+                                {trainee.enrollment_status === 'pending' ? (
+                                    <IconButton onClick={() => handleChangeInit(trainee.id, 'rejected')} disabled={isChanging}>
+                                        <IconThumbDown size={20} />
+                                    </IconButton>
+                                ) : (
+                                    <IconButton onClick={() => handleDeleteInit(trainee.id)}>
+                                        {trainee.id === selectedTrainee && deleting ? <CircularProgress size={18} /> : <IconX size={20} />}
+                                    </IconButton>
+                                )}
+                            </Box>
                         }
                     />
                 ))

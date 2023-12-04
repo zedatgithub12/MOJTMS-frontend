@@ -41,6 +41,8 @@ const Connections = {
     //trainers api endpoints
     trainers: 'trainers',
     trainersearch: 'trainer/search',
+
+    //training api endpoints
     round: 'training/round/',
     trainingsession: 'training-sessions',
     sessions: 'training/sessions/',
@@ -54,9 +56,12 @@ const Connections = {
     traineeenrollments: 'trainee-enrollments',
     sessionenrollments: 'trainee-enrollments/session/',
     trainingenrollments: 'trainee-enrollments/training/',
+    enrollmentstatus: 'trainee-enrollments/status/',
 
     trainingassessment: 'training-assessments',
     sessionassessment: 'training-assessments/session/',
+
+    traineeassessment: 'trainee-assessments',
 
     trainingsurvey: 'training-surveys',
     sessionsurvey: 'training-surveys/session/',

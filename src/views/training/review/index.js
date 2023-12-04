@@ -263,6 +263,7 @@ const Review = ({ session_id }) => {
                             <Grid item xs={12} sx={{ minHeight: 300, padding: 3, paddingX: 4 }}>
                                 {reviews.map((review) => (
                                     <ReviewsListing
+                                        key={review.id}
                                         name={review.name}
                                         rating={review.rating}
                                         description={review.review}

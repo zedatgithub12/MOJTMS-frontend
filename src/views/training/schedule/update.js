@@ -47,7 +47,6 @@ const UpdateSchedule = () => {
 
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
-            setRefreshed(true);
             FetchSession();
         } else {
             FetchSession();

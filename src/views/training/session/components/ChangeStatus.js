@@ -78,7 +78,7 @@ function ChangeStatus({ options, onPress, selectedIndex, isUpdating }) {
 ChangeStatus.propTypes = {
     options: PropTypes.array,
     onPress: PropTypes.func,
-    selectedIndex: PropTypes.func,
+    selectedIndex: PropTypes.number,
     isUpdating: PropTypes.bool
 };
 

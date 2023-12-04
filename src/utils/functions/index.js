@@ -88,7 +88,7 @@ export const ProfileValidator = (file, size) => {
 
 export const TimeFormatter = (number) => {
     if (number === 0) {
-        return '0 m';
+        return '0 min';
     } else if (number < 0) {
         return 'Invalid time';
     } else if (number === 60) {
@@ -96,9 +96,9 @@ export const TimeFormatter = (number) => {
     } else if (number > 60) {
         const hours = Math.floor(number / 60);
         const minutes = number % 60;
-        return `${hours}:${minutes.toString().padStart(2, '0')} m`;
+        return `${hours}:${minutes.toString().padStart(2, '0')} min`;
     } else {
-        return `${number} m`;
+        return `${number} min`;
     }
 };
 
