@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery, Button, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery, IconButton, Button } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
-import { IconEdit, IconShare, IconTrash } from '@tabler/icons';
+import { IconEdit, IconListDetails, IconShare, IconTrash, IconX } from '@tabler/icons';
 import DetailHeader from './components/DetailHeader';
 import SessionDetailCard from 'ui-component/cards/SessionDetailCard';
 import { FormattedRound, formatDate } from 'utils/functions';
@@ -39,14 +39,22 @@ const SessionDetails = () => {
 
     const [enrollmentstatus, setEnrollmentstatus] = useState('');
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState([]);
+
     const [trainee, setTrainee] = useState([]);
     const [enrollment, setEnrollment] = useState([]);
     const [enrolledcount, setEnrolledCount] = useState(7);
+    //open survey
+    const [openSurvey, setOpenSurvey] = useState(false);
 
     //assessment related states
     const [assessment, setAssessment] = useState({
         type: '',
+        status: '',
+        data: []
+    });
+
+    //survey related states
+    const [surveys, setSurveys] = useState({
         status: '',
         data: []
     });
@@ -77,12 +85,13 @@ const SessionDetails = () => {
         const parsed = await response.json();
         if (parsed.success) {
             const data = parsed.data;
-            const assessments = parsed.assessment;
+
             const count = data.totalcount;
             const EnrollmentInfo = data.enrollmentInfo;
             const TraineeInfo = data.traineeInfo;
+            const assessments = parsed.assessment;
+            const survey = parsed.survey;
 
-            setData(data.data);
             setEnrolledCount(count);
             setTrainee(TraineeInfo);
             EnrollmentInfo && setEnrollment(EnrollmentInfo);
@@ -91,6 +100,11 @@ const SessionDetails = () => {
                 type: assessments.type,
                 status: assessments.status,
                 data: assessments.data
+            });
+
+            setSurveys({
+                status: survey.status,
+                data: survey.data
             });
 
             setLoading(false);
@@ -178,6 +192,14 @@ const SessionDetails = () => {
     const handleShareDialogClose = () => {
         setOpenShare(false);
     };
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (surveys.status === 'exist') {
+                setOpenSurvey(true);
+            }
+        }, 4000);
+    });
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
@@ -633,6 +655,47 @@ const SessionDetails = () => {
 
                     <SnackbarProvider maxSnack={3} />
                 </Grid>
+            )}
+
+            {openSurvey && surveys.data && (
+                <Box
+                    sx={{
+                        width: 380,
+                        minHeight: 330,
+                        float: 'right',
+                        position: 'sticky',
+                        right: 10,
+                        bottom: 10,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: 1,
+                        backgroundColor: theme.palette.background.default,
+                        borderRadius: 2,
+                        boxShadow: 4
+                    }}
+                >
+                    <IconButton sx={{ position: 'absolute', top: 6, right: 8 }} onClick={() => setOpenSurvey(!openSurvey)}>
+                        <IconX size={22} />
+                    </IconButton>
+
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                        <IconListDetails size={54} style={{ color: theme.palette.secondary.dark }} />
+
+                        <Typography variant="h3" marginY={1}>
+                            {state.round_name}
+                        </Typography>
+                        <Typography variant="body">Let's take some moment and fill this training survey </Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{ marginTop: 5, paddingX: 4, paddingY: 1 }}
+                            onClick={() => navigate('/training/session/survey', { state: surveys.data })}
+                        >
+                            Take Survey
+                        </Button>
+                    </Box>
+                </Box>
             )}
         </React.Fragment>
     );

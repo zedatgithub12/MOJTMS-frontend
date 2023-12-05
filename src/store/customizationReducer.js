@@ -10,7 +10,8 @@ export const initialState = {
     fontFamily: config.fontFamily,
     borderRadius: config.borderRadius,
     opened: true,
-    assessmentAnswers: []
+    assessmentAnswers: [],
+    surveyresponse: []
 };
 
 // ==============================|| CUSTOMIZATION REDUCER ||============================== //
@@ -42,7 +43,12 @@ const customizationReducer = (state = initialState, action) => {
         case actionTypes.SET_ASSESSMENT_ANSWERS:
             return {
                 ...state,
-                assessmentAnswers: action.payload //the operation performed
+                assessmentAnswers: action.payload
+            };
+        case actionTypes.SET_SURVEY_RESPONSE:
+            return {
+                ...state,
+                surveyresponse: action.payload
             };
         default:
             return state;

@@ -39,7 +39,6 @@ const Training = () => {
 
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
-            setRefreshed(true);
             FetchTraining();
         } else {
             FetchTraining();
