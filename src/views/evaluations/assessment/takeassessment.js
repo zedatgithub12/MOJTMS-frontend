@@ -14,7 +14,6 @@ import {
 } from '@mui/material';
 import { IconChevronDown, IconChevronRight, IconX } from '@tabler/icons';
 import { useLocation, useNavigate } from 'react-router';
-import { TimeFormatter } from 'utils/functions';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
@@ -24,6 +23,7 @@ import { ReadMore } from 'utils/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAssessmentAnswers } from 'store/actions';
 import { RefreshToken } from 'utils/token-refresh';
+import TakenDialog from './components/takendialog';
 
 const letterConfig = {
     startfrom: 0,
@@ -44,6 +44,7 @@ const TakeAssessment = () => {
     const [teststatus, setTestStatus] = useState('not started');
     const [timeStatus, setTimeStatus] = useState('in'); // a state that captures whether the trainee completed the test in a given time or not
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [succeed, setSucceed] = useState(false);
 
     const [open, setOpen] = useState(true);
     const [collapse, setCollapse] = useState(true);
@@ -276,7 +277,7 @@ const TakeAssessment = () => {
                 .then((response) => response.json())
                 .then((response) => {
                     if (response.success) {
-                        handlePrompts(response.message, 'success');
+                        setSucceed(true);
                         setIsSubmitting(false);
                     } else {
                         setIsSubmitting(false);
@@ -290,6 +291,13 @@ const TakeAssessment = () => {
         }
     };
 
+    //the following function will be triggered when user clicked done button
+    // after taking the assessment
+    const AssessmentDone = () => {
+        setSucceed(false);
+        dispatch(setAssessmentAnswers([]));
+        navigate(-1);
+    };
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
         enqueueSnackbar(message, { variant });
@@ -531,6 +539,13 @@ const TakeAssessment = () => {
                     )}
                 </Grid>
             </InfoDialog>
+
+            {/* the dialog to prompt that the assessment is taken successfully */}
+
+            {succeed && (
+                <TakenDialog open={succeed} handleClose={() => AssessmentDone()} score={calculateScore()} onDone={() => AssessmentDone()} />
+            )}
+
             <SnackbarProvider maxSnack={3} />
         </Grid>
     );
