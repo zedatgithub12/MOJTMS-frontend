@@ -81,20 +81,15 @@ const FillSurvey = () => {
 
         const selectedOption = questionoptions.findIndex((option) => option.id == e.target.value);
         const option = questionoptions[selectedOption];
-        const isCorrect = option.is_correct == 1 ? true : false;
 
-        handleSingleSelect(
-            {
-                qid: que.id,
-                oid: option.id,
-                iscorrect: isCorrect
-            },
-            option.is_correct
-        );
+        handleSingleSelect({
+            qid: que.id,
+            oid: option.id
+        });
     };
 
     //handle the selection of answer in each question
-    const handleSingleSelect = (answer, apoint) => {
+    const handleSingleSelect = (answer) => {
         // answer is will be an new answer selected and it will be referencing to answer paramer, the answer parameter is an object containing, qid, oid, and isCorrect attributes
         const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.qid === answer.qid); //return the existing answer index if exist
 
@@ -102,11 +97,9 @@ const FillSurvey = () => {
             qid: answer.qid,
             answers: [
                 {
-                    oid: answer.oid,
-                    is_correct: answer.iscorrect
+                    oid: answer.oid
                 }
-            ],
-            point: apoint //by default the answered question point is one
+            ]
         };
 
         const updatedAnswers = [...surveyresponse];
@@ -145,13 +138,12 @@ const FillSurvey = () => {
     };
 
     //handle multiple question select
-    function handleMultiSelect({ qid, oid, iscorrect }) {
+    function handleMultiSelect({ qid, oid }) {
         const existingAnswerIndex = surveyresponse.findIndex((answer) => answer.qid === qid);
-        const isCorrect = iscorrect === 1 ? true : false;
+
         const newAnswer = {
             qid: qid,
-            answers: [{ oid: oid, is_correct: isCorrect }],
-            point: 1
+            answers: [{ oid: oid }]
         };
 
         const updatedAnswers = [...surveyresponse];
@@ -166,7 +158,7 @@ const FillSurvey = () => {
                     existingAnswer.answers.splice(existingOptionIndex, 1);
                 } else {
                     // Add the selected option
-                    existingAnswer.answers.push({ oid: oid, is_correct: isCorrect });
+                    existingAnswer.answers.push({ oid: oid });
                 }
 
                 dispatch(setSurveyResponses(updatedAnswers));
@@ -178,6 +170,38 @@ const FillSurvey = () => {
         dispatch(setSurveyResponses(updatedAnswers));
     }
 
+    //here we are going to handle the fill survey text input field
+    // the name of the text field will be an id of the question as it is unique for each question
+    // and we find question with specified id and update its value afterward
+
+    const handleTextChange = (event) => {
+        let qid = parseInt(event.target.name); //we convert the question id from string to integer
+        const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.qid === qid); //return the existing answer index if exist
+
+        const newAnswer = {
+            qid: qid,
+            answers: [
+                {
+                    text_ans: event.target.value
+                }
+            ]
+        };
+
+        const updatedAnswers = [...surveyresponse];
+
+        if (existingAnswerIndex !== -1) {
+            const existingAnswer = updatedAnswers[existingAnswerIndex];
+            existingAnswer.answers[0].text_ans = event.target.value;
+
+            dispatch(setSurveyResponses(updatedAnswers));
+            return;
+        } else {
+            updatedAnswers.push(newAnswer);
+        }
+
+        dispatch(setSurveyResponses(updatedAnswers));
+    };
+
     //handle answer submission here
     const handleAnsSubmission = () => {
         let questioncount = questions.length;
@@ -187,7 +211,7 @@ const FillSurvey = () => {
             handlePrompts('Please answer all questions before submitting', 'info');
         } else {
             setIsSubmitting(true);
-            const Api = Connections.api + Connections.traineeassessment;
+            const Api = Connections.api + Connections.surveyresponse;
             const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
             const Addedby = ActiveUser.user.id;
             const token = sessionStorage.getItem('token');
@@ -198,12 +222,10 @@ const FillSurvey = () => {
 
             const answerstring = JSON.stringify(surveyresponse);
             const data = {
-                assessment_id: state.assessment_id,
+                survey_id: state.survey_id,
                 user_id: Addedby,
                 session_id: state.session_id,
-                type: state.assessment_type,
-                answers: answerstring,
-                feedback: ''
+                response: answerstring
             };
 
             fetch(Api, { method: 'POST', headers: headers, body: JSON.stringify(data) })
@@ -274,6 +296,7 @@ const FillSurvey = () => {
 
                     {questions.map((question, index) => {
                         const existingAnswer = surveyresponse.find((ans) => ans.qid === question.id);
+
                         return (
                             <Box key={index} sx={{ marginTop: 6, paddingX: 1 }}>
                                 <Box
@@ -340,9 +363,10 @@ const FillSurvey = () => {
                                             <FormControl fullWidth>
                                                 <OutlinedInput
                                                     id="survey-answer"
-                                                    name={`answer${question.id}`}
-                                                    value={''}
-                                                    onChange={(event) => console.log(event.target.value, event.target.name)}
+                                                    name={question.id}
+                                                    placeholder="Answer here"
+                                                    value={existingAnswer && existingAnswer.answers[0].text_ans}
+                                                    onChange={(event) => handleTextChange(event)}
                                                     fullWidth
                                                     multiline
                                                     rows={4}
@@ -403,7 +427,7 @@ const FillSurvey = () => {
 
             {/* the dialog to prompt that the survey is filled successfully */}
 
-            {succeed && <TakenDialog open={succeed} handleClose={() => AssessmentDone()} score={'jk'} onDone={() => AssessmentDone()} />}
+            {succeed && <TakenDialog open={succeed} handleClose={() => AssessmentDone()} onDone={() => AssessmentDone()} />}
 
             <SnackbarProvider maxSnack={3} />
         </Grid>

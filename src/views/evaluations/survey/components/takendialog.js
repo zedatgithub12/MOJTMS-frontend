@@ -3,11 +3,11 @@ import { Box } from '@mui/system';
 import { IconCircleCheck } from '@tabler/icons';
 import PropTypes from 'prop-types';
 
-export default function TakenDialog({ open, handleClose, score, onDone }) {
+export default function TakenDialog({ open, handleClose, onDone }) {
     const theme = useTheme();
     return (
         <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-slide-description">
-            <Grid container sx={{ minWidth: 500, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Grid container sx={{ width: 400, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Grid item xs={12}>
                     <Box
                         sx={{
@@ -30,24 +30,11 @@ export default function TakenDialog({ open, handleClose, score, onDone }) {
                             padding: 3
                         }}
                     >
-                        <Typography variant="h2" color="success">
-                            Successfully Assessed
-                        </Typography>
+                        <Typography variant="h2">Successfully Submitted</Typography>
 
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                marginTop: 1
-                            }}
-                        >
-                            <Typography variant="subtitle1">Scored</Typography>
-                            <Typography variant="h4" color="primary" marginLeft={1}>
-                                {score ? `${score}%` : 'Not ready'}
-                            </Typography>
-                        </Box>
+                        <Typography variant="subtitle1" marginTop={0.6}>
+                            Thank you for your time
+                        </Typography>
 
                         <Button variant="outlined" color="primary" onClick={onDone} sx={{ marginTop: 5, paddingX: 8, paddingY: 1 }}>
                             Done
@@ -62,6 +49,5 @@ export default function TakenDialog({ open, handleClose, score, onDone }) {
 TakenDialog.propTypes = {
     open: PropTypes.bool,
     handleClose: PropTypes.func,
-    score: PropTypes.number,
     onDone: PropTypes.func
 };

@@ -110,7 +110,8 @@ const Connections = {
     surveysearch: 'survey/search',
     surveyStatus: 'survey/status/',
     surveyquestions: 'survey-questions',
-    surveyoptions: 'survey-options'
+    surveyoptions: 'survey-options',
+    surveyresponse: 'survey-responses'
 };
 
 export default Connections;
