@@ -74,7 +74,7 @@ const TraineeDetails = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => FetchUsers(), {
+    useQuery(['data'], () => FetchUsers(), {
         refetchOnWindowFocus: false
     });
 
@@ -170,7 +170,7 @@ const TraineeDetails = () => {
 
     const formik = useFormik({
         initialValues: {
-            name: state.name ? state.name : ''
+            name: state.name ? state.name : state.user_name ? state.user_name : ''
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
@@ -389,7 +389,7 @@ const TraineeDetails = () => {
                         )}
 
                         <Typography variant="body2" sx={{ marginBottom: 2 }}>
-                            {state.email}
+                            {state.email ? state.email : state.user_email}
                         </Typography>
 
                         {!validImage.status && (

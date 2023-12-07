@@ -18,7 +18,7 @@ export const NoResult = ({ image, title, message, buttontitle, onPress }) => {
                     borderRadius: 4
                 }}
             >
-                <img src={image} alt="No result found" width="240px" height="240px" />
+                <img src={noresult} alt="No result found" width="240px" height="240px" />
                 <Typography variant="h3" marginY={0.5}>
                     {title}
                 </Typography>

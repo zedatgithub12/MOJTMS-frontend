@@ -19,13 +19,14 @@ import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { useLocation, useNavigate } from 'react-router';
 import Connections from 'api';
 import { IconLabel } from 'ui-component/content/IconLabel';
-import { IconBuilding, IconChalkboard, IconEdit, IconLanguage, IconPaperclip, IconUser } from '@tabler/icons';
+import { IconChalkboard, IconEdit, IconLanguage, IconPaperclip, IconUser } from '@tabler/icons';
 import { TrainingTabs } from 'data/tabs/training';
 import { TabPanel } from './components/tabpanel';
 import { StarOutline } from '@mui/icons-material';
 import { ReadMore } from 'utils/functions';
 import TrainingModules from './module';
 import SessionListing from './session/components/Listing';
+import TrainingTrainees from './trainee/trainingtrainees';
 
 // ==============================|| VIEW TRAINING PAGE ||============================== //
 
@@ -153,16 +154,15 @@ const ViewTraining = () => {
                                         pl: 0.5
                                     }}
                                 >
-                                    <Typography variant="subtitle1">4.0</Typography>
+                                    <Typography variant="subtitle1">{state.trainee_reviews_avg_rating}</Typography>
                                     <Rating
                                         name="hover-feedback"
-                                        value={4}
+                                        value={state.trainee_reviews_avg_rating}
                                         readOnly
-                                        precision={0.5}
                                         emptyIcon={<StarOutline style={{ opacity: 0.85 }} fontSize="inherit" />}
                                         sx={{ marginX: 2 }}
                                     />
-                                    <Typography variant="body2">{'(3243)'}</Typography>
+                                    <Typography variant="body2">({state.trainee_reviews_count})</Typography>
                                 </Box>
                                 <Button
                                     variant="contained"
@@ -200,6 +200,10 @@ const ViewTraining = () => {
                             <TabPanel value={tab} index={1}>
                                 <TrainingModules training_id={state.id} />
                             </TabPanel>
+
+                            <TabPanel value={tab} index={2}>
+                                <TrainingTrainees training_id={state.id} />
+                            </TabPanel>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -232,19 +236,7 @@ const ViewTraining = () => {
                             </Typography>
                         </Box>
 
-                        <Typography variant="subtitle1">72</Typography>
-                    </Box>
-
-                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginY: 3 }}>
-                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                            <IconBuilding size={20} />
-                            <Typography variant="body2" sx={{ paddingLeft: 1 }}>
-                                {' '}
-                                Involved Department
-                            </Typography>
-                        </Box>
-
-                        <Typography variant="subtitle1">4</Typography>
+                        <Typography variant="subtitle1">{state.sessions_count}</Typography>
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginY: 3 }}>
@@ -256,7 +248,7 @@ const ViewTraining = () => {
                             </Typography>
                         </Box>
 
-                        <Typography variant="subtitle1">234</Typography>
+                        <Typography variant="subtitle1">{state.enrollments_count}</Typography>
                     </Box>
 
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginY: 3 }}>
@@ -268,7 +260,7 @@ const ViewTraining = () => {
                             </Typography>
                         </Box>
 
-                        <Typography variant="subtitle1">6</Typography>
+                        <Typography variant="subtitle1">{state.modules_count}</Typography>
                     </Box>
                     <Divider />
                     {state.prerequisites && (

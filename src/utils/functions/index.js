@@ -175,3 +175,22 @@ export const convertDateTime = (datetime) => {
     const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
     return convertedTime;
 };
+
+export function calculateAge(dateString) {
+    if (dateString === null) {
+        return 'N/A';
+    }
+
+    var birthDate = new Date(dateString);
+    var today = new Date();
+
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var monthDiff = today.getMonth() - birthDate.getMonth();
+    var dayDiff = today.getDate() - birthDate.getDate();
+
+    if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+    }
+
+    return age;
+}

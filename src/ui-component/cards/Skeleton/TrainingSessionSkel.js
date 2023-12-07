@@ -9,6 +9,7 @@ const TrainingSessionSkel = () => {
         <Card
             sx={{
                 width: 280,
+                margin: 1,
                 border: '1px solid',
                 borderColor: theme.palette.secondary.light,
                 ':hover': {
@@ -21,25 +22,25 @@ const TrainingSessionSkel = () => {
                     <Skeleton variant="rectangular" width={'100%'} height={150} sx={{ borderTopRightRadius: 2, borderTopLeftRadius: 2 }} />
                 </Grid>
                 <Grid item sx={{ display: 'flex', flexDirection: 'row', paddingX: 1 }}>
-                    <Skeleton variant="rectangular" width={'20%'} height={12} sx={{ marginTop: 2, marginRight: 1, borderRadius: 2 }} />
-                    <Skeleton variant="rectangular" width={'60%'} height={12} sx={{ marginTop: 2, borderRadius: 2 }} />
+                    <Skeleton variant="rectangular" width={'40%'} height={10} sx={{ marginTop: 2, borderRadius: 1 }} />
                 </Grid>
 
                 <Grid item justifyContent="space-between" paddingX={1}>
-                    <Skeleton variant="rectangular" width={'100%'} height={20} sx={{ marginTop: 2, borderRadius: 2 }} />
+                    <Skeleton variant="rectangular" width={'100%'} height={20} sx={{ marginTop: 1, borderRadius: 1 }} />
                 </Grid>
 
                 <Grid item justifyContent="space-between" paddingX={1}>
-                    <Skeleton variant="rectangular" width={'100%'} height={12} sx={{ marginTop: 3, borderRadius: 2 }} />
+                    <Skeleton variant="rectangular" width={'96%'} height={14} sx={{ marginTop: 2.4, borderRadius: 1 }} />
                 </Grid>
 
                 <Grid item justifyContent="space-between" paddingX={1}>
-                    <Skeleton variant="rectangular" width={'100%'} height={12} sx={{ marginTop: 3, borderRadius: 2 }} />
+                    <Skeleton variant="rectangular" width={'96%'} height={14} sx={{ marginTop: 2.4, borderRadius: 1 }} />
                 </Grid>
-
-                <Grid item sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingX: 1, marginY: 1 }}>
-                    <Skeleton variant="rectangular" width={'46%'} height={34} sx={{ marginTop: 2, borderRadius: 2 }} />
-                    <Skeleton variant="rectangular" width={'46%'} height={34} sx={{ marginTop: 2, borderRadius: 2 }} />
+                <Grid item justifyContent="space-between" paddingX={1}>
+                    <Skeleton variant="rectangular" width={'96%'} height={14} sx={{ marginTop: 2.4, borderRadius: 1 }} />
+                </Grid>
+                <Grid item justifyContent="space-between" paddingX={1}>
+                    <Skeleton variant="rectangular" width={'96%'} height={14} sx={{ marginY: 2.4, borderRadius: 2 }} />
                 </Grid>
             </Grid>
         </Card>

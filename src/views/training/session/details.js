@@ -216,7 +216,7 @@ const SessionDetails = () => {
                         sx={{
                             borderRadius: 4,
                             border: '1px solid',
-                            borderColor: theme.palette.primary[200] + 25,
+                            borderColor: theme.palette.primary[200],
                             ':hover': {
                                 boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
                             }

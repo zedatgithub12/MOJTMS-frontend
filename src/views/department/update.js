@@ -82,6 +82,7 @@ const UpdateDepartment = () => {
         };
 
         const data = new FormData();
+        data.append('thumbnail', thumbnail);
         data.append('name', values.name);
         data.append('description', values.description);
         data.append('email', values.email);
@@ -129,16 +130,20 @@ const UpdateDepartment = () => {
                 lg={8}
                 xl={8}
                 sx={{
-                    borderRadius: 4,
+                    borderRadius: 2,
                     border: '1px solid',
-                    background: theme.palette.secondary.light,
-                    borderColor: theme.palette.primary[200] + 25,
+                    background: theme.palette.primary.light,
+                    borderColor: theme.palette.primary[200],
                     ':hover': {
                         boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
                     }
                 }}
             >
-                <MiniHeader title="Update Department " back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+                <MiniHeader
+                    title="Update Department "
+                    back={true}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
+                />
 
                 <Grid container>
                     <Grid item xs={12} sx={{ padding: 2 }}>
@@ -162,7 +167,12 @@ const UpdateDepartment = () => {
                                                         width: 300,
                                                         height: 300,
                                                         alignSelf: 'center',
-                                                        justifySelf: 'center'
+                                                        justifySelf: 'center',
+                                                        borderRadius: 2,
+                                                        border: '1px solid',
+                                                        background: theme.palette.primary.light,
+                                                        borderColor: theme.palette.primary[200],
+                                                        boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
                                                     }}
                                                 >
                                                     <img
@@ -382,13 +392,22 @@ const UpdateDepartment = () => {
                                         </FormControl>
                                     </Grid>
 
-                                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row' }}>
+                                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                        <Button
+                                            variant="text"
+                                            color="primary"
+                                            sx={{ py: 1, px: 4, my: 2, mx: 4 }}
+                                            onClick={() => navigate(-1)}
+                                        >
+                                            Cancel
+                                        </Button>
+
                                         <AnimateButton>
                                             <Button
                                                 disabled={isSubmitting ? true : false}
                                                 type="submit"
                                                 variant="contained"
-                                                color="secondary"
+                                                color="primary"
                                                 sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
                                             >
                                                 {isSubmitting ? (
@@ -398,15 +417,6 @@ const UpdateDepartment = () => {
                                                 )}
                                             </Button>
                                         </AnimateButton>
-
-                                        <Button
-                                            variant="text"
-                                            color="secondary"
-                                            sx={{ py: 1, px: 4, my: 2, mx: 4 }}
-                                            onClick={() => navigate(-1)}
-                                        >
-                                            Cancel
-                                        </Button>
                                     </Grid>
                                 </Grid>
                             </form>

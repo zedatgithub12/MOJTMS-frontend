@@ -20,6 +20,7 @@ const Department = () => {
     const navigate = useNavigate();
     const ImageApi = Connections.thumbnails;
 
+    const [loading, setLoading] = useState(false);
     const [departments, setDepartments] = useState([]);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
@@ -44,6 +45,8 @@ const Department = () => {
     };
 
     const FetchDepartments = async () => {
+        setLoading(true);
+
         var Api = Connections.api + Connections.departments + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -55,9 +58,12 @@ const Department = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            setLastPage(parsed.data.last_page);
             const data = parsed.data.data;
             setDepartments(data);
+            setLastPage(parsed.data.last_page);
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
     };
 
@@ -117,7 +123,7 @@ const Department = () => {
                 title="Departments"
                 back={true}
                 option={false}
-                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+                sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
             />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
@@ -131,17 +137,26 @@ const Department = () => {
                 />
 
                 <Grid container>
-                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
-                        {isLoading ? (
-                            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8 }}>
-                                <CircularProgress size={22} />
-                            </Box>
-                        ) : error ? (
-                            <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the departments!" />
-                        ) : !isLoading && departments.length == 0 ? (
-                            <NoResult image={noresult} title="Result Not Found" message="Oooops... No department found!" />
-                        ) : (
-                            departments.map((department) => (
+                    {loading ? (
+                        <Grid
+                            container
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                padding: 8
+                            }}
+                        >
+                            <CircularProgress size={22} />
+                        </Grid>
+                    ) : departments.length === 0 ? (
+                        <NoResult title="" message="Oooops... No department found!" />
+                    ) : error ? (
+                        <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the departments!" />
+                    ) : (
+                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
+                            {departments.map((department) => (
                                 <DepartmentCard
                                     isLoading={isLoading}
                                     image={ImageApi + department.thumbnail}
@@ -150,9 +165,9 @@ const Department = () => {
                                     phone={department.phone}
                                     onPress={() => navigate('/department/view', { state: department })}
                                 />
-                            ))
-                        )}
-                    </Grid>
+                            ))}
+                        </Grid>
+                    )}
                 </Grid>
 
                 {departments.length > paginationModel.pageSize && (

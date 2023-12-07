@@ -1,11 +1,10 @@
-import { Grid, Box, IconButton, Typography, useTheme } from '@mui/material';
+import { Grid, Box, IconButton, Typography } from '@mui/material';
 import { IconArrowLeft } from '@tabler/icons';
 import { useNavigate } from 'react-router';
 import { ActionMenu } from 'ui-component/menu/action';
 import PropTypes from 'prop-types';
 
 export const MediumHeader = ({ title, back, option, optionChildrens, sx }) => {
-    const theme = useTheme();
     const navigate = useNavigate();
 
     return (
@@ -17,6 +16,7 @@ export const MediumHeader = ({ title, back, option, optionChildrens, sx }) => {
                 borderTopLeftRadius: 8,
                 borderTopRightRadius: 8,
                 zIndex: 1,
+
                 ...sx
             }}
         >
@@ -27,11 +27,11 @@ export const MediumHeader = ({ title, back, option, optionChildrens, sx }) => {
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     {back && (
                         <IconButton onClick={() => navigate(-1)}>
-                            <IconArrowLeft color={theme.palette.background.default} />
+                            <IconArrowLeft />
                         </IconButton>
                     )}
 
-                    <Typography color={'white'} variant="h4" sx={{ paddingX: 1 }}>
+                    <Typography variant="h4" sx={{ paddingX: 1 }}>
                         {title}
                     </Typography>
                 </Box>

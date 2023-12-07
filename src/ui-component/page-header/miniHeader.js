@@ -27,11 +27,11 @@ export const MiniHeader = ({ title, back, option, optionChildrens, sx }) => {
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     {back && (
                         <IconButton onClick={() => navigate(-1)}>
-                            <IconArrowLeft color={theme.palette.background.default} />
+                            <IconArrowLeft />
                         </IconButton>
                     )}
 
-                    <Typography color={'white'} variant="h4" sx={{ paddingX: 1 }}>
+                    <Typography variant="h4" sx={{ paddingX: 1 }}>
                         {title}
                     </Typography>
                 </Box>

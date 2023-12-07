@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination } from '@mui/material';
 // project imports
@@ -9,18 +9,21 @@ import { RefreshToken } from 'utils/token-refresh';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import Connections from 'api';
-import noresult from 'assets/images/no_result.png';
 import errorImage from 'assets/images/error.jpg';
 import TrainingCard from 'ui-component/cards/TrainingCard';
 import TrainingCardSkel from 'ui-component/cards/Skeleton/TrainingCardSkel';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
+import { useDispatch } from 'react-redux';
+import { setbasicinfos } from 'store/actions';
 
 // ==============================|| TRAINING PAGE ||============================== //
 
 const Training = () => {
     const theme = useTheme();
-    const navigate = useNavigate();
     const ImageApi = Connections.thumbnails;
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [trainings, setTrainings] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -99,6 +102,31 @@ const Training = () => {
             });
     };
 
+    const FetchData = async () => {
+        const Api = Connections.api + Connections.getinfos;
+        const token = sessionStorage.getItem('token');
+
+        fetch(Api, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    dispatch(setbasicinfos(response.data));
+                }
+            });
+    };
+
+    useEffect(() => {
+        setTimeout(() => {
+            FetchData();
+        }, 2000);
+    }, []);
+
     const handleChange = (event, value) => {
         setPaginationModel({
             ...paginationModel,
@@ -112,7 +140,7 @@ const Training = () => {
             sx={{
                 borderRadius: 4,
                 border: '1px solid',
-                borderColor: theme.palette.primary[200] + 25,
+                borderColor: theme.palette.primary[200],
                 ':hover': {
                     boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
                 }
@@ -122,7 +150,7 @@ const Training = () => {
                 title="Trainings"
                 back={true}
                 option={false}
-                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+                sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
             />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
@@ -155,7 +183,6 @@ const Training = () => {
                             />
                         ) : trainings.length == 0 ? (
                             <NoResult
-                                image={noresult}
                                 title="Result Not Found"
                                 message="Oooops... no training found in the moment!"
                                 buttontitle="Go Back"
@@ -170,11 +197,10 @@ const Training = () => {
                                     title={training.title}
                                     language={training.language}
                                     category={training.category}
-                                    departments={training.department}
-                                    sessions={training.sessions}
-                                    traineecount={training.trainees}
-                                    rating={training.rating}
-                                    ratingcount={training.ratingcount}
+                                    sessions={training.sessions_count}
+                                    traineecount={training.enrollments_count}
+                                    rating={training.trainee_reviews_avg_rating}
+                                    ratingcount={training.trainee_reviews_count}
                                     onPress={() => navigate('/training/view', { state: training })}
                                 />
                             ))

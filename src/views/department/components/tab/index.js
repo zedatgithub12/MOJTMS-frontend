@@ -3,7 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { TabPanel } from './tabpanel';
-import { useTheme } from '@mui/material';
+import PropTypes from 'prop-types';
 
 function a11yProps(index) {
     return {
@@ -12,10 +12,8 @@ function a11yProps(index) {
     };
 }
 
-export default function TMSTab({ tabsfor }) {
+function TMSTab({ tabsfor, children }) {
     const [value, setValue] = React.useState(0);
-
-    const theme = useTheme();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -23,7 +21,7 @@ export default function TMSTab({ tabsfor }) {
 
     return (
         <Box sx={{ width: '100%' }}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: theme.palette.secondary.light }}>
+            <Box>
                 <Tabs value={value} onChange={handleChange} aria-label="tabs">
                     {tabsfor.map((tab, index) => (
                         <Tab label={tab.name} {...a11yProps(index)} />
@@ -31,11 +29,15 @@ export default function TMSTab({ tabsfor }) {
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                A list of trainings this department involved in will be listed here
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                A list of trainees in this department will be listed here
+                {children}
             </TabPanel>
         </Box>
     );
 }
+
+TMSTab.propTypes = {
+    tabsfor: PropTypes.array,
+    children: PropTypes.node
+};
+
+export default TMSTab;

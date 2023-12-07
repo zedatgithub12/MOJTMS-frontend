@@ -25,6 +25,9 @@ const Connections = {
     changerole: 'change-role',
     updatestatus: 'update-status',
 
+    //an api endpoint to get basic information like department names, job_titles
+    getinfos: 'filter/infos',
+
     // trainees api endpoints
     trainee: 'trainees',
     searchtrainee: 'trainee/search',
@@ -47,6 +50,7 @@ const Connections = {
     trainingsession: 'training-sessions',
     sessions: 'training/sessions/',
     sessionStatus: 'session/status/',
+    trainingtrainees: 'training/trainees/',
     schedules: 'session-schedules',
     roundschedule: 'round-schedules/',
     trainingtrainers: 'training-trainers', //an api end point to perform create, updatestatus and delete record
@@ -54,6 +58,7 @@ const Connections = {
     sessionoftrainers: 'training-trainers/trainers/', //an api end point to fetch a session trainer assign to
 
     traineeenrollments: 'trainee-enrollments',
+
     sessionenrollments: 'trainee-enrollments/session/',
     trainingenrollments: 'trainee-enrollments/training/',
     enrollmentstatus: 'trainee-enrollments/status/',

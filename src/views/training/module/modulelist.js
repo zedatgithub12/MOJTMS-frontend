@@ -2,21 +2,22 @@ import { useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, CircularProgress, IconButton, Typography, Divider, Button } from '@mui/material';
 // project imports
-import noresult from 'assets/images/no_result.png';
-import errorImage from 'assets/images/error.jpg';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { IconArchive, IconArchiveOff, IconChevronDown, IconChevronRight, IconEdit } from '@tabler/icons';
 import { IconLabel } from 'ui-component/content/IconLabel';
-import PropTypes from 'prop-types';
-import UpdateModule from './updatemodule';
 import { Delete } from 'ui-component/delete/Delete';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { AddMaterial } from 'views/materials/addmaterial';
-import MaterialCard from 'ui-component/cards/materialCard';
 import { useNavigate } from 'react-router';
 import { UpdateMaterial } from 'views/materials/updatematerial';
+
+import noresult from 'assets/images/no_result.png';
+import errorImage from 'assets/images/error.jpg';
+import PropTypes from 'prop-types';
+import UpdateModule from './updatemodule';
+import Connections from 'api';
+import MaterialCard from 'ui-component/cards/materialCard';
 
 const ModuleList = ({ modules, loading, error, sx }) => {
     const theme = useTheme();
@@ -108,7 +109,6 @@ const ModuleList = ({ modules, loading, error, sx }) => {
             .then((response) => {
                 if (response.success) {
                     setActivating(false);
-
                     handlePrompts(response.message, 'success');
                 } else {
                     setActivating(false);
@@ -241,10 +241,10 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                 ) : error ? (
                     <ErrorPrompt image={errorImage} title="Server Error" message="Oooops... There is server error fetching modules!" />
                 ) : modules.length === 0 ? (
-                    <NoResult image={noresult} title="Result Not Found" message="Oooops... No module found in the moment!" />
+                    <NoResult title="" message="Oooops... No module found" />
                 ) : (
-                    modules.map((module) => (
-                        <Box key={module.id}>
+                    modules.map((module, index) => (
+                        <Box key={index}>
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -280,7 +280,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                             <IconEdit size={18} />
                                         </IconButton>
 
-                                        {module.module_status === 'archive' ? (
+                                        {module.module_status === 'archived' ? (
                                             <IconButton
                                                 onClick={() => handleActivating(module)}
                                                 title="Un archive"
@@ -304,7 +304,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                             <IconEdit size={18} />
                                         </IconButton>
 
-                                        {module.module_status === 'archive' ? (
+                                        {module.module_status === 'archived' ? (
                                             <IconButton
                                                 onClick={() => handleActivating(module)}
                                                 title="Un archive"

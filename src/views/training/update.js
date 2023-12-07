@@ -50,7 +50,6 @@ const UpdateTraining = () => {
     const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
     const ImageApi = Connections.thumbnails;
 
-    const [loading, setLoading] = useState(false);
     const [thumbnail, setThumbnail] = useState(null);
     const [previewImage, setPreviewImage] = useState(state ? ImageApi + state.thumbnail : null);
     const [imageprompt, setImagePrompt] = useState({
@@ -63,7 +62,6 @@ const UpdateTraining = () => {
     //fetch categories and assign them to categories state and
     //map them on to the dropdown list
     const FetchCategory = async () => {
-        setLoading(true);
         var Api = Connections.api + Connections.categories;
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -77,11 +75,10 @@ const UpdateTraining = () => {
         if (parsed.success) {
             const data = parsed.data.data;
             setCategories(data);
-            setLoading(false);
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => FetchCategory(), {
+    useQuery(['data'], () => FetchCategory(), {
         refetchOnWindowFocus: false
     });
 
@@ -174,14 +171,18 @@ const UpdateTraining = () => {
                 sx={{
                     borderRadius: 4,
                     border: '1px solid',
-                    background: theme.palette.secondary.light,
-                    borderColor: theme.palette.primary[200] + 25,
+                    background: theme.palette.primary.light,
+                    borderColor: theme.palette.primary[200],
                     ':hover': {
                         boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
                     }
                 }}
             >
-                <MiniHeader title="Update Training" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+                <MiniHeader
+                    title="Update Training"
+                    back={true}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
+                />
 
                 <Grid container>
                     <Grid item xs={12} sx={{ padding: 2 }}>
@@ -482,7 +483,7 @@ const UpdateTraining = () => {
                                                 disabled={isSubmitting ? true : false}
                                                 type="submit"
                                                 variant="contained"
-                                                color="secondary"
+                                                color="primary"
                                                 sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
                                             >
                                                 {isSubmitting ? (
@@ -495,7 +496,7 @@ const UpdateTraining = () => {
 
                                         <Button
                                             variant="text"
-                                            color="secondary"
+                                            color="primary"
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >

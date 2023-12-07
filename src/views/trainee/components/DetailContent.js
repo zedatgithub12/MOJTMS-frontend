@@ -12,27 +12,9 @@ import {
 } from '@tabler/icons';
 import PropTypes from 'prop-types';
 import { IconLabel } from 'ui-component/content/IconLabel';
-import { DateFormatter } from 'utils/functions';
+import { DateFormatter, calculateAge } from 'utils/functions';
 
 const DetailContent = ({ data }) => {
-    const calculateAge = (dateOfBirth) => {
-        if (!dateOfBirth) {
-            return 'N/A';
-        }
-
-        const birthDate = new Date(dateOfBirth);
-        const today = new Date();
-
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDifference = today.getMonth() - birthDate.getMonth();
-
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-
-        return age;
-    };
-
     return (
         <Grid container>
             <Grid item xs={12} paddingY={1}>

@@ -147,10 +147,10 @@ const TrainingModules = ({ training_id }) => {
                     </React.Fragment>
                 ) : null}
 
-                <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} />
+                <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} o />
 
                 {/* the pagination will be shown when the number of modules exceed five */}
-                {modules.length > 10 && (
+                {modules.length > paginationModel.pageSize && (
                     <Box sx={{ paddingY: 4 }}>
                         <Pagination
                             showFirstButton

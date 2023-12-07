@@ -194,10 +194,10 @@ TrainingSessionCard.propTypes = {
     image: PropTypes.string,
     status: PropTypes.string,
     title: PropTypes.string,
-    round: PropTypes.string,
+    round: PropTypes.number,
     level: PropTypes.string,
     address: PropTypes.string,
-    capacity: PropTypes.string,
+    capacity: PropTypes.number,
     startdate: PropTypes.string.isRequired,
     enddate: PropTypes.string.isRequired,
     onPress: PropTypes.func

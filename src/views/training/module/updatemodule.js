@@ -11,13 +11,13 @@ import {
     Typography,
     useTheme
 } from '@mui/material';
-import Connections from 'api';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
+import { IconX } from '@tabler/icons';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import PropTypes from 'prop-types';
-import { IconX } from '@tabler/icons';
+import Connections from 'api';
 
 //============================= UPDATE MODULE COMPONENT ===========================//
 
@@ -78,19 +78,24 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
     };
 
     return (
-        <Box sx={{ ...sx }}>
+        <Box sx={{ ...sx, zIndex: 2 }}>
             <form noValidate onSubmit={formik.handleSubmit}>
                 <Grid container>
                     <Grid
                         item
                         xs={12}
                         sx={{
-                            minWidth: 400,
+                            minWidth: 440,
                             display: 'flex',
                             flexDirection: 'column',
-                            background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})`,
+                            border: 0.5,
+                            background: theme.palette.primary.light,
+                            borderColor: theme.palette.primary[800],
+                            borderRadius: 4,
                             padding: 2,
-                            borderRadius: 4
+                            ':hover': {
+                                boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
+                            }
                         }}
                     >
                         <Box
@@ -102,7 +107,9 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                                 paddingRight: 1
                             }}
                         >
-                            <Typography variant="h4">Update module</Typography>
+                            <Typography variant="h4" color="primary">
+                                Update module
+                            </Typography>
                             <IconButton onClick={handleClosePanel}>
                                 <IconX size={20} />
                             </IconButton>
@@ -149,26 +156,26 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                             )}
                         </FormControl>
 
-                        <Box item xs={12} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <Button variant="text" color="secondary" sx={{ py: 1, px: 4, mt: 4, mx: 2 }} onClick={handleClosePanel}>
-                                Cancel
-                            </Button>
+                        <Box item xs={12} sx={{ display: 'flex', flexDirection: 'row' }}>
                             <AnimateButton>
                                 <Button
                                     disabled={isSubmitting ? true : false}
                                     type="submit"
-                                    variant="outlined"
-                                    color="secondary"
+                                    variant="contained"
+                                    color="primary"
                                     sx={{ py: 1, px: 4, mt: 4 }}
                                 >
                                     {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.grey[700] }} /> : 'Update'}
                                 </Button>
                             </AnimateButton>
+                            <Button variant="text" color="primary" sx={{ py: 1, px: 4, mt: 4, mx: 2 }} onClick={handleClosePanel}>
+                                Cancel
+                            </Button>
                         </Box>
                     </Grid>
+                    <SnackbarProvider maxSnack={3} />
                 </Grid>
             </form>
-            <SnackbarProvider maxSnack={3} />
         </Box>
     );
 };

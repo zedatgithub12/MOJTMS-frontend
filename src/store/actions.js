@@ -5,6 +5,8 @@ export const MENU_OPEN = '@customization/MENU_OPEN';
 export const SET_FONT_FAMILY = '@customization/SET_FONT_FAMILY';
 export const SET_BORDER_RADIUS = '@customization/SET_BORDER_RADIUS';
 
+export const SET_BASIC_INFOS = 'SET_BASIC_INFOS';
+
 export const SET_ASSESSMENT_ANSWERS = 'SET_ASSESSMENT_ANSWERS';
 export const SET_SURVEY_RESPONSE = 'SET_SURVEY_RESPONSE';
 
@@ -15,5 +17,10 @@ export const setAssessmentAnswers = (answer) => ({
 
 export const setSurveyResponses = (response) => ({
     type: SET_SURVEY_RESPONSE,
+    payload: response
+});
+
+export const setbasicinfos = (response) => ({
+    type: SET_BASIC_INFOS,
     payload: response
 });

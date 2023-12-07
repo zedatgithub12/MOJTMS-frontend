@@ -22,7 +22,8 @@ export const AssignCoordDialog = ({
     searchText,
     searching,
     onTextChange,
-    onSubmit
+    onSubmit,
+    onRefresh
 }) => {
     const [selectedCoordinator, setSelectedCoordinator] = useState(null);
     const [assigning, setAssigning] = useState(false);
@@ -64,6 +65,7 @@ export const AssignCoordDialog = ({
                 if (response.success) {
                     setAssigning(false);
                     handlePrompts(response.message, 'success');
+                    onRefresh();
                 } else {
                     setAssigning(false);
                     handlePrompts(response.message, 'error');
@@ -88,11 +90,12 @@ export const AssignCoordDialog = ({
                         flexDirection: 'row',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        paddingRight: 2,
-                        backgroundColor: theme.palette.secondary.light
+                        paddingRight: 2
                     }}
                 >
-                    <DialogTitle variant="h4">Assign branch coordinator</DialogTitle>
+                    <DialogTitle variant="h4" color="grey">
+                        Assign branch coordinator
+                    </DialogTitle>
                     <IconButton onClick={handleDialogClose}>
                         <IconX size={20} />
                     </IconButton>

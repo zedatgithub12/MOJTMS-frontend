@@ -10,6 +10,7 @@ export const initialState = {
     fontFamily: config.fontFamily,
     borderRadius: config.borderRadius,
     opened: true,
+    basicinfos: [], //an state that store the basic information needed while filtering or other purposed it contains job_title and department name list arrays
     assessmentAnswers: [],
     surveyresponse: []
 };
@@ -50,6 +51,13 @@ const customizationReducer = (state = initialState, action) => {
                 ...state,
                 surveyresponse: action.payload
             };
+
+        case actionTypes.SET_BASIC_INFOS:
+            return {
+                ...state,
+                basicinfos: action.payload
+            };
+
         default:
             return state;
     }

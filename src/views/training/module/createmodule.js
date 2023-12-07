@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, TextField, Typography, useTheme } from '@mui/material';
-import Connections from 'api';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import * as Yup from 'yup';
+import Connections from 'api';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import PropTypes from 'prop-types';
 
@@ -82,12 +82,17 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
-                            background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})`,
+                            border: '1px solid',
+                            background: theme.palette.primary.light,
+                            borderColor: theme.palette.primary[200],
+                            borderRadius: 4,
                             padding: 2,
-                            borderRadius: 4
+                            ':hover': {
+                                boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
+                            }
                         }}
                     >
-                        <Typography variant="h4" color="grey">
+                        <Typography variant="h4" color="primary">
                             Create module
                         </Typography>
 
@@ -132,21 +137,22 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                             )}
                         </FormControl>
 
-                        <Box item xs={12} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
-                            <Button variant="text" color="secondary" sx={{ py: 1, px: 4, mt: 4, mx: 2 }} onClick={handleClosePanel}>
-                                Cancel
-                            </Button>
+                        <Box item xs={12} sx={{ display: 'flex', flexDirection: 'row' }}>
                             <AnimateButton>
                                 <Button
                                     disabled={isSubmitting ? true : false}
                                     type="submit"
-                                    variant="outlined"
-                                    color="secondary"
+                                    variant="contained"
+                                    color="primary"
                                     sx={{ py: 1, px: 4, mt: 4 }}
                                 >
                                     {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.grey[700] }} /> : 'Submit'}
                                 </Button>
                             </AnimateButton>
+
+                            <Button variant="text" color="primary" sx={{ py: 1, px: 4, mt: 4, mx: 2 }} onClick={handleClosePanel}>
+                                Cancel
+                            </Button>
                         </Box>
                     </Grid>
                 </Grid>

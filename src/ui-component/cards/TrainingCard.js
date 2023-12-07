@@ -1,4 +1,4 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -7,27 +7,10 @@ import { Grid, Box, useTheme, Stack, Rating } from '@mui/material';
 import TrainingCardSkel from './Skeleton/TrainingCardSkel';
 
 const TrainingCard = forwardRef(
-    (
-        {
-            sx = {},
-            isLoading,
-            image,
-            title,
-            language,
-            category,
-            departments,
-            sessions,
-            traineecount,
-            rating,
-            ratingcount,
-            onPress,
-            ...others
-        },
-        ref
-    ) => {
+    ({ sx = {}, isLoading, image, title, language, category, sessions, traineecount, rating, ratingcount, onPress, ...others }, ref) => {
         const theme = useTheme();
         return (
-            <>
+            <React.Fragment>
                 {isLoading ? (
                     <TrainingCardSkel />
                 ) : (
@@ -53,7 +36,7 @@ const TrainingCard = forwardRef(
                                 borderRadius: 1
                             }}
                             image={image}
-                            title="Trainer photo"
+                            title="Training thumbnail"
                         />
 
                         <Grid item paddingX={1.5}>
@@ -71,28 +54,22 @@ const TrainingCard = forwardRef(
                                 </Typography>
                             </Box>
 
-                            <Box paddingY={2} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', paddingX: 1 }}>
-                                {departments && (
-                                    <Box>
-                                        <Typography variant="h3">{departments}</Typography>
-                                        <Typography variant="subtitle2">{departments > 0 ? 'Departments' : 'Department'} </Typography>
-                                    </Box>
-                                )}
-                                {sessions && (
+                            <Box paddingY={2} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingX: 1 }}>
+                                {sessions !== 0 && (
                                     <Box>
                                         <Typography variant="h3">{sessions}</Typography>
                                         <Typography variant="subtitle2">{sessions > 0 ? 'Sessions' : 'Session'} </Typography>
                                     </Box>
                                 )}
-                                {traineecount && (
-                                    <Box>
+                                {traineecount !== 0 && (
+                                    <Box marginLeft={4}>
                                         <Typography variant="h3">{traineecount}</Typography>
                                         <Typography variant="subtitle2">{traineecount > 0 ? 'Trainees' : 'Trainee'} </Typography>
                                     </Box>
                                 )}
                             </Box>
 
-                            <Stack marginTop={2.4}>
+                            <Stack marginTop={1.4}>
                                 {rating ? (
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: 2 }}>
                                         <Typography variant="h4" marginX={1}>
@@ -108,7 +85,7 @@ const TrainingCard = forwardRef(
                         </Grid>
                     </Card>
                 )}
-            </>
+            </React.Fragment>
         );
     }
 );
@@ -117,10 +94,9 @@ TrainingCard.propTypes = {
     sx: PropTypes.object,
     isLoading: PropTypes.bool,
     image: PropTypes.string,
-    title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
+    title: PropTypes.string,
     language: PropTypes.string,
     category: PropTypes.string,
-    departments: PropTypes.number,
     sessions: PropTypes.number,
     traineecount: PropTypes.number,
     rating: PropTypes.number,

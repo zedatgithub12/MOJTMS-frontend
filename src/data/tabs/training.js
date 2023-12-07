@@ -6,5 +6,9 @@ export const TrainingTabs = [
     {
         id: 2,
         name: 'Modules'
+    },
+    {
+        id: 3,
+        name: 'Trainees'
     }
 ];

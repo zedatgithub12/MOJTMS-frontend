@@ -1,18 +1,33 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, Typography, useTheme, CardMedia, useMediaQuery, Button, MenuItem, ListItemIcon, Divider } from '@mui/material';
+import {
+    Grid,
+    Box,
+    Typography,
+    useTheme,
+    CardMedia,
+    useMediaQuery,
+    Button,
+    MenuItem,
+    ListItemIcon,
+    Divider,
+    CircularProgress,
+    Pagination
+} from '@mui/material';
 import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { useLocation, useNavigate } from 'react-router';
 import Connections from 'api';
 import { IconLabel } from 'ui-component/content/IconLabel';
-import { IconArrowsExchange, IconEdit, IconMail, IconPhone, IconPlus, IconTrash } from '@tabler/icons';
+import { IconArrowsExchange, IconEdit, IconMail, IconPhone, IconPlus, IconTrash, IconUser } from '@tabler/icons';
 import FacilitatorCard from 'ui-component/cards/FacilitatorCard';
-import facilitator from 'assets/images/facilitator.jpg';
 import TMSTab from 'views/department/components/tab';
 import { DepartmentTabs } from 'data/tabs/department';
 import { AssignCoordDialog } from './components/Dialog';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Delete } from 'ui-component/delete/Delete';
+import { useQuery } from 'react-query';
+import { RefreshToken } from 'utils/token-refresh';
+import DepartmentTrainees from './components/TraineeListing';
 
 // ==============================|| VIEW DEPARTMENT PAGE ||============================== //
 
@@ -20,18 +35,71 @@ const ViewDepartment = () => {
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const ImageApi = Connections.thumbnails;
+    const thumbnailApi = Connections.thumbnails;
+    const profileApi = Connections.profiles;
     const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
 
     const { state } = useLocation();
 
-    const [coordinator, setCoordinator] = useState([]);
+    const [loading, setLoading] = useState(false);
+    // const [data, setData] = useState([]);
+    const [trainees, setTrainees] = useState([]);
+    const [coordinatordata, setCoordinatorData] = useState([]); // the coordinator of this deparment
+    const [coordfound, setCoordFound] = useState('');
+    const [lastPage, setLastPage] = useState(1);
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 20,
+        page: 1
+    });
+
+    const [coordinator, setCoordinator] = useState([]); //list of coordinators
     const [coordIsLoading, setCoordIsLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [deleting, setDeleting] = useState(false);
+
+    const handleFetching = async () => {
+        const tokenExpiration = sessionStorage.getItem('tokenExpiration');
+        const currentTime = new Date().getTime();
+
+        if (tokenExpiration && currentTime >= tokenExpiration) {
+            await RefreshToken();
+            DeparmentDetails();
+        } else {
+            DeparmentDetails();
+        }
+    };
+
+    const DeparmentDetails = async () => {
+        setLoading(true);
+        var Api =
+            Connections.api + Connections.departments + '/' + state.id + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            const data = parsed.data;
+
+            setTrainees(data.trainees.data);
+            setLastPage(data.trainees.data.last_page);
+            setCoordinatorData(data.coordinator);
+            setCoordFound(data.where);
+            setLoading(false);
+        }
+    };
+
+    useQuery(['data', paginationModel], () => handleFetching(), {
+        refetchOnWindowFocus: false
+    });
 
     const handleOpenDialog = () => {
         setOpen(!open);
@@ -130,156 +198,205 @@ const ViewDepartment = () => {
             });
     };
 
+    //handle pagination here
+    const handleChange = (event, value) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: value
+        });
+    };
+
     const handlePrompts = (message, severity) => {
         enqueueSnackbar(message, { severity });
     };
 
     return (
-        <Grid
-            container
-            sx={{
-                borderRadius: 4,
-                border: '1px solid',
-                borderColor: theme.palette.primary[200] + 25,
-                ':hover': {
-                    boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
-                }
-            }}
-        >
-            <PageHeader
-                back={true}
-                title={state.name}
-                option={true}
-                optionChildrens={
-                    <Box>
-                        <MenuItem onClick={() => handleCoordGet()}>
-                            <ListItemIcon>
-                                <IconArrowsExchange size={18} />
-                            </ListItemIcon>
-                            Change Coordinator
-                        </MenuItem>
-
-                        <Divider />
-                        <MenuItem onClick={() => navigate('/department/update', { state: state })}>
-                            <ListItemIcon>
-                                <IconEdit size={18} />
-                            </ListItemIcon>
-                            Update
-                        </MenuItem>
-
-                        <Divider />
-                        <MenuItem onClick={() => setDeleteUser(true)}>
-                            <ListItemIcon>
-                                <IconTrash size={18} />
-                            </ListItemIcon>
-                            Delete
-                        </MenuItem>
-                    </Box>
-                }
-                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+        <Grid container>
+            <Grid
+                item
+                xs={12}
+                sm={12}
+                md={12}
+                lg={8}
+                xl={8}
+                sx={{
+                    minHeight: 200,
+                    borderRadius: 4,
+                    border: '1px solid',
+                    borderColor: theme.palette.primary[200],
+                    ':hover': {
+                        boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
+                    }
+                }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between'
-                    }}
-                >
-                    {state.thumbnail && bigDevice && (
+                <PageHeader
+                    back={true}
+                    title={state.name}
+                    option={true}
+                    optionChildrens={
                         <Box>
-                            <CardMedia
-                                sx={{
-                                    width: 120,
-                                    height: 120,
-                                    boxShadow: 2,
-                                    borderRadius: 6,
-                                    border: 4,
-                                    borderColor: theme.palette.secondary.light
-                                }}
-                                image={ImageApi + state.thumbnail}
-                                title={state.name}
-                            />
+                            <MenuItem onClick={() => handleCoordGet()}>
+                                <ListItemIcon>
+                                    <IconArrowsExchange size={18} />
+                                </ListItemIcon>
+                                Change Coordinator
+                            </MenuItem>
+
+                            <Divider />
+                            <MenuItem onClick={() => navigate('/department/update', { state: state })}>
+                                <ListItemIcon>
+                                    <IconEdit size={18} />
+                                </ListItemIcon>
+                                Update
+                            </MenuItem>
+
+                            <Divider />
+                            <MenuItem onClick={() => setDeleteUser(true)}>
+                                <ListItemIcon>
+                                    <IconTrash size={18} />
+                                </ListItemIcon>
+                                Delete
+                            </MenuItem>
                         </Box>
-                    )}
-
-                    <Box sx={{ marginX: 3, padding: 0.2 }}>
-                        {state.name ? (
-                            <Typography variant="h3" color="white">
-                                {state.name}
-                            </Typography>
-                        ) : (
-                            <Typography variant="h4">Department name</Typography>
+                    }
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
+                >
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        {state.thumbnail && bigDevice && (
+                            <Box>
+                                <CardMedia
+                                    sx={{
+                                        width: 120,
+                                        height: 120,
+                                        boxShadow: 2,
+                                        borderRadius: 6,
+                                        border: 4,
+                                        borderColor: theme.palette.secondary.light
+                                    }}
+                                    image={thumbnailApi + state.thumbnail}
+                                    title={state.name}
+                                />
+                            </Box>
                         )}
-                        {state.description && (
-                            <Typography
-                                variant="subtitle1"
-                                marginTop={1}
-                                sx={{ maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis' }}
-                            >
-                                {state.description}
-                            </Typography>
-                        )}
 
-                        <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 1 }}>
-                            {state.email && (
-                                <IconLabel content={state.email} sx={{ marginRight: 2 }}>
-                                    <IconMail size={20} color="white" />
-                                </IconLabel>
+                        <Box sx={{ marginX: 3, padding: 0.2 }}>
+                            {state.name ? (
+                                <Typography variant="h3" color="primary">
+                                    {state.name}
+                                </Typography>
+                            ) : (
+                                <Typography variant="h4">Department name</Typography>
+                            )}
+                            {state.description && (
+                                <Typography
+                                    variant="subtitle1"
+                                    marginTop={1}
+                                    sx={{ maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis' }}
+                                >
+                                    {state.description}
+                                </Typography>
                             )}
 
-                            {state.phone && (
-                                <IconLabel content={state.phone}>
-                                    <IconPhone size={20} color="white" />
-                                </IconLabel>
-                            )}
+                            <Box sx={{ display: 'flex', flexDirection: 'row', marginTop: 1 }}>
+                                {state.email && (
+                                    <IconLabel content={state.email} sx={{ marginRight: 2 }}>
+                                        <IconMail size={18} style={{ color: theme.palette.secondary.main }} />
+                                    </IconLabel>
+                                )}
+
+                                {state.phone && (
+                                    <IconLabel content={state.phone}>
+                                        <IconPhone size={18} style={{ color: theme.palette.secondary.main }} />
+                                    </IconLabel>
+                                )}
+                            </Box>
                         </Box>
                     </Box>
-                </Box>
-            </PageHeader>
-
-            <Grid container sx={{ minHeight: 200, padding: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                <Grid item xs={12} sm={12} md={3} lg={2} xl={2} sx={{ alignItems: 'center', justifyContent: 'center', paddingY: 3 }}>
-                    {state.coordinatorId ? (
-                        <FacilitatorCard
-                            isLoading={false}
-                            image={facilitator}
-                            qualification={'BSc'}
-                            title="Semahagn Belew"
-                            name="Branch Coordinator"
-                            linkedin="https://mui.com/material-ui/react-card/"
-                            address="Addis Ababa"
-                            gender="Male"
-                            trainingcount="24"
-                            phone="+251949390840"
-                            email="semahagn@gmail.com"
-                            onPress={() => {
-                                console.log('Facilitator clicked');
-                            }}
-                        />
-                    ) : (
-                        <Box
-                            sx={{
-                                minWidth: 200,
-                                minHeight: 200,
-                                padding: 3,
-                                backgroundColor: theme.palette.secondary.light,
-                                borderRadius: 3,
-                                display: 'flex',
-                                flexDirection: 'flexDirection',
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <Button variant="text" color="primary" onClick={() => handleCoordGet()}>
-                                <IconPlus size={16} /> Assign Coordinator
-                            </Button>
+                </PageHeader>
+                <TMSTab tabsfor={DepartmentTabs}>
+                    {loading ? (
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingY: 4 }}>
+                            <CircularProgress size={24} color="primary" />
                         </Box>
-                    )}
-                </Grid>
+                    ) : (
+                        <div>
+                            <DepartmentTrainees data={trainees} />
 
-                <Grid item xs={12} sm={12} md={7} lg={8} xl={8} sx={{ alignItems: 'center', justifyContent: 'center', paddingY: 2 }}>
-                    <TMSTab tabsfor={DepartmentTabs} />
-                </Grid>
+                            {trainees.length > paginationModel.pageSize && (
+                                <Box sx={{ paddingY: 4 }}>
+                                    <Pagination
+                                        showFirstButton
+                                        showLastButton
+                                        count={lastPage}
+                                        page={paginationModel.page}
+                                        onChange={handleChange}
+                                    />
+                                </Box>
+                            )}
+                        </div>
+                    )}
+                </TMSTab>
+            </Grid>
+
+            <Grid item xs={12} sm={12} md={12} lg={3} xl={3} sx={bigDevice ? { paddingX: 2 } : { paddingY: 2 }}>
+                {loading ? (
+                    <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingY: 4 }}>
+                        <CircularProgress size={24} color="primary" />
+                    </Box>
+                ) : coordinatordata && coordfound === 'coordinators' ? (
+                    <FacilitatorCard
+                        isLoading={false}
+                        image={coordinatordata.photo ? profileApi + coordinatordata.photo : null}
+                        qualification={coordinatordata.education}
+                        title="Branch Coordinator"
+                        name={coordinatordata.name}
+                        address={coordinatordata.address}
+                        gender={coordinatordata.gender}
+                        phone={coordinatordata.phone}
+                        email={coordinatordata.email}
+                    />
+                ) : coordinatordata && coordfound === 'users' ? (
+                    <Box
+                        sx={{
+                            minWidth: 200,
+                            minHeight: 200,
+                            padding: 3,
+                            backgroundColor: theme.palette.primary[200],
+                            borderRadius: 3
+                        }}
+                    >
+                        <IconLabel content={coordinatordata.name} label="Name">
+                            <IconUser size={22} />
+                        </IconLabel>
+                        <IconLabel content={coordinatordata.email} label="Email">
+                            <IconMail size={22} />
+                        </IconLabel>
+                    </Box>
+                ) : (
+                    <Box
+                        sx={{
+                            minWidth: 200,
+                            minHeight: 200,
+                            padding: 3,
+                            backgroundColor: theme.palette.primary[200],
+                            borderRadius: 3,
+                            display: 'flex',
+                            flexDirection: 'row',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}
+                    >
+                        <Button variant="text" color="primary" onClick={() => handleCoordGet()}>
+                            <IconPlus size={16} /> Assign Coordinator
+                        </Button>
+                    </Box>
+                )}
             </Grid>
 
             <AssignCoordDialog
@@ -292,6 +409,7 @@ const ViewDepartment = () => {
                 searching={searching}
                 onTextChange={(event) => setSearch(event.target.value)}
                 onSubmit={() => handleCoordSearching()}
+                onRefresh={() => handleFetching()}
             />
 
             {deleteUser && (
