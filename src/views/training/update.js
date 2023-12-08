@@ -144,7 +144,7 @@ const UpdateTraining = () => {
             name: state.title,
             description: state.description,
             language: state.language,
-            prerequisites: state.prerequisites
+            prerequisites: state.prerequisites ? state.prerequisites : ''
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {

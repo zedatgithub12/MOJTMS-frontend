@@ -51,6 +51,8 @@ const Connections = {
     sessions: 'training/sessions/',
     sessionStatus: 'session/status/',
     trainingtrainees: 'training/trainees/',
+    filledsurveys: 'training/filled/surveys/',
+
     schedules: 'session-schedules',
     roundschedule: 'round-schedules/',
     trainingtrainers: 'training-trainers', //an api end point to perform create, updatestatus and delete record

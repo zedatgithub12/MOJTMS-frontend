@@ -256,7 +256,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                     borderRadius: 2,
                                     border: 0.1,
                                     borderColor: theme.palette.primary[200],
-                                    backgroundColor: selectedModule && selectedModule.id == module.id && theme.palette.primary[200],
+                                    backgroundColor: selectedModule && selectedModule.id === module.id && theme.palette.primary[200],
                                     cursor: 'pointer'
                                 }}
                             >
@@ -284,9 +284,9 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                             <IconButton
                                                 onClick={() => handleActivating(module)}
                                                 title="Un archive"
-                                                disabled={selectedModule.id == module.id && activating ? true : false}
+                                                disabled={selectedModule && selectedModule.id === module.id && activating ? true : false}
                                             >
-                                                {selectedModule.id == module.id && activating ? (
+                                                {selectedModule && selectedModule.id == module.id && activating ? (
                                                     <CircularProgress size={20} />
                                                 ) : (
                                                     <IconArchiveOff size={18} />
@@ -308,9 +308,9 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                             <IconButton
                                                 onClick={() => handleActivating(module)}
                                                 title="Un archive"
-                                                disabled={selectedModule.id == module.id && activating ? true : false}
+                                                disabled={selectedModule && selectedModule.id == module.id && activating ? true : false}
                                             >
-                                                {selectedModule.id == module.id && activating ? (
+                                                {selectedModule && selectedModule.id == module.id && activating ? (
                                                     <CircularProgress size={20} />
                                                 ) : (
                                                     <IconArchiveOff size={18} />

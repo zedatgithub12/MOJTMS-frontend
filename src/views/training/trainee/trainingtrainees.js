@@ -31,23 +31,30 @@ import Connections from 'api';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+import { CSVLink } from 'react-csv';
+import { DateFormatter, calculateAge } from 'utils/functions';
+
 const TrainingTrainees = ({ training_id }) => {
     const [loading, setLoading] = useState(false);
     const [trainees, setTrainees] = useState([]);
 
     const filterData = useSelector((state) => state.customization.basicinfos);
     const [filters, setFilters] = useState({
+        round: '',
         age: '',
         gender: '',
         department: '',
         job_title: ''
     });
 
+    const [counts, setCounts] = useState(0);
     const [paginationModel, setPaginationModel] = useState({
-        counts: 0,
         pageSize: 10,
         page: 0
     });
+
     const [exportExcel, setexportExcel] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -56,8 +63,12 @@ const TrainingTrainees = ({ training_id }) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
         setAnchorEl(null);
+        setexportExcel(null);
     };
 
     const handleDataFetching = async () => {
@@ -78,7 +89,7 @@ const TrainingTrainees = ({ training_id }) => {
             Connections.api +
             Connections.trainingtrainees +
             training_id +
-            `?age=${filters.age}&gender=${filters.gender}&department=${filters.department}&job_title=${filters.job_title}`;
+            `?round=${filters.round}&age=${filters.age}&gender=${filters.gender}&department=${filters.department}&job_title=${filters.job_title}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -91,12 +102,16 @@ const TrainingTrainees = ({ training_id }) => {
         if (parsed.success) {
             setLoading(false);
             const data = parsed.data;
+
             setTrainees(data.data);
-            setPaginationModel({ ...paginationModel, counts: data.total });
+            setCounts(data.total);
         } else {
             setLoading(false);
         }
     };
+    const { error } = useQuery(['data', paginationModel], () => handleDataFetching(), {
+        refetchOnWindowFocus: false
+    });
 
     const handleFilterChange = (event) => {
         const { name, value } = event.target;
@@ -128,10 +143,7 @@ const TrainingTrainees = ({ training_id }) => {
         });
     };
 
-    const { error } = useQuery(['data', paginationModel], () => handleDataFetching(), {
-        refetchOnWindowFocus: false
-    });
-
+    //handle the page change of the trainee listing table
     const handleChangePage = (event, newPage) => {
         setPaginationModel({
             ...paginationModel,
@@ -139,6 +151,7 @@ const TrainingTrainees = ({ training_id }) => {
         });
     };
 
+    //handle the page size or row count number of the listing table
     const handleChangeRowsPerPage = (event) => {
         setPaginationModel({
             ...paginationModel,
@@ -147,52 +160,31 @@ const TrainingTrainees = ({ training_id }) => {
         });
     };
 
+    //handle generating report in exceel and csv formats
     const expand = Boolean(exportExcel);
     const handleClick = (event) => {
         setexportExcel(event.currentTarget);
     };
 
-    //handle generating report in exceel and csv formats
-    const csvData =
-        selectedRows.length > 0
-            ? selectedRows.map((id) => {
-                  const item = filteredData.find((item) => item.id === id);
-                  return {
-                      shop: item.stock_shop,
-                      item_name: item.item_name,
-                      item_code: item.item_code,
-                      category: item.item_category,
-                      sub_category: item.item_sub_category,
-                      brand: item.item_brand,
-                      SKU: item.stock_unit,
-                      item_min_quantity: item.stock_min_quantity,
-                      item_quantity: item.stock_quantity,
-                      item_cost: item.stock_cost,
-                      item_price: item.stock_price,
-                      item_expire_date: item.stock_expire_date,
-                      item_status: item.stock_status
-                  };
-              })
-            : filteredData.map((item) => ({
-                  shop: item.stock_shop,
-                  item_name: item.item_name,
-                  item_code: item.item_code,
-                  category: item.item_category,
-                  sub_category: item.item_sub_category,
-                  brand: item.item_brand,
-                  SKU: item.stock_unit,
-                  item_min_quantity: item.stock_min_quantity,
-                  item_quantity: item.stock_quantity,
-                  item_cost: item.stock_cost,
-                  item_price: item.stock_price,
-                  item_expire_date: item.stock_expire_date,
-                  item_status: item.stock_status
-              }));
+    const csvData = trainees.map((item) => ({
+        Name: item.name,
+        Email: item.email,
+        Gender: item.gender,
+        Age: calculateAge(item.date_of_birth),
+        Department: item.department,
+        Job_title: item.job_title ? item.job_title : 'N/A',
+        Round: item.round_number,
+        Pre_score: item.pre_score ? item.pre_score : 'N/A',
+        Post_score: item.post_score ? item.post_score : 'N/A',
+        Enrolled_on: DateFormatter(item.created_at),
+        Enrollment_Type: item.enrollment_type,
+        Status: item.enrollment_status
+    }));
 
     const handleDownloadExcel = () => {
         const worksheet = XLSX.utils.json_to_sheet(csvData);
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'stocks');
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'trainees');
         const excelBuffer = XLSX.write(workbook, {
             bookType: 'xlsx',
             type: 'array'
@@ -200,7 +192,7 @@ const TrainingTrainees = ({ training_id }) => {
         const fileData = new Blob([excelBuffer], {
             type: 'application/octet-stream'
         });
-        saveAs(fileData, 'stocks.xlsx');
+        saveAs(fileData, 'trainees.xlsx');
     };
 
     return (
@@ -211,10 +203,9 @@ const TrainingTrainees = ({ training_id }) => {
                         <FilterPanel
                             open={open}
                             anchorEl={anchorEl}
-                            handleMenuClick={handleMenuClick}
                             handleClose={handleClose}
                             filterButton={
-                                <Button variant="outlined" startIcon={<SortOutlinedIcon />}>
+                                <Button variant="outlined" startIcon={<SortOutlinedIcon />} onClick={handleMenuClick}>
                                     Filter
                                 </Button>
                             }
@@ -231,6 +222,20 @@ const TrainingTrainees = ({ training_id }) => {
 
                                 <Box sx={{ minHeight: 200, display: 'flex', flexDirection: 'column', marginTop: 3 }}>
                                     <TextField
+                                        name="round"
+                                        value={filters.round}
+                                        onChange={handleFilterChange}
+                                        label="Round"
+                                        InputProps={{
+                                            endAdornment: filters.round && (
+                                                <IconButton onClick={() => handleClear('round')}>
+                                                    <IconX size={18} />
+                                                </IconButton>
+                                            )
+                                        }}
+                                    />
+
+                                    <TextField
                                         name="age"
                                         value={filters.age}
                                         onChange={handleFilterChange}
@@ -242,6 +247,7 @@ const TrainingTrainees = ({ training_id }) => {
                                                 </IconButton>
                                             )
                                         }}
+                                        sx={{ marginTop: 3 }}
                                     />
 
                                     <FormControl component="fieldset" sx={{ marginTop: 3, paddingLeft: 1 }}>
@@ -369,15 +375,17 @@ const TrainingTrainees = ({ training_id }) => {
                             onClose={handleClose}
                             PaperProps={{
                                 style: {
-                                    maxHeight: 20 * 4.5,
+                                    maxHeight: 30 * 4.5,
                                     width: '20ch'
                                 }
                             }}
                         >
-                            <MenuItem onClick={handleDownloadExcel}>Export Excel </MenuItem>
+                            <MenuItem onClick={handleDownloadExcel}>
+                                <Typography variant="body1">Excel Export</Typography>
+                            </MenuItem>
                             <MenuItem>
-                                <CSVLink data={csvData} filename={'stocks.csv'} className="text-decoration-none text-dark">
-                                    Export CSV
+                                <CSVLink data={csvData} filename={'trainees.csv'} style={{ textDecoration: 'none' }}>
+                                    <Typography variant="body1">CSV Export</Typography>
                                 </CSVLink>
                             </MenuItem>
                         </Menu>
@@ -395,17 +403,18 @@ const TrainingTrainees = ({ training_id }) => {
                 ) : trainees.length === 0 ? (
                     <NoResult title="" message="Oooops... No trainee found" />
                 ) : (
-                    <TraineesTable rows={trainees} />
+                    <div>
+                        <TraineesTable rows={trainees} />
+                        <TablePagination
+                            component="div"
+                            count={counts}
+                            page={paginationModel.page}
+                            onPageChange={handleChangePage}
+                            rowsPerPage={paginationModel.pageSize}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </div>
                 )}
-
-                <TablePagination
-                    component="div"
-                    count={paginationModel.counts}
-                    page={paginationModel.page}
-                    onPageChange={handleChangePage}
-                    rowsPerPage={paginationModel.pageSize}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
             </Grid>
         </Grid>
     );

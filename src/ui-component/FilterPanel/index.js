@@ -2,12 +2,11 @@ import React from 'react';
 import { Box, Menu, Tooltip } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export const FilterPanel = ({ open, anchorEl, filterButton, children, handleMenuClick, handleClose }) => {
+export const FilterPanel = ({ open, anchorEl, filterButton, children, handleClose }) => {
     return (
         <React.Fragment>
             <Tooltip>
                 <Box
-                    onClick={handleMenuClick}
                     size="small"
                     sx={{ ml: 2 }}
                     aria-controls={open ? 'filter-panel' : undefined}

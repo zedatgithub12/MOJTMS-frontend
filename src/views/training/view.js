@@ -17,16 +17,17 @@ import {
 } from '@mui/material';
 import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { useLocation, useNavigate } from 'react-router';
-import Connections from 'api';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { IconChalkboard, IconEdit, IconLanguage, IconPaperclip, IconUser } from '@tabler/icons';
 import { TrainingTabs } from 'data/tabs/training';
 import { TabPanel } from './components/tabpanel';
 import { StarOutline } from '@mui/icons-material';
 import { ReadMore } from 'utils/functions';
+import Connections from 'api';
 import TrainingModules from './module';
 import SessionListing from './session/components/Listing';
 import TrainingTrainees from './trainee/trainingtrainees';
+import FilledSurveys from './survey/filledsurveys';
 
 // ==============================|| VIEW TRAINING PAGE ||============================== //
 
@@ -68,6 +69,7 @@ const ViewTraining = () => {
                     container
                     sx={{
                         minHeight: '80dvh',
+                        marginBottom: 2,
                         borderRadius: 4,
                         border: '1px solid',
                         borderColor: theme.palette.primary[200] + 25,
@@ -203,6 +205,9 @@ const ViewTraining = () => {
 
                             <TabPanel value={tab} index={2}>
                                 <TrainingTrainees training_id={state.id} />
+                            </TabPanel>
+                            <TabPanel value={tab} index={3}>
+                                <FilledSurveys training_id={state.id} />
                             </TabPanel>
                         </Grid>
                     </Grid>
