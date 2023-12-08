@@ -14,14 +14,16 @@ import {
     RadioGroup,
     Divider,
     Select,
-    MenuItem
+    Menu,
+    MenuItem,
+    TablePagination
 } from '@mui/material';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
 import { FilterPanel } from 'ui-component/FilterPanel';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { NoResult } from 'utils/components/noresult';
-import { IconX } from '@tabler/icons';
+import { IconTableExport, IconX } from '@tabler/icons';
 import TraineesTable from './components/TraineesTable';
 import errorImage from 'assets/images/error.jpg';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
@@ -41,6 +43,12 @@ const TrainingTrainees = ({ training_id }) => {
         job_title: ''
     });
 
+    const [paginationModel, setPaginationModel] = useState({
+        counts: 0,
+        pageSize: 10,
+        page: 0
+    });
+    const [exportExcel, setexportExcel] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -84,6 +92,7 @@ const TrainingTrainees = ({ training_id }) => {
             setLoading(false);
             const data = parsed.data;
             setTrainees(data.data);
+            setPaginationModel({ ...paginationModel, counts: data.total });
         } else {
             setLoading(false);
         }
@@ -119,9 +128,80 @@ const TrainingTrainees = ({ training_id }) => {
         });
     };
 
-    const { error } = useQuery(['data'], () => handleDataFetching(), {
+    const { error } = useQuery(['data', paginationModel], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
+
+    const handleChangePage = (event, newPage) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: newPage
+        });
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setPaginationModel({
+            ...paginationModel,
+            pageSize: parseInt(event.target.value, 10),
+            page: 0
+        });
+    };
+
+    const expand = Boolean(exportExcel);
+    const handleClick = (event) => {
+        setexportExcel(event.currentTarget);
+    };
+
+    //handle generating report in exceel and csv formats
+    const csvData =
+        selectedRows.length > 0
+            ? selectedRows.map((id) => {
+                  const item = filteredData.find((item) => item.id === id);
+                  return {
+                      shop: item.stock_shop,
+                      item_name: item.item_name,
+                      item_code: item.item_code,
+                      category: item.item_category,
+                      sub_category: item.item_sub_category,
+                      brand: item.item_brand,
+                      SKU: item.stock_unit,
+                      item_min_quantity: item.stock_min_quantity,
+                      item_quantity: item.stock_quantity,
+                      item_cost: item.stock_cost,
+                      item_price: item.stock_price,
+                      item_expire_date: item.stock_expire_date,
+                      item_status: item.stock_status
+                  };
+              })
+            : filteredData.map((item) => ({
+                  shop: item.stock_shop,
+                  item_name: item.item_name,
+                  item_code: item.item_code,
+                  category: item.item_category,
+                  sub_category: item.item_sub_category,
+                  brand: item.item_brand,
+                  SKU: item.stock_unit,
+                  item_min_quantity: item.stock_min_quantity,
+                  item_quantity: item.stock_quantity,
+                  item_cost: item.stock_cost,
+                  item_price: item.stock_price,
+                  item_expire_date: item.stock_expire_date,
+                  item_status: item.stock_status
+              }));
+
+    const handleDownloadExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(csvData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'stocks');
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: 'xlsx',
+            type: 'array'
+        });
+        const fileData = new Blob([excelBuffer], {
+            type: 'application/octet-stream'
+        });
+        saveAs(fileData, 'stocks.xlsx');
+    };
 
     return (
         <Grid container>
@@ -177,7 +257,7 @@ const TrainingTrainees = ({ training_id }) => {
                                                 alignItems: 'center'
                                             }}
                                         >
-                                            <FormControlLabel value="" control={<Radio />} label="Both" />
+                                            <FormControlLabel value="" control={<Radio />} label="All" />
                                             <FormControlLabel value="male" control={<Radio />} label="Males" />
                                             <FormControlLabel value="female" control={<Radio />} label="Females" />
                                         </RadioGroup>
@@ -269,9 +349,38 @@ const TrainingTrainees = ({ training_id }) => {
                         md={6}
                         sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 2 }}
                     >
-                        <Box>
-                            <Typography variant="body2">Rows</Typography>
-                        </Box>
+                        <IconButton
+                            aria-label="more"
+                            id="long-button"
+                            aria-controls={expand ? 'long-menu' : undefined}
+                            aria-expanded={expand ? 'true' : undefined}
+                            aria-haspopup="true"
+                            onClick={handleClick}
+                        >
+                            <IconTableExport size={18} />
+                        </IconButton>
+                        <Menu
+                            id="long-menu"
+                            MenuListProps={{
+                                'aria-labelledby': 'long-button'
+                            }}
+                            anchorEl={exportExcel}
+                            open={expand}
+                            onClose={handleClose}
+                            PaperProps={{
+                                style: {
+                                    maxHeight: 20 * 4.5,
+                                    width: '20ch'
+                                }
+                            }}
+                        >
+                            <MenuItem onClick={handleDownloadExcel}>Export Excel </MenuItem>
+                            <MenuItem>
+                                <CSVLink data={csvData} filename={'stocks.csv'} className="text-decoration-none text-dark">
+                                    Export CSV
+                                </CSVLink>
+                            </MenuItem>
+                        </Menu>
                     </Grid>
                 </Grid>
 
@@ -288,6 +397,15 @@ const TrainingTrainees = ({ training_id }) => {
                 ) : (
                     <TraineesTable rows={trainees} />
                 )}
+
+                <TablePagination
+                    component="div"
+                    count={paginationModel.counts}
+                    page={paginationModel.page}
+                    onPageChange={handleChangePage}
+                    rowsPerPage={paginationModel.pageSize}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
             </Grid>
         </Grid>
     );
