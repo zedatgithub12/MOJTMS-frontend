@@ -73,6 +73,7 @@ const TrainingSessionCard = forwardRef(
                             border: '1px solid',
                             borderColor: theme.palette.primary[200],
                             paddingBottom: 1,
+                            cursor: 'pointer',
                             ':hover': {
                                 boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
                             },

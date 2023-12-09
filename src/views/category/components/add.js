@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
-export default function AddCategory({ open, handleDialogClose }) {
+export default function AddCategory({ open, handleDialogClose, onRefresh }) {
     const theme = useTheme();
 
     const AddUserScheme = Yup.object().shape({
@@ -44,6 +44,7 @@ export default function AddCategory({ open, handleDialogClose }) {
                     setAdding(false);
                     handleDialogClose();
                     handlePrompts(response.message, 'success');
+                    onRefresh();
                 } else {
                     setAdding(false);
                     handlePrompts(response.message, 'error');
@@ -106,7 +107,7 @@ export default function AddCategory({ open, handleDialogClose }) {
                             error={formik.touched.description && Boolean(formik.errors.description)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-name">Category description</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-name">Description (optional)</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-name"
                                 type="text"
@@ -126,22 +127,23 @@ export default function AddCategory({ open, handleDialogClose }) {
                             )}
                         </FormControl>
 
-                        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 2 }}>
-                            <Button onClick={handleDialogClose} variant="text" color="secondary" sx={{ marginRight: 3 }}>
-                                Cancel
-                            </Button>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
                             <AnimateButton>
                                 <Button
                                     disabled={adding ? true : false}
                                     size="small"
                                     type="submit"
                                     variant="contained"
-                                    color="secondary"
-                                    sx={{ paddingX: 8, paddingY: 0.8 }}
+                                    color="primary"
+                                    sx={{ paddingX: 6, paddingY: 0.8 }}
                                 >
                                     {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Save'}
                                 </Button>
                             </AnimateButton>
+
+                            <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginLeft: 3 }}>
+                                Cancel
+                            </Button>
                         </Box>
                     </form>
                 </DialogContent>

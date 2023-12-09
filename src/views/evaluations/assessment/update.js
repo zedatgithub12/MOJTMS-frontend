@@ -102,7 +102,7 @@ const UpdateAssessment = () => {
                 <MiniHeader
                     title="Update Assessment"
                     back={true}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})` }}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
                 />
 
                 <Grid container paddingTop={4}>

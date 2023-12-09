@@ -3,13 +3,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Add } from '@mui/icons-material';
 import PropTypes from 'prop-types';
 
-export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit, onAddUser }) => {
+export const SearchFilterAdd = ({ searchText, searching, children, onTextChange, onSubmit, onAddUser, exportingComponent }) => {
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             onSubmit();
         }
     };
+
     return (
         <Grid container>
             <Grid
@@ -31,7 +32,7 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                         alignItems: 'center'
                     }}
                 >
-                    <Paper component="form" sx={{ p: '3px 4px', boxShadow: 1, display: 'flex', alignItems: 'center', width: 400 }}>
+                    <Paper component="form" sx={{ p: '3px 4px', boxShadow: 1, display: 'flex', alignItems: 'center' }}>
                         <InputBase
                             sx={{ ml: 1, px: 1.5, flex: 1 }}
                             placeholder="Search trainees"
@@ -45,14 +46,23 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                             {searching ? <CircularProgress size={20} /> : <SearchIcon />}
                         </IconButton>
                     </Paper>
+                    {children}
                 </Box>
-                <Box>
-                    <Button variant="text" color="primary" padding={2} onClick={onAddUser}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                    }}
+                >
+                    <Button variant="contained" color="primary" padding={2} onClick={onAddUser}>
                         <Add size={10} />
-                        <Typography marginLeft={1} variant="subtitle1">
+                        <Typography marginLeft={1} variant="subtitle1" color="white">
                             New Trainee
                         </Typography>
                     </Button>
+
+                    {exportingComponent}
                 </Box>
             </Grid>
         </Grid>
@@ -64,5 +74,7 @@ SearchFilterAdd.propTypes = {
     onTextChange: PropTypes.func,
     onSubmit: PropTypes.func,
     searching: PropTypes.bool,
-    onAddUser: PropTypes.func
+    onAddUser: PropTypes.func,
+    children: PropTypes.node,
+    exportingComponent: PropTypes.node
 };

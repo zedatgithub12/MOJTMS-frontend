@@ -1,11 +1,28 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, useTheme, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    CircularProgress,
+    Grid,
+    IconButton,
+    TextField,
+    Typography,
+    FormControl,
+    FormLabel,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    Divider,
+    Select,
+    Menu,
+    MenuItem,
+    TablePagination,
+    useTheme
+} from '@mui/material';
 import { SearchFilterAdd } from './components/SearchFilterAdd';
-
 // project imports
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 import AddTrainee from './components/AddTrainee';
 import { ChangeRole } from './components/ChangeRole';
@@ -16,6 +33,16 @@ import Connections from 'api';
 import { useQuery } from 'react-query';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { useNavigate } from 'react-router';
+import { FilterPanel } from 'ui-component/FilterPanel';
+import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
+import { useSelector } from 'react-redux';
+import { IconDotsVertical, IconTableExport, IconX } from '@tabler/icons';
+import { DateFormatter, calculateAge } from 'utils/functions';
+
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+import { CSVLink } from 'react-csv';
+import TraineesTable from './components/TraineesTable';
 
 // ==============================|| TRAINEE DETAIL PAGE ||============================== //
 
@@ -23,6 +50,7 @@ const Trainee = () => {
     const theme = useTheme();
     const navigate = useNavigate();
 
+    const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
@@ -32,17 +60,28 @@ const Trainee = () => {
     const [statusPanel, setStatusPanel] = useState(false);
     const [deleteUser, setDeleteUser] = useState(false);
     const [deleting, setDeleting] = useState(false);
+
     const [lastPage, setLastPage] = useState(1);
-    const [rowCountState] = useState(lastPage);
+    const [counts, setCounts] = useState(0);
     const [paginationModel, setPaginationModel] = useState({
-        pageSize: 15,
-        page: 1,
-        pageCount: 0,
-        pageStartIndex: 0,
-        pageEndIndex: 0
+        pageSize: 10,
+        page: 0
+    });
+    const filterData = useSelector((state) => state.customization.basicinfos);
+    const [filters, setFilters] = useState({
+        round: '',
+        age: '',
+        gender: '',
+        department: '',
+        job_title: ''
     });
 
+    const [exportExcel, setexportExcel] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
     const FetchUsers = async () => {
+        setLoading(true);
         const department = '';
         var Api =
             Connections.api +
@@ -59,12 +98,17 @@ const Trainee = () => {
         const parsed = await response.json();
         if (parsed.success) {
             setLastPage(parsed.data.last_page);
+            setCounts(parsed.data.total);
+
             const data = parsed.data.data;
             setUsers(data);
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel], () => FetchUsers(), {
+    useQuery(['data', paginationModel], () => FetchUsers(), {
         refetchOnWindowFocus: false
     });
 
@@ -102,6 +146,19 @@ const Trainee = () => {
     const handleDialogClose = () => {
         setOpenDialog(false);
     };
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAnchorEl(null);
+        setexportExcel(null);
+    };
+
     const handleUserSelection = (params) => {
         setSelectedUser(params.row);
         navigate('/trainee/details', { state: params.row });
@@ -125,53 +182,60 @@ const Trainee = () => {
         return { text, color };
     };
 
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 60 },
-        { field: 'name', headerName: 'Name', width: 150 },
-        { field: 'department', headerName: 'Department', width: 260 },
-        { field: 'email', headerName: 'Email Address', width: 200 },
-        { field: 'gender', headerName: 'Gender', width: 100 },
-        { field: 'age', headerName: 'Age', width: 100 },
-        { field: 'address', headerName: 'Address', width: 200 },
-        { field: 'phone', headerName: 'Phone Number', width: 150 },
-        {
-            field: 'status',
-            headerName: 'Status',
-            renderCell: (params) => {
-                const status = userStatusIndicator(params.value);
+    const handleFilterChange = (event) => {
+        const { name, value } = event.target;
 
-                return (
-                    <Box>
-                        <Typography sx={{ backgroundColor: status.color, padding: 0.4, paddingX: 2.4, borderRadius: 4 }}>
-                            {status.text}
-                        </Typography>
-                    </Box>
-                );
-            },
-            width: 120
-        }
-    ];
-
-    const calculateAge = (dateOfBirth) => {
-        if (!dateOfBirth) {
-            return 'N/A';
-        }
-
-        const birthDate = new Date(dateOfBirth);
-        const today = new Date();
-
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const monthDifference = today.getMonth() - birthDate.getMonth();
-
-        if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-            age--;
-        }
-
-        return age;
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [name]: value
+        }));
     };
 
-    const rows = users.map((data) => ({
-        id: data.id,
+    const handleClear = (name) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [name]: ''
+        }));
+    };
+
+    const handleApplyingFilter = () => {
+        handleClose();
+        FetchTrainees();
+    };
+
+    const handleReset = () => {
+        setFilters({
+            age: '',
+            gender: '',
+            department: '',
+            job_title: ''
+        });
+    };
+
+    //handle the page change of the trainee listing table
+    const handleChangePage = (event, newPage) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: newPage
+        });
+    };
+
+    //handle the page size or row count number of the listing table
+    const handleChangeRowsPerPage = (event) => {
+        setPaginationModel({
+            ...paginationModel,
+            pageSize: parseInt(event.target.value, 10),
+            page: 0
+        });
+    };
+
+    //handle generating report in exceel and csv formats
+    const expand = Boolean(exportExcel);
+    const handleClick = (event) => {
+        setexportExcel(event.currentTarget);
+    };
+
+    const csvData = users.map((data) => ({
         name: data.user ? data.user.name : 'N/A',
         department: data.department ? data.department.name : 'N/A',
         email: data.user ? data.user.email : 'N/A',
@@ -182,50 +246,18 @@ const Trainee = () => {
         status: data.user ? data.user.status : 'N/A'
     }));
 
-    const handleExport = async (format) => {
-        if (format === 'csv') {
-            exportToCsv();
-        } else if (format === 'excel') {
-            await exportToExcel();
-        }
-    };
-
-    const exportToCsv = () => {
-        const csvData = users.map((data) => ({
-            id: data.id,
-            name: data.user.name,
-            department: data.department.name,
-            email: data.user.email,
-            gender: data.gender || 'N/A',
-            age: calculateAge(data.date_of_birth),
-            address: data.address || 'N/A',
-            phone: data.phone || 'N/A',
-            status: data.user.status
-        }));
-
-        const csvContent = [Object.keys(csvData[0]).join(','), ...csvData.map((row) => Object.values(row).join(','))].join('\n');
-
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
-        saveAs(blob, 'trainee_data.csv');
-    };
-
-    const exportToExcel = async () => {
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Trainee Data');
-
-        worksheet.columns = columns.map((column) => ({
-            header: column.headerName,
-            key: column.field,
-            width: column.width / 10 // Divide by 10 to adjust column width for Excel
-        }));
-
-        rows.forEach((row) => {
-            worksheet.addRow(row);
+    const handleDownloadExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(csvData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'trainees');
+        const excelBuffer = XLSX.write(workbook, {
+            bookType: 'xlsx',
+            type: 'array'
         });
-
-        const buffer = await workbook.xlsx.writeBuffer();
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, 'trainee_data.xlsx');
+        const fileData = new Blob([excelBuffer], {
+            type: 'application/octet-stream'
+        });
+        saveAs(fileData, 'trainees.xlsx');
     };
 
     const DeleteUser = () => {
@@ -282,7 +314,7 @@ const Trainee = () => {
                     title="Trainees"
                     back={true}
                     option={false}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})` }}
+                    sx={{ background: `linear-gradient(to left, ${theme.palette.secondary.light}, ${theme.palette.primary[200]})` }}
                 />
             </Grid>
 
@@ -292,54 +324,211 @@ const Trainee = () => {
                 onTextChange={(event) => setSearch(event.target.value)}
                 onSubmit={() => handleSearching()}
                 onAddUser={() => handleDialogOpen()}
-            />
-            <Grid container sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: 1 }}>
-                <Grid item xs={12} sm={12} md={12} sx={{}}>
-                    <div style={{ height: 400, width: '100%' }}>
-                        <DataGrid
-                            rows={rows}
-                            columns={columns}
-                            pagination
-                            slots={{
-                                toolbar: GridToolbar
+                exportingComponent={
+                    <div>
+                        <IconButton
+                            aria-label="more"
+                            id="long-button"
+                            aria-controls={expand ? 'long-menu' : undefined}
+                            aria-expanded={expand ? 'true' : undefined}
+                            aria-haspopup="true"
+                            onClick={handleClick}
+                            sx={{ marginLeft: 1 }}
+                        >
+                            <IconDotsVertical size={22} />
+                        </IconButton>
+                        <Menu
+                            id="long-menu"
+                            MenuListProps={{
+                                'aria-labelledby': 'long-button'
                             }}
-                            slotProps={{
-                                toolbar: {
-                                    exportCsv: () => handleExport('csv'),
-                                    exportExcel: () => handleExport('excel')
+                            anchorEl={exportExcel}
+                            open={expand}
+                            onClose={handleClose}
+                            PaperProps={{
+                                style: {
+                                    maxHeight: 30 * 4.5,
+                                    width: '20ch'
                                 }
                             }}
-                            initialState={{
-                                pagination: {
-                                    paginationModel: {
-                                        pageSize: paginationModel.pageSize,
-                                        pageCount: lastPage,
-                                        pageEndIndex: lastPage
-                                    }
-                                }
-                            }}
-                            paginationModel={paginationModel}
-                            onPaginationModelChange={setPaginationModel}
-                            rowCount={rowCountState}
-                            pageSizeOptions={[15, 25, 50, 100]}
-                            onPageChange={(newPage) => {
-                                setPaginationModel({
-                                    ...paginationModel,
-                                    page: newPage
-                                });
-                            }}
-                            onPageSizeChange={(newPageSize) => {
-                                setPaginationModel({
-                                    ...paginationModel,
-                                    pageSize: newPageSize
-                                });
-                            }}
-                            checkboxSelection
-                            density="comfortable"
-                            sx={{ padding: 1 }}
-                            onRowClick={(params) => handleUserSelection(params)}
-                        />
+                        >
+                            <MenuItem onClick={handleDownloadExcel}>
+                                <Typography variant="body1">Excel Export</Typography>
+                            </MenuItem>
+                            <MenuItem>
+                                <CSVLink data={csvData} filename={'trainees.csv'} style={{ textDecoration: 'none' }}>
+                                    <Typography variant="body1">CSV Export</Typography>
+                                </CSVLink>
+                            </MenuItem>
+                        </Menu>
                     </div>
+                }
+            >
+                <FilterPanel
+                    open={open}
+                    anchorEl={anchorEl}
+                    handleClose={handleClose}
+                    filterButton={
+                        <Button
+                            variant="outlined"
+                            startIcon={<SortOutlinedIcon />}
+                            onClick={handleMenuClick}
+                            sx={{ paddingY: 1, paddingX: 2 }}
+                        >
+                            Filter
+                        </Button>
+                    }
+                >
+                    <Box sx={{ minWidth: 340, paddingX: 3 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Typography variant="h4">Filter Data</Typography>
+                            <IconButton onClick={() => handleClose()}>
+                                <IconX size={20} />
+                            </IconButton>
+                        </Box>
+
+                        <Divider />
+
+                        <Box sx={{ minHeight: 200, display: 'flex', flexDirection: 'column', marginTop: 3 }}>
+                            <TextField
+                                name="round"
+                                value={filters.round}
+                                onChange={handleFilterChange}
+                                label="Round"
+                                InputProps={{
+                                    endAdornment: filters.round && (
+                                        <IconButton onClick={() => handleClear('round')}>
+                                            <IconX size={18} />
+                                        </IconButton>
+                                    )
+                                }}
+                            />
+
+                            <TextField
+                                name="age"
+                                value={filters.age}
+                                onChange={handleFilterChange}
+                                label="Age, Above"
+                                InputProps={{
+                                    endAdornment: filters.age && (
+                                        <IconButton onClick={() => handleClear('age')}>
+                                            <IconX size={18} />
+                                        </IconButton>
+                                    )
+                                }}
+                                sx={{ marginTop: 3 }}
+                            />
+
+                            <FormControl component="fieldset" sx={{ marginTop: 3, paddingLeft: 1 }}>
+                                <FormLabel component="legend">Gender</FormLabel>
+                                <RadioGroup
+                                    aria-label="gender"
+                                    name="gender"
+                                    value={filters.gender}
+                                    onChange={handleFilterChange}
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <FormControlLabel value="" control={<Radio />} label="All" />
+                                    <FormControlLabel value="male" control={<Radio />} label="Males" />
+                                    <FormControlLabel value="female" control={<Radio />} label="Females" />
+                                </RadioGroup>
+                            </FormControl>
+
+                            <FormControl sx={{ marginTop: 3 }}>
+                                <FormLabel component="legend">Department</FormLabel>
+                                <Select
+                                    value={filters.department}
+                                    onChange={handleFilterChange}
+                                    id="outlined-adornment-job-title"
+                                    name="department"
+                                    sx={{ marginTop: 1 }}
+                                >
+                                    <MenuItem value={''}>All</MenuItem>
+
+                                    {filterData.departments && filterData.departments.length == 0 ? (
+                                        <Typography variant="body2" sx={{ padding: 1 }}>
+                                            Job titles not found
+                                        </Typography>
+                                    ) : (
+                                        filterData.departments &&
+                                        filterData.departments.map((position, index) => (
+                                            <MenuItem key={index} value={position}>
+                                                {position}
+                                            </MenuItem>
+                                        ))
+                                    )}
+                                </Select>
+                            </FormControl>
+
+                            <FormControl sx={{ marginY: 3 }}>
+                                <FormLabel component="legend" htmlFor="outlined-adornment-job-title">
+                                    Job Title
+                                </FormLabel>
+                                <Select
+                                    value={filters.job_title}
+                                    onChange={handleFilterChange}
+                                    id="outlined-adornment-job-title"
+                                    name="job_title"
+                                    sx={{ marginTop: 1 }}
+                                >
+                                    <MenuItem value={''}>All</MenuItem>
+
+                                    {filterData.job_titles && filterData.job_titles.length == 0 ? (
+                                        <Typography variant="body2" sx={{ padding: 1 }}>
+                                            Job titles not found
+                                        </Typography>
+                                    ) : (
+                                        filterData.job_titles &&
+                                        filterData.job_titles.map((position, index) => (
+                                            <MenuItem key={index} value={position}>
+                                                {position}
+                                            </MenuItem>
+                                        ))
+                                    )}
+                                </Select>
+                            </FormControl>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-end',
+                                marginTop: 1
+                            }}
+                        >
+                            <Button variant="text" color="primary" sx={{ marginRight: 2 }} onClick={() => handleReset()}>
+                                Reset
+                            </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{ minWidth: 120, paddingX: 1 }}
+                                onClick={() => handleApplyingFilter()}
+                            >
+                                Apply
+                            </Button>
+                        </Box>
+                    </Box>
+                </FilterPanel>
+            </SearchFilterAdd>
+
+            <Grid container>
+                <Grid item xs={12}>
+                    <TraineesTable rows={users} isLoading={loading} />
+                    <TablePagination
+                        component="div"
+                        count={counts}
+                        page={paginationModel.page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={paginationModel.pageSize}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
                 </Grid>
             </Grid>
 

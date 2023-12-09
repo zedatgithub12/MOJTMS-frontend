@@ -90,7 +90,7 @@ const UpdateSurvey = () => {
                 <MiniHeader
                     title="Update Survey"
                     back={true}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})` }}
+                    sx={{ background: `linear-gradient(to left, ${theme.palette.secondary.light}, ${theme.palette.primary[200]})` }}
                 />
 
                 <Grid container paddingTop={4}>

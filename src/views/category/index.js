@@ -8,13 +8,12 @@ import { useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import noresult from 'assets/images/no_result.png';
 import errorImage from 'assets/images/error.jpg';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import AddCategory from './components/add';
-import { IconChevronDown, IconChevronRight, IconEdit, IconEditCircle, IconTrash } from '@tabler/icons';
+import { IconChevronDown, IconChevronRight, IconEdit, IconTrash } from '@tabler/icons';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { Delete } from 'ui-component/delete/Delete';
 import UpdateCategory from './components/update';
@@ -25,17 +24,17 @@ const Category = () => {
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const [open, setOpen] = useState(false);
-    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [expand, setExpand] = useState(false);
-    const [lastPage, setLastPage] = useState(1);
-    const [rowCountState] = useState(lastPage);
+    const [count, setCount] = useState(0);
+    const [pageCount, setPageCount] = useState(0);
     const [paginationModel, setPaginationModel] = useState({
-        pageSize: 20,
+        pageSize: 10,
         page: 1
     });
     const [update, setUpdate] = useState(false);
@@ -71,14 +70,17 @@ const Category = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            setLastPage(parsed.data.last_page);
+            setPageCount(parsed.data.last_page);
+            setCount(parsed.data.total);
             const data = parsed.data.data;
             setCategories(data);
+            setLoading(false);
+        } else {
             setLoading(false);
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel], () => handleCategoryFetching(), {
+    const { error } = useQuery(['data', paginationModel], () => handleCategoryFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -166,111 +168,137 @@ const Category = () => {
             });
     };
 
-    return (
-        <Grid
-            container
-            sx={{
-                borderRadius: 4,
-                border: '1px solid',
-                borderColor: theme.palette.primary[200] + 25,
-                ':hover': {
-                    boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
-                }
-            }}
-        >
-            <MiniHeader
-                title="Categories"
-                back={true}
-                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
-            />
+    const handleChange = (event, value) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: value
+        });
+    };
 
-            <Grid container sx={{ minHeight: 200, padding: 1 }}>
-                <SearchFilterAdd
-                    searchText={search}
-                    searching={searching}
-                    onTextChange={(event) => setSearch(event.target.value)}
-                    onSubmit={() => handleSearching()}
-                    addTitle="Add Category"
-                    onAdd={() => handleDialogOpen()}
+    return (
+        <Grid container alignItems={'center'} justifyContent={'center'}>
+            <Grid
+                item
+                xs={12}
+                sm={12}
+                md={8}
+                lg={6}
+                xl={6}
+                sx={{
+                    borderRadius: 4,
+                    border: '1px solid',
+                    background: theme.palette.primary.light,
+                    borderColor: theme.palette.primary[200]
+                }}
+            >
+                <MiniHeader
+                    title="Categories"
+                    back={true}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
                 />
 
-                <Grid container>
-                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap' }} spacing={1}>
-                        {loading ? (
-                            <Grid container>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
-                                >
-                                    <CircularProgress size={20} />
-                                </Grid>
-                            </Grid>
-                        ) : error ? (
-                            <ErrorPrompt
-                                image={errorImage}
-                                title="Server Error"
-                                message="Oooops... There is server error fetching category!"
-                                buttontitle="Go Back"
-                                onPress={() => navigate(-1)}
-                            />
-                        ) : categories.length == 0 ? (
-                            <NoResult
-                                image={noresult}
-                                title="Result Not Found"
-                                message="Oooops... No category found in the moment!"
-                                buttontitle="Go Back"
-                                onPress={() => navigate(-1)}
-                            />
-                        ) : (
-                            categories.map((category) => (
-                                <Box key={category.id}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexDirection: 'row',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                            marginY: 0.5,
-                                            paddingX: 1.2,
-                                            borderRadius: 2,
-                                            backgroundColor:
-                                                selectedCategory && selectedCategory.id == category.id && theme.palette.primary[200],
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        <IconLabel content={category.name} sx={{ paddinY: 3 }}>
-                                            <IconButton onClick={() => handleExpnadCollapse(category)}>
-                                                {expand && selectedCategory.id == category.id ? (
-                                                    <IconChevronDown size={16} />
-                                                ) : (
-                                                    <IconChevronRight size={16} />
-                                                )}
-                                            </IconButton>
-                                        </IconLabel>
+                <Grid container sx={{ minHeight: 200, padding: 1 }}>
+                    <SearchFilterAdd
+                        searchText={search}
+                        searching={searching}
+                        onTextChange={(event) => setSearch(event.target.value)}
+                        onSubmit={() => handleSearching()}
+                        addTitle="Add Category"
+                        onAdd={() => handleDialogOpen()}
+                    />
 
-                                        <Box SX={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                            <IconButton onClick={() => handleUpdateInit(category)}>
-                                                <IconEdit size={18} />
-                                            </IconButton>
-                                            <IconButton onClick={() => initiateDeleteCategory(category)}>
-                                                <IconTrash size={18} />
-                                            </IconButton>
+                    <Grid container>
+                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', paddingX: 2 }} spacing={1}>
+                            {loading ? (
+                                <Grid container>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                    >
+                                        <CircularProgress size={20} />
+                                    </Grid>
+                                </Grid>
+                            ) : error ? (
+                                <ErrorPrompt
+                                    image={errorImage}
+                                    title="Server Error"
+                                    message="Oooops... There is server error fetching category!"
+                                />
+                            ) : categories.length == 0 ? (
+                                <NoResult title="" message="Oooops... No category found in the moment!" />
+                            ) : (
+                                <div>
+                                    {categories.map((category) => (
+                                        <Box
+                                            key={category.id}
+                                            sx={{
+                                                marginY: 1,
+                                                borderRadius: 2,
+                                                border: '1px solid',
+                                                borderColor: theme.palette.primary[200]
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'row',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    paddingX: 1.2,
+                                                    borderRadius: 2,
+                                                    backgroundColor:
+                                                        selectedCategory &&
+                                                        selectedCategory.id == category.id &&
+                                                        theme.palette.primary[200],
+                                                    cursor: 'pointer'
+                                                }}
+                                            >
+                                                <IconLabel content={category.name} sx={{ paddinY: 3 }}>
+                                                    <IconButton onClick={() => handleExpnadCollapse(category)}>
+                                                        {expand && selectedCategory.id == category.id ? (
+                                                            <IconChevronDown size={16} />
+                                                        ) : (
+                                                            <IconChevronRight size={16} />
+                                                        )}
+                                                    </IconButton>
+                                                </IconLabel>
+
+                                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                                    <IconButton onClick={() => handleUpdateInit(category)}>
+                                                        <IconEdit size={16} />
+                                                    </IconButton>
+                                                    <IconButton onClick={() => initiateDeleteCategory(category)}>
+                                                        <IconTrash size={16} style={{ color: theme.palette.error.main }} />
+                                                    </IconButton>
+                                                </Box>
+                                            </Box>
+                                            {expand && selectedCategory && selectedCategory.id == category.id && (
+                                                <Box sx={{ paddingLeft: 7, paddingY: 0.5 }}>
+                                                    <Typography variant="body2">{category.description}</Typography>
+                                                </Box>
+                                            )}
                                         </Box>
+                                    ))}
+
+                                    <Box sx={{ paddingY: 4 }}>
+                                        <Pagination count={pageCount} page={paginationModel.page} onChange={handleChange} />
                                     </Box>
-                                    {expand && selectedCategory && selectedCategory.id == category.id && (
-                                        <Box sx={{ paddingLeft: 7, paddingY: 0.5 }}>
-                                            <Typography variant="body2">{category.description}</Typography>
-                                        </Box>
-                                    )}
-                                </Box>
-                            ))
-                        )}
+                                </div>
+                            )}
+                        </Grid>
                     </Grid>
                 </Grid>
             </Grid>
-            <AddCategory open={open} handleDialogClose={() => setOpen(false)} />
-            {selectedCategory && <UpdateCategory open={update} handleDialogClose={() => setUpdate(false)} selectedCat={selectedCategory} />}
+            <AddCategory open={open} handleDialogClose={() => setOpen(false)} onRefresh={() => FetchCategory()} />
+            {selectedCategory && (
+                <UpdateCategory
+                    open={update}
+                    handleDialogClose={() => setUpdate(false)}
+                    selectedCat={selectedCategory}
+                    onRefresh={() => FetchCategory()}
+                />
+            )}
             {deleteCategory && (
                 <Delete
                     open={deleteCategory}

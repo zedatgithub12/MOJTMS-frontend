@@ -23,6 +23,7 @@ const Assessment = () => {
     const theme = useTheme();
     const navigate = useNavigate();
 
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [status, setStatus] = useState('active');
     const [selectedIndex, setSelectedIndex] = useState(1);
@@ -49,6 +50,7 @@ const Assessment = () => {
     };
 
     const fetchAssessments = async () => {
+        setLoading(true);
         var Api =
             Connections.api + Connections.assessments + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&status=${status}`;
         const token = sessionStorage.getItem('token');
@@ -68,6 +70,9 @@ const Assessment = () => {
             setData(data);
             setRowCount(totalrows);
             setLastPage(lastPage);
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
     };
 
@@ -138,14 +143,18 @@ const Assessment = () => {
                 xl={8}
                 sx={{
                     marginBottom: 2,
-                    minHeight: '90vh'
+                    minHeight: '45vh',
+                    borderRadius: 4,
+                    border: '1px solid',
+                    background: theme.palette.primary.light,
+                    borderColor: theme.palette.primary[200]
                 }}
             >
                 <MediumHeader
                     title="Assessments"
                     back={true}
                     option={false}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})` }}
+                    sx={{ background: `linear-gradient(to left, ${theme.palette.secondary.light}, ${theme.palette.primary[200]})` }}
                 />
                 <SearchFilterAdd
                     searchText={search}
@@ -163,34 +172,44 @@ const Assessment = () => {
                         selectedIndex={selectedIndex}
                     />
 
-                    {isLoading ? (
+                    {loading ? (
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8 }}>
                             <CircularProgress size={22} />
                         </Box>
                     ) : error ? (
                         <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the assessments!" />
+                    ) : data.length === 0 ? (
+                        <NoResult title="" message="No assessment found" />
                     ) : (
-                        data.map((item) => (
-                            <AssessmentCard
-                                key={item.id}
-                                name={item.assessment_name}
-                                description={item.assessment_description}
-                                score={item.passing_score}
-                                duration={TimeFormatter(item.duration)}
-                                instruction={item.instructions}
-                                option={true}
-                                onClick={() => navigate('/assessment/view', { state: item })}
-                                status={item.status}
-                                sx={{}}
-                            />
-                        ))
+                        <div>
+                            {data.map((item) => (
+                                <AssessmentCard
+                                    key={item.id}
+                                    name={item.assessment_name}
+                                    description={item.assessment_description}
+                                    score={item.passing_score}
+                                    duration={TimeFormatter(item.duration)}
+                                    instruction={item.instructions}
+                                    option={true}
+                                    onClick={() => navigate('/assessment/view', { state: item })}
+                                    status={item.status}
+                                    sx={{}}
+                                />
+                            ))}
+                            {rowCount > paginationModel.pageSize && (
+                                <Box sx={{ paddingY: 4 }}>
+                                    <Pagination
+                                        showFirstButton
+                                        showLastButton
+                                        count={lastPage}
+                                        page={paginationModel.page}
+                                        onChange={handleChange}
+                                    />
+                                </Box>
+                            )}
+                        </div>
                     )}
                 </Box>
-                {rowCount > paginationModel.pageSize && (
-                    <Box sx={{ paddingY: 4 }}>
-                        <Pagination showFirstButton showLastButton count={lastPage} page={paginationModel.page} onChange={handleChange} />
-                    </Box>
-                )}
             </Grid>
         </Grid>
     );

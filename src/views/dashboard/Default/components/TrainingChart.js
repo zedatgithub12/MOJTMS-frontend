@@ -11,25 +11,23 @@ const TrainingChart = () => {
         ],
         options: {
             chart: {
-                type: 'bar',
-                height: 400
+                type: 'line'
             },
             xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] //'Jan', 'Feb', 'Mar', 'Apr', 'May',
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
             },
-            yaxis: {
-                // title: {
-                //     text: 'Number of Trainees'
-                // }
-            },
+            yaxis: {},
             legend: {
                 position: 'top'
             },
-            colors: [theme.palette.primary.main, theme.palette.secondary[800]]
+            colors: ['#2E93fA', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
+            stroke: {
+                curve: 'smooth'
+            }
         }
     };
 
-    return <Chart options={data.options} series={data.series} type="bar" height={400} />;
+    return <Chart options={data.options} series={data.series} type="line" width="100%" height={400} />;
 };
 
 export default TrainingChart;

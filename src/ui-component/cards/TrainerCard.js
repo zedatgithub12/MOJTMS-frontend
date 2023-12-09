@@ -1,10 +1,10 @@
-import { forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Grid, Box, useTheme, Stack, Link, Rating } from '@mui/material';
-import { IconCertificate, IconChalkboard, IconMapPin, IconUser } from '@tabler/icons';
+import { Grid, Box, useTheme, Link } from '@mui/material';
+import { IconCertificate, IconMapPin, IconUser } from '@tabler/icons';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TrainerCardSkel from './Skeleton/TrainerCardSkel';
 
@@ -15,7 +15,7 @@ const TrainerCard = forwardRef(
     ) => {
         const theme = useTheme();
         return (
-            <>
+            <React.Fragment>
                 {isLoading ? (
                     <TrainerCardSkel />
                 ) : (
@@ -37,8 +37,8 @@ const TrainerCard = forwardRef(
                         <Grid container>
                             <Box
                                 sx={{
-                                    width: '50%',
-                                    height: 140,
+                                    width: 280,
+                                    height: 180,
                                     borderBottomRightRadius: 2,
                                     border: '1px solid',
                                     borderColor: theme.palette.secondary.light
@@ -54,28 +54,6 @@ const TrainerCard = forwardRef(
                                     title="Trainer photo"
                                 />
                             </Box>
-                            <Stack paddingTop={0.5}>
-                                {address && (
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', padding: 1 }}>
-                                        <IconMapPin size={18} />
-                                        <Typography sx={{ marginX: 1 }}>{address}</Typography>
-                                    </Box>
-                                )}
-
-                                {gender && (
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', padding: 1 }}>
-                                        <IconUser size={18} />
-                                        <Typography sx={{ marginX: 1 }}>{gender}</Typography>{' '}
-                                    </Box>
-                                )}
-
-                                {qualification && (
-                                    <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', padding: 1 }}>
-                                        <IconCertificate size={18} />
-                                        <Typography sx={{ marginX: 1 }}>{qualification}</Typography>{' '}
-                                    </Box>
-                                )}
-                            </Stack>
                         </Grid>
 
                         <Grid item paddingX={1.5}>
@@ -100,7 +78,28 @@ const TrainerCard = forwardRef(
                             <Box marginY={1}>
                                 <Typography variant="h3"> {title}</Typography>
                             </Box>
-                            <Box sx={{ marginY: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
+
+                            {gender && (
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', paddingY: 1 }}>
+                                    <IconUser size={18} />
+                                    <Typography sx={{ marginX: 1 }}>{gender}</Typography>{' '}
+                                </Box>
+                            )}
+
+                            {qualification && (
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', paddingY: 1 }}>
+                                    <IconCertificate size={18} />
+                                    <Typography sx={{ marginX: 1 }}>{qualification}</Typography>{' '}
+                                </Box>
+                            )}
+                            {address && (
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', paddingY: 1 }}>
+                                    <IconMapPin size={18} />
+                                    <Typography sx={{ marginX: 1 }}>{address}</Typography>
+                                </Box>
+                            )}
+
+                            {/* <Box sx={{ marginY: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 {trainingcount && (
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                         <IconChalkboard size={18} />
@@ -110,18 +109,12 @@ const TrainerCard = forwardRef(
                                     </Box>
                                 )}
 
-                                <Stack flexDirection="column">
-                                    {rating ? (
-                                        <Rating name="read-only" value={rating} readOnly />
-                                    ) : (
-                                        <Typography variant="subtitle2">No rating yet</Typography>
-                                    )}
-                                </Stack>
-                            </Box>
+                                <Stack flexDirection="column">{rating && <Rating name="read-only" value={rating} readOnly />}</Stack>
+                            </Box> */}
                         </Grid>
                     </Card>
                 )}
-            </>
+            </React.Fragment>
         );
     }
 );

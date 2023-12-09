@@ -11,7 +11,10 @@ const GenderPieChart = ({ males, females }) => {
                 type: 'pie'
             },
             labels: ['Males', 'Females'],
-            colors: [theme.palette.primary.main, theme.palette.secondary[800]], // Customize the colors here
+            colors: ['#2E93fA', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
+            stroke: {
+                curve: 'smooth'
+            }, // Customize the colors here
             legend: {
                 position: 'bottom'
             }

@@ -9,7 +9,6 @@ import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import TrainerCard from 'ui-component/cards/TrainerCard';
-import noresult from 'assets/images/no_result.png';
 import errorImage from 'assets/images/error.jpg';
 import TrainerCardSkel from 'ui-component/cards/Skeleton/TrainerCardSkel';
 import { NoResult } from 'utils/components/noresult';
@@ -26,8 +25,7 @@ const Trainers = () => {
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState('');
     const [searching, setSearching] = useState(false);
-    const [lastPage, setLastPage] = useState(1);
-    const [rowCountState] = useState(lastPage);
+    const [counts, setCounts] = useState(1);
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 20,
         page: 1
@@ -39,7 +37,6 @@ const Trainers = () => {
 
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
-            setRefreshed(true);
             FetchTrainers();
         } else {
             FetchTrainers();
@@ -59,7 +56,7 @@ const Trainers = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            setLastPage(parsed.data.last_page);
+            setCounts(parsed.data.total);
             const data = parsed.data.data;
             setTrainers(data);
             setLoading(false);
@@ -111,16 +108,13 @@ const Trainers = () => {
             sx={{
                 borderRadius: 4,
                 border: '1px solid',
-                borderColor: theme.palette.primary[200] + 25,
-                ':hover': {
-                    boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
-                }
+                borderColor: theme.palette.primary[200] + 25
             }}
         >
             <MiniHeader
                 title="Trainers"
                 back={true}
-                sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+                sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
             />
 
             <Grid container sx={{ minHeight: 200, padding: 1 }}>
@@ -152,13 +146,7 @@ const Trainers = () => {
                                 onPress={() => navigate(-1)}
                             />
                         ) : trainers.length == 0 ? (
-                            <NoResult
-                                image={noresult}
-                                title="Result Not Found"
-                                message="Oooops... no trainer found in the moment!"
-                                buttontitle="Go Back"
-                                onPress={() => navigate(-1)}
-                            />
+                            <NoResult title="" message="Oooops... no trainer found in the moment!" />
                         ) : (
                             trainers.map((trainer) => (
                                 <TrainerCard
@@ -180,15 +168,9 @@ const Trainers = () => {
                             ))
                         )}
                     </Grid>
-                    {trainers.length != 0 && (
+                    {trainers.length > paginationModel.pageSize && (
                         <Box sx={{ paddingY: 4 }}>
-                            <Pagination
-                                showFirstButton
-                                showLastButton
-                                count={rowCountState}
-                                page={paginationModel.page}
-                                onChange={handleChange}
-                            />
+                            <Pagination showFirstButton showLastButton count={counts} page={paginationModel.page} onChange={handleChange} />
                         </Box>
                     )}
                 </Grid>

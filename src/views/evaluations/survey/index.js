@@ -24,6 +24,7 @@ const Survey = () => {
     const theme = useTheme();
     const navigate = useNavigate();
 
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
     const [status, setStatus] = useState('active');
     const [selectedIndex, setSelectedIndex] = useState(1);
@@ -50,6 +51,7 @@ const Survey = () => {
     };
 
     const fetchSurveys = async () => {
+        setLoading(false);
         var Api =
             Connections.api + Connections.surveys + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&status=${status}`;
         const token = sessionStorage.getItem('token');
@@ -69,6 +71,9 @@ const Survey = () => {
             setData(data);
             setRowCount(totalrows);
             setLastPage(lastPage);
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
     };
 
@@ -137,14 +142,18 @@ const Survey = () => {
                 xl={8}
                 sx={{
                     marginBottom: 2,
-                    minHeight: '90vh'
+                    minHeight: '45vh',
+                    borderRadius: 2,
+                    border: '1px solid',
+                    background: theme.palette.primary.light,
+                    borderColor: theme.palette.primary[200]
                 }}
             >
                 <MediumHeader
                     title="Surveys"
                     back={true}
                     option={false}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})` }}
+                    sx={{ background: `linear-gradient(to left, ${theme.palette.secondary.light}, ${theme.palette.primary[200]})` }}
                 />
                 <SearchFilterAdd
                     searchText={search}
@@ -162,32 +171,40 @@ const Survey = () => {
                         selectedIndex={selectedIndex}
                     />
 
-                    {isLoading ? (
+                    {loading ? (
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 8 }}>
                             <CircularProgress size={22} />
                         </Box>
                     ) : error ? (
                         <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the surveys!" />
-                    ) : isLoading && data.length == 0 ? (
-                        <NoResult image={noresult} title="Result Not Found" message="Oooops... No survey found!" />
+                    ) : data.length === 0 ? (
+                        <NoResult image={noresult} title="" message="Oooops... No survey found!" />
                     ) : (
-                        data.map((item) => (
-                            <SurveyCard
-                                key={item.id}
-                                title={item.title}
-                                description={item.description}
-                                onClick={() => navigate('/survey/view', { state: item })}
-                                status={item.status}
-                                sx={{}}
-                            />
-                        ))
+                        <div>
+                            {data.map((item) => (
+                                <SurveyCard
+                                    key={item.id}
+                                    title={item.title}
+                                    description={item.description}
+                                    onClick={() => navigate('/survey/view', { state: item })}
+                                    status={item.status}
+                                    sx={{}}
+                                />
+                            ))}
+                            {rowCount > paginationModel.pageSize && (
+                                <Box sx={{ paddingY: 4 }}>
+                                    <Pagination
+                                        showFirstButton
+                                        showLastButton
+                                        count={lastPage}
+                                        page={paginationModel.page}
+                                        onChange={handleChange}
+                                    />
+                                </Box>
+                            )}
+                        </div>
                     )}
                 </Box>
-                {rowCount > paginationModel.pageSize && (
-                    <Box sx={{ paddingY: 4 }}>
-                        <Pagination showFirstButton showLastButton count={lastPage} page={paginationModel.page} onChange={handleChange} />
-                    </Box>
-                )}
             </Grid>
         </Grid>
     );

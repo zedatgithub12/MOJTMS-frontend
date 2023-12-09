@@ -156,14 +156,18 @@ const UpdateTrainer = () => {
                 sx={{
                     borderRadius: 4,
                     border: '1px solid',
-                    background: theme.palette.secondary.light,
-                    borderColor: theme.palette.primary[200] + 25,
+                    background: theme.palette.primary.light,
+                    borderColor: theme.palette.primary[200],
                     ':hover': {
                         boxShadow: '0 2px 2px 0 rgb(32 40 45 / 8%)'
                     }
                 }}
             >
-                <MiniHeader title="Update Trainer" back={true} sx={{ backgroundColor: theme.palette.secondary.dark }} />
+                <MiniHeader
+                    title="Update Trainer"
+                    back={true}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
+                />
 
                 <Grid container>
                     <Grid item xs={12} sx={{ padding: 2 }}>
@@ -556,7 +560,7 @@ const UpdateTrainer = () => {
                                                 disabled={isSubmitting ? true : false}
                                                 type="submit"
                                                 variant="contained"
-                                                color="secondary"
+                                                color="primary"
                                                 sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
                                             >
                                                 {isSubmitting ? (
@@ -569,7 +573,7 @@ const UpdateTrainer = () => {
 
                                         <Button
                                             variant="text"
-                                            color="secondary"
+                                            color="primary"
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
