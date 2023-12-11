@@ -1,26 +1,18 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React from 'react';
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
-import { Avatar, Box, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { Avatar, Box, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import SkeletonEarningCard from 'ui-component/cards/Skeleton/EarningCard';
+import SkeletonTotalTrainingCard from 'ui-component/cards/Skeleton/SkeletonTotalTrainingCard';
 
-// assets
-import EarningIcon from 'assets/images/icons/earning.svg';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
-import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
-import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
-import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
-import { IconArtboard, IconSchool } from '@tabler/icons';
+import { IconSchool } from '@tabler/icons';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.secondary.light,
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
@@ -55,61 +47,59 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     }
 }));
 
-// ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
+// ===========================|| DASHBOARD DEFAULT - TRAINING CARD ||=========================== //
 
-const EarningCard = ({ isLoading }) => {
+const TotalTrainingCard = ({ isLoading, value }) => {
     const theme = useTheme();
 
-    const [anchorEl, setAnchorEl] = useState(null);
-
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
     return (
-        <>
+        <React.Fragment>
             {isLoading ? (
-                <SkeletonEarningCard />
+                <SkeletonTotalTrainingCard />
             ) : (
                 <CardWrapper border={false} content={false}>
                     <Box sx={{ p: 2.25 }}>
                         <Grid container direction="column">
                             <Grid item>
-                                <Grid container justifyContent="space-between">
+                                <Grid container direction="row" alignItems="center">
                                     <Grid item>
                                         <Avatar
                                             variant="rounded"
                                             sx={{
                                                 ...theme.typography.commonAvatar,
                                                 ...theme.typography.largeAvatar,
-                                                backgroundColor: theme.palette.secondary[800],
+
                                                 mt: 1
                                             }}
                                         >
-                                            <IconSchool color="white" />
+                                            <IconSchool color={theme.palette.secondary.dark} />
                                         </Avatar>
                                     </Grid>
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <Grid container alignItems="center">
+
                                     <Grid item>
-                                        <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                            72{' '}
+                                        <Typography
+                                            sx={{
+                                                fontSize: '2.125rem',
+                                                fontWeight: 500,
+                                                mx: 2,
+                                                mt: 1.75,
+                                                mb: 0.75,
+                                                color: theme.palette.secondary.dark
+                                            }}
+                                        >
+                                            {value} 87
                                         </Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item sx={{ mb: 1.25 }}>
+
+                            <Grid item sx={{ my: 1.25 }}>
                                 <Typography
+                                    variant="subtitle1"
                                     sx={{
                                         fontSize: '1rem',
                                         fontWeight: 500,
-                                        color: theme.palette.background.default
+                                        color: theme.palette.grey[600]
                                     }}
                                 >
                                     Total Trainings
@@ -119,12 +109,13 @@ const EarningCard = ({ isLoading }) => {
                     </Box>
                 </CardWrapper>
             )}
-        </>
+        </React.Fragment>
     );
 };
 
-EarningCard.propTypes = {
-    isLoading: PropTypes.bool
+TotalTrainingCard.propTypes = {
+    isLoading: PropTypes.bool,
+    value: PropTypes.number
 };
 
-export default EarningCard;
+export default TotalTrainingCard;

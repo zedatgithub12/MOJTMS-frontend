@@ -2,9 +2,9 @@
 import { Card, CardContent, Grid } from '@mui/material';
 import Skeleton from '@mui/material/Skeleton';
 
-// ==============================|| SKELETON - EARNING CARD ||============================== //
+// ==============================|| SKELETON - TRAINING CARD ||============================== //
 
-const EarningCard = () => (
+const SkeletonTotalTrainingCard = () => (
     <Card>
         <CardContent>
             <Grid container direction="column">
@@ -29,4 +29,4 @@ const EarningCard = () => (
     </Card>
 );
 
-export default EarningCard;
+export default SkeletonTotalTrainingCard;

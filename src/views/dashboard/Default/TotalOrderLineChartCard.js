@@ -1,27 +1,25 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 // material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, Button, Grid, Typography } from '@mui/material';
+import { Avatar, Box, Grid, Typography } from '@mui/material';
 
 // third-party
 import Chart from 'react-apexcharts';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
-import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
+import SkeletonTotalTrainingCard from 'ui-component/cards/Skeleton/SkeletonTotalTrainingCard';
 
 import ChartDataMonth from './chart-data/total-order-month-line-chart';
 import ChartDataYear from './chart-data/total-order-year-line-chart';
 
 // assets
-import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { IconUsers } from '@tabler/icons';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary[200],
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
@@ -64,78 +62,67 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
 
-const TotalOrderLineChartCard = ({ isLoading }) => {
+const TotalOrderLineChartCard = ({ isLoading, value }) => {
     const theme = useTheme();
 
-    const [timeValue, setTimeValue] = useState(false);
-    const handleChangeTime = (event, newValue) => {
-        setTimeValue(newValue);
-    };
-
     return (
-        <>
+        <React.Fragment>
             {isLoading ? (
-                <SkeletonTotalOrderCard />
+                <SkeletonTotalTrainingCard />
             ) : (
                 <CardWrapper border={false} content={false}>
                     <Box sx={{ p: 2.25 }}>
                         <Grid container direction="column">
                             <Grid item>
-                                <Grid container justifyContent="space-between">
+                                <Grid container direction="row" alignItems="center">
                                     <Grid item>
                                         <Avatar
                                             variant="rounded"
                                             sx={{
                                                 ...theme.typography.commonAvatar,
                                                 ...theme.typography.largeAvatar,
-                                                backgroundColor: theme.palette.primary[800],
-                                                color: '#fff',
+
                                                 mt: 1
                                             }}
                                         >
-                                            <IconUsers fontSize="inherit" />
+                                            <IconUsers color={theme.palette.primary.main} />
                                         </Avatar>
+                                    </Grid>
+
+                                    <Grid item>
+                                        <Typography
+                                            sx={{
+                                                fontSize: '2.125rem',
+                                                fontWeight: 500,
+                                                mx: 2,
+                                                mt: 1.75,
+                                                mb: 0.75,
+                                                color: theme.palette.primary.main
+                                            }}
+                                        >
+                                            {value} 343
+                                        </Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Grid item sx={{ mb: 0.75 }}>
-                                <Grid container alignItems="center">
-                                    <Grid item xs={6}>
-                                        <Grid container alignItems="center">
-                                            <Grid item>
-                                                {timeValue ? (
-                                                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                                        $108
-                                                    </Typography>
-                                                ) : (
-                                                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                                        2302
-                                                    </Typography>
-                                                )}
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: '1rem',
-                                                        fontWeight: 500,
-                                                        color: theme.palette.primary[200]
-                                                    }}
-                                                >
-                                                    Total Trainees
-                                                </Typography>
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                    <Grid item xs={6}>
-                                        {timeValue ? <Chart {...ChartDataMonth} /> : <Chart {...ChartDataYear} />}
-                                    </Grid>
-                                </Grid>
+
+                            <Grid item sx={{ my: 1.25 }}>
+                                <Typography
+                                    variant="subtitle1"
+                                    sx={{
+                                        fontSize: '1rem',
+                                        fontWeight: 500,
+                                        color: theme.palette.grey[600]
+                                    }}
+                                >
+                                    Total Trainees
+                                </Typography>
                             </Grid>
                         </Grid>
                     </Box>
                 </CardWrapper>
             )}
-        </>
+        </React.Fragment>
     );
 };
 

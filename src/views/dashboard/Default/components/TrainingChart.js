@@ -1,13 +1,10 @@
-import { useTheme } from '@mui/material';
-import React from 'react';
 import Chart from 'react-apexcharts';
 
 const TrainingChart = () => {
-    const theme = useTheme();
     const data = {
         series: [
-            { name: 'Males', data: [80, 90, 80, 90, 80, 90, 80, 60, 60, 90, 60, 100] }, //70, 80, 90, 80, 90,
-            { name: 'Females', data: [75, 50, 60, 75, 50, 60, 75, 80, 90, 70, 70, 80] } //50, 60, 75, 50, 60,
+            { name: 'Males', data: [80, 90, 80, 90, 80, 90, 80, 60, 60, 90, 60, 100] },
+            { name: 'Females', data: [75, 50, 60, 75, 50, 60, 75, 80, 90, 70, 70, 80] }
         ],
         options: {
             chart: {
