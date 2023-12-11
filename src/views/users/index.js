@@ -166,7 +166,7 @@ const Users = () => {
                     title="Users"
                     back={true}
                     option={false}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.main})` }}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
                 />
             </Grid>
 

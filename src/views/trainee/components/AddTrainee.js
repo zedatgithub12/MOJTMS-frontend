@@ -37,10 +37,8 @@ export default function AddTrainee({ open, handleDialogClose }) {
     const [department, setDepartment] = useState([]);
     const role = 'Trainee';
     const password = 'trainee12345';
-    const [loading, setLoading] = useState(false);
 
     const FetchDepartments = async () => {
-        setLoading(true);
         var Api = Connections.api + Connections.departments;
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -54,11 +52,10 @@ export default function AddTrainee({ open, handleDialogClose }) {
         if (parsed.success) {
             const data = parsed.data.data;
             setDepartment(data);
-            setLoading(false);
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => FetchDepartments(), {
+    useQuery(['data'], () => FetchDepartments(), {
         refetchOnWindowFocus: false
     });
 
@@ -132,15 +129,13 @@ export default function AddTrainee({ open, handleDialogClose }) {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         paddingRight: 1,
-                        background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})`
+                        background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})`
                     }}
                 >
-                    <DialogTitle variant="h4" color="white">
-                        Add new trainee
-                    </DialogTitle>
+                    <DialogTitle variant="h4">Add new trainee</DialogTitle>
 
                     <IconButton onClick={handleDialogClose}>
-                        <IconX size={22} />
+                        <IconX size={20} />
                     </IconButton>
                 </Box>
 

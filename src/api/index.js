@@ -34,6 +34,7 @@ const Connections = {
     traineestatus: 'trainee-status',
     traineename: 'trainee/name',
     updateProfile: 'trainee/profile/',
+    traineestraining: 'trainee/trainings/',
 
     //departments api endpoints
     departments: 'departments',

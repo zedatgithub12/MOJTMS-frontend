@@ -89,7 +89,7 @@ const TrainingTrainees = ({ training_id }) => {
             Connections.api +
             Connections.trainingtrainees +
             training_id +
-            `?round=${filters.round}&age=${filters.age}&gender=${filters.gender}&department=${filters.department}&job_title=${filters.job_title}`;
+            `?round=${filters.round}&age=${filters.age}&gender=${filters.gender}&department=${filters.department}&job_title=${filters.job_title}&page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,

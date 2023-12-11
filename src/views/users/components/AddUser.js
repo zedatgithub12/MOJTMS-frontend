@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -97,6 +96,8 @@ export default function AddUser({ open, handleDialogClose }) {
             setPassword('admin12345');
         } else if (event.target.value == 'Coordinator') {
             setPassword('coordinator12345');
+        } else if (event.target.value == 'Trainee') {
+            setPassword('trainee12345');
         }
     };
 
@@ -115,12 +116,10 @@ export default function AddUser({ open, handleDialogClose }) {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         paddingRight: 1,
-                        backgroundColor: theme.palette.secondary.dark
+                        backgroundColor: theme.palette.primary[200]
                     }}
                 >
-                    <DialogTitle variant="h4" color="white">
-                        Add new user
-                    </DialogTitle>
+                    <DialogTitle variant="h4">Add new user</DialogTitle>
 
                     <IconButton onClick={handleDialogClose}>
                         <IconX size={22} />
@@ -203,7 +202,7 @@ export default function AddUser({ open, handleDialogClose }) {
                         </Box>
 
                         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 2 }}>
-                            <Button onClick={handleDialogClose} variant="text" color="secondary" sx={{ marginRight: 3 }}>
+                            <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginRight: 3 }}>
                                 Cancel
                             </Button>
                             <AnimateButton>
@@ -212,7 +211,7 @@ export default function AddUser({ open, handleDialogClose }) {
                                     size="small"
                                     type="submit"
                                     variant="contained"
-                                    color="secondary"
+                                    color="primary"
                                     sx={{ paddingX: 8, paddingY: 0.8 }}
                                 >
                                     {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Save'}

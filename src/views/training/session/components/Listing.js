@@ -9,7 +9,6 @@ import { RefreshToken } from 'utils/token-refresh';
 import { useNavigate } from 'react-router';
 import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 import { NoResult } from 'utils/components/noresult';
-import { GetBasicInfos } from 'utils/get-infos';
 
 // ==============================|| SESSION LISTING COMPONENT ||============================== //
 

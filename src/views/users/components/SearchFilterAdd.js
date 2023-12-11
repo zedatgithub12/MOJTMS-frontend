@@ -1,4 +1,4 @@
-import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography, CircularProgress } from '@mui/material';
+import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, CircularProgress } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Add } from '@mui/icons-material';
 import PropTypes from 'prop-types';
@@ -20,7 +20,7 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    paddingY: 2,
+                    paddingY: 4,
                     paddingX: 2
                 }}
             >
@@ -47,11 +47,8 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                     </Paper>
                 </Box>
                 <Box>
-                    <Button variant="text" color="primary" padding={2} onClick={onAddUser}>
-                        <Add size={10} />{' '}
-                        <Typography marginLeft={1} variant="subtitle1">
-                            New user
-                        </Typography>
+                    <Button variant="contained" color="primary" padding={2} onClick={onAddUser}>
+                        <Add size={6} sx={{ marginRight: 1 }} /> New user
                     </Button>
                 </Box>
             </Grid>
