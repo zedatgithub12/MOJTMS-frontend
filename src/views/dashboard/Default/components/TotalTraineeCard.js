@@ -2,20 +2,25 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 // material-ui
-import { styled, useTheme } from '@mui/material/styles';
+import { useTheme, styled } from '@mui/material/styles';
 import { Avatar, Box, Grid, Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalTrainingCard from 'ui-component/cards/Skeleton/SkeletonTotalTrainingCard';
 
-import { IconSchool } from '@tabler/icons';
+// assets
+import { IconUsers } from '@tabler/icons';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.light,
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
+    '&>div': {
+        position: 'relative',
+        zIndex: 5
+    },
     '&:after': {
         content: '""',
         position: 'absolute',
@@ -23,6 +28,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
         height: 210,
         background: theme.palette.secondary[800],
         borderRadius: '50%',
+        zIndex: 1,
         top: -85,
         right: -95,
         [theme.breakpoints.down('sm')]: {
@@ -33,6 +39,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     '&:before': {
         content: '""',
         position: 'absolute',
+        zIndex: 1,
         width: 210,
         height: 210,
         background: theme.palette.secondary[800],
@@ -47,9 +54,9 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     }
 }));
 
-// ===========================|| DASHBOARD DEFAULT - TRAINING CARD ||=========================== //
+// ==============================|| DASHBOARD - TOTAL TRAINEE CARD ||============================== //
 
-const TotalTrainingCard = ({ isLoading, value }) => {
+const TotalTraineeCard = ({ isLoading, total, male, female }) => {
     const theme = useTheme();
 
     return (
@@ -72,7 +79,7 @@ const TotalTrainingCard = ({ isLoading, value }) => {
                                                 mt: 1
                                             }}
                                         >
-                                            <IconSchool color={theme.palette.secondary.dark} />
+                                            <IconUsers color={theme.palette.secondary.dark} />
                                         </Avatar>
                                     </Grid>
 
@@ -82,18 +89,18 @@ const TotalTrainingCard = ({ isLoading, value }) => {
                                                 fontSize: '2.125rem',
                                                 fontWeight: 500,
                                                 mx: 2,
-                                                mt: 1.75,
-                                                mb: 0.75,
+                                                mt: 0.75,
+
                                                 color: theme.palette.secondary.dark
                                             }}
                                         >
-                                            {value} 87
+                                            {total}
                                         </Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
 
-                            <Grid item sx={{ my: 1.25 }}>
+                            <Grid item sx={{ mt: 1.5 }}>
                                 <Typography
                                     variant="subtitle1"
                                     sx={{
@@ -102,8 +109,16 @@ const TotalTrainingCard = ({ isLoading, value }) => {
                                         color: theme.palette.grey[600]
                                     }}
                                 >
-                                    Total Trainings
+                                    Total Trainees
                                 </Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <Typography variant="body2">
+                                        <b>{male}</b> Males
+                                    </Typography>
+                                    <Typography variant="body2" marginLeft={2}>
+                                        <b>{female}</b> Females
+                                    </Typography>
+                                </Box>
                             </Grid>
                         </Grid>
                     </Box>
@@ -113,9 +128,11 @@ const TotalTrainingCard = ({ isLoading, value }) => {
     );
 };
 
-TotalTrainingCard.propTypes = {
+TotalTraineeCard.propTypes = {
     isLoading: PropTypes.bool,
-    value: PropTypes.number
+    total: PropTypes.number,
+    male: PropTypes.number,
+    female: PropTypes.number
 };
 
-export default TotalTrainingCard;
+export default TotalTraineeCard;

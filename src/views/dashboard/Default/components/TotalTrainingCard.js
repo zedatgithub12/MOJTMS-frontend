@@ -1,32 +1,21 @@
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React from 'react';
 
 // material-ui
-import { useTheme, styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { Avatar, Box, Grid, Typography } from '@mui/material';
-
-// third-party
-import Chart from 'react-apexcharts';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalTrainingCard from 'ui-component/cards/Skeleton/SkeletonTotalTrainingCard';
 
-import ChartDataMonth from './chart-data/total-order-month-line-chart';
-import ChartDataYear from './chart-data/total-order-year-line-chart';
-
-// assets
-import { IconUsers } from '@tabler/icons';
+import { IconSchool } from '@tabler/icons';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
     backgroundColor: theme.palette.primary[200],
     color: '#fff',
     overflow: 'hidden',
     position: 'relative',
-    '&>div': {
-        position: 'relative',
-        zIndex: 5
-    },
     '&:after': {
         content: '""',
         position: 'absolute',
@@ -34,7 +23,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
         height: 210,
         background: theme.palette.primary[800],
         borderRadius: '50%',
-        zIndex: 1,
         top: -85,
         right: -95,
         [theme.breakpoints.down('sm')]: {
@@ -45,7 +33,6 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     '&:before': {
         content: '""',
         position: 'absolute',
-        zIndex: 1,
         width: 210,
         height: 210,
         background: theme.palette.primary[800],
@@ -60,9 +47,9 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     }
 }));
 
-// ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
+// ===========================|| DASHBOARD DEFAULT - TRAINING CARD ||=========================== //
 
-const TotalOrderLineChartCard = ({ isLoading, value }) => {
+const TotalTrainingCard = ({ isLoading, total, sessions }) => {
     const theme = useTheme();
 
     return (
@@ -85,7 +72,7 @@ const TotalOrderLineChartCard = ({ isLoading, value }) => {
                                                 mt: 1
                                             }}
                                         >
-                                            <IconUsers color={theme.palette.primary.main} />
+                                            <IconSchool color={theme.palette.primary.dark} />
                                         </Avatar>
                                     </Grid>
 
@@ -95,18 +82,17 @@ const TotalOrderLineChartCard = ({ isLoading, value }) => {
                                                 fontSize: '2.125rem',
                                                 fontWeight: 500,
                                                 mx: 2,
-                                                mt: 1.75,
-                                                mb: 0.75,
-                                                color: theme.palette.primary.main
+                                                mt: 0.75,
+                                                color: theme.palette.primary.dark
                                             }}
                                         >
-                                            {value} 343
+                                            {total}
                                         </Typography>
                                     </Grid>
                                 </Grid>
                             </Grid>
 
-                            <Grid item sx={{ my: 1.25 }}>
+                            <Grid item sx={{ mt: 1.5 }}>
                                 <Typography
                                     variant="subtitle1"
                                     sx={{
@@ -115,8 +101,14 @@ const TotalOrderLineChartCard = ({ isLoading, value }) => {
                                         color: theme.palette.grey[600]
                                     }}
                                 >
-                                    Total Trainees
+                                    Total Trainings
                                 </Typography>
+
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <Typography variant="body2">
+                                        <b>{sessions}</b> sessions
+                                    </Typography>
+                                </Box>
                             </Grid>
                         </Grid>
                     </Box>
@@ -126,8 +118,10 @@ const TotalOrderLineChartCard = ({ isLoading, value }) => {
     );
 };
 
-TotalOrderLineChartCard.propTypes = {
-    isLoading: PropTypes.bool
+TotalTrainingCard.propTypes = {
+    isLoading: PropTypes.bool,
+    total: PropTypes.number,
+    sessions: PropTypes.number
 };
 
-export default TotalOrderLineChartCard;
+export default TotalTrainingCard;

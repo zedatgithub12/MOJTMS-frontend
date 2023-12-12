@@ -1,30 +1,48 @@
+import { Grid } from '@mui/material';
 import Chart from 'react-apexcharts';
+import PropTypes from 'prop-types';
 
-const TrainingChart = () => {
-    const data = {
-        series: [
-            { name: 'Males', data: [80, 90, 80, 90, 80, 90, 80, 60, 60, 90, 60, 100] },
-            { name: 'Females', data: [75, 50, 60, 75, 50, 60, 75, 80, 90, 70, 70, 80] }
-        ],
-        options: {
-            chart: {
-                type: 'line'
-            },
-            xaxis: {
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-            },
-            yaxis: {},
-            legend: {
-                position: 'top'
-            },
-            colors: ['#2E93fA', '#66DA26', '#546E7A', '#E91E63', '#FF9800'],
-            stroke: {
-                curve: 'smooth'
-            }
+const TrainingChart = ({ data, width }) => {
+    const series = [
+        {
+            name: 'Male',
+            data: data.map((item) => parseInt(item.maleCount))
+        },
+        {
+            name: 'Female',
+            data: data.map((item) => parseInt(item.femaleCount))
         }
+    ];
+
+    const options = {
+        chart: {
+            type: 'line'
+        },
+        xaxis: {
+            categories: data.map((item) => item.monthName)
+        },
+        yaxis: {},
+        legend: {
+            position: 'bottom'
+        },
+        colors: ['#2E93fA', '#66DA26', '#546E7A', '#E91E63', '#FF9800']
+        // stroke: {
+        //     curve: 'smooth'
+        // }
     };
 
-    return <Chart options={data.options} series={data.series} type="line" width="100%" height={400} />;
+    return (
+        <Grid container>
+            <Grid item xs={12}>
+                <Chart options={options} series={series} type="line" width={width} height={400} />
+            </Grid>
+        </Grid>
+    );
+};
+
+TrainingChart.propTypes = {
+    data: PropTypes.array,
+    width: PropTypes.string
 };
 
 export default TrainingChart;

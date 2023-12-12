@@ -1,26 +1,48 @@
 import { Typography, Box, useTheme } from '@mui/material';
 import { FormattedRound } from 'utils/functions';
+import PropTypes from 'prop-types';
 
-const UpcomingTrainings = () => {
+const UpcomingTrainings = ({ name, round, start_date, end_date, onPress }) => {
     const theme = useTheme();
     return (
-        <Box sx={{ marginY: 1, padding: 1, border: 2, borderColor: theme.palette.primary[200], borderRadius: 2 }}>
+        <Box
+            sx={{
+                marginX: 1.6,
+                marginY: 1,
+                padding: 1,
+                border: 2,
+                borderColor: theme.palette.primary[200],
+                borderRadius: 2,
+                cursor: 'pointer'
+            }}
+            onClick={onPress}
+        >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 0.5 }}>
-                <Typography variant="subtitle1">Goal setting for better achievement</Typography>
+                {name && <Typography variant="subtitle1">{name}</Typography>}
 
-                <Typography variant="body2" color="primary" marginLeft={1}>
-                    {2} <sup>{FormattedRound(2)} </sup> Round
-                </Typography>
+                {round && (
+                    <Typography variant="body2" color="primary" marginLeft={1}>
+                        {round} <sup>{FormattedRound(round)} </sup> Round
+                    </Typography>
+                )}
             </Box>
 
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 0.5 }}>
-                <Typography variant="body2">Dec 2, 2023 | 8:00 am</Typography>
+                <Typography variant="body2">{start_date}</Typography>
                 <Typography variant="body2" marginLeft={1}>
-                    Dec 3, 2023 | 5:00 pm
+                    {end_date}
                 </Typography>
             </Box>
         </Box>
     );
+};
+
+UpcomingTrainings.propTypes = {
+    name: PropTypes.string,
+    round: PropTypes.number,
+    start_date: PropTypes.string,
+    end_date: PropTypes.string,
+    onPress: PropTypes.func
 };
 
 export default UpcomingTrainings;
