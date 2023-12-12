@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Box, Accordion, AccordionSummary, Typography, useTheme } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PropTypes from 'prop-types';
 
 const DashboardAccordions = ({ categories, departments }) => {
     const theme = useTheme();
@@ -30,6 +30,11 @@ const DashboardAccordions = ({ categories, departments }) => {
             </Accordion>
         </Box>
     );
+};
+
+DashboardAccordions.propTypes = {
+    categories: PropTypes.node,
+    departments: PropTypes.node
 };
 
 export default DashboardAccordions;
