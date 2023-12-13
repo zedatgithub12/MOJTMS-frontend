@@ -6,17 +6,22 @@ import { Avatar, Box, ButtonBase } from '@mui/material';
 
 // project imports
 import LogoSection from '../LogoSection';
-import SearchSection from './SearchSection';
 import ProfileSection from './ProfileSection';
-import NotificationSection from './NotificationSection';
 
 // assets
 import { IconMenu2 } from '@tabler/icons';
+import { useContext } from 'react';
+import { AuthContext } from 'context/context';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
 const Header = ({ handleLeftDrawerToggle }) => {
     const theme = useTheme();
+    const { getRole } = useContext(AuthContext);
+
+    const userRole = () => {
+        return getRole();
+    };
 
     return (
         <>
@@ -30,29 +35,31 @@ const Header = ({ handleLeftDrawerToggle }) => {
                     }
                 }}
             >
-                <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1 }}>
+                {userRole() != 'Trainee' && (
+                    <ButtonBase sx={{ borderRadius: '30px', overflow: 'hidden' }}>
+                        <Avatar
+                            variant="rounded"
+                            sx={{
+                                ...theme.typography.commonAvatar,
+                                ...theme.typography.mediumAvatar,
+                                transition: 'all .2s ease-in-out',
+                                background: theme.palette.background.default,
+                                color: theme.palette.secondary.dark,
+                                '&:hover': {
+                                    background: theme.palette.background.default,
+                                    color: theme.palette.secondary.dark
+                                }
+                            }}
+                            onClick={handleLeftDrawerToggle}
+                            color="inherit"
+                        >
+                            <IconMenu2 stroke={1.5} size="1.5rem" />
+                        </Avatar>
+                    </ButtonBase>
+                )}
+                <Box component="span" sx={{ display: { xs: 'none', md: 'block' }, flexGrow: 1, marginLeft: 4 }}>
                     <LogoSection />
                 </Box>
-                <ButtonBase sx={{ borderRadius: '30px', overflow: 'hidden' }}>
-                    <Avatar
-                        variant="rounded"
-                        sx={{
-                            ...theme.typography.commonAvatar,
-                            ...theme.typography.mediumAvatar,
-                            transition: 'all .2s ease-in-out',
-                            background: theme.palette.background.default,
-                            color: theme.palette.secondary.dark,
-                            '&:hover': {
-                                background: theme.palette.background.default,
-                                color: theme.palette.secondary.dark
-                            }
-                        }}
-                        onClick={handleLeftDrawerToggle}
-                        color="inherit"
-                    >
-                        <IconMenu2 stroke={1.5} size="1.5rem" />
-                    </Avatar>
-                </ButtonBase>
             </Box>
 
             {/* header search
@@ -61,7 +68,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
             <Box sx={{ flexGrow: 1 }} />
 
             {/* notification & profile */}
-            <NotificationSection />
+            {/* <NotificationSection /> */}
             <ProfileSection />
         </>
     );

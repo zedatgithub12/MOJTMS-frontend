@@ -23,18 +23,17 @@ import { RefreshToken } from 'utils/token-refresh';
 import { FilterPanel } from 'ui-component/FilterPanel';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { NoResult } from 'utils/components/noresult';
-import { IconTableExport, IconX } from '@tabler/icons';
+import { IconDotsVertical, IconX } from '@tabler/icons';
+import { useSelector } from 'react-redux';
+import { saveAs } from 'file-saver';
+import { CSVLink } from 'react-csv';
+import { DateFormatter, calculateAge } from 'utils/functions';
 import TraineesTable from './components/TraineesTable';
 import errorImage from 'assets/images/error.jpg';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 import Connections from 'api';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-
-import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CSVLink } from 'react-csv';
-import { DateFormatter, calculateAge } from 'utils/functions';
 
 const TrainingTrainees = ({ training_id }) => {
     const [loading, setLoading] = useState(false);
@@ -353,7 +352,7 @@ const TrainingTrainees = ({ training_id }) => {
                         xs={12}
                         sm={12}
                         md={6}
-                        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 2 }}
+                        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 1 }}
                     >
                         <IconButton
                             aria-label="more"
@@ -363,7 +362,7 @@ const TrainingTrainees = ({ training_id }) => {
                             aria-haspopup="true"
                             onClick={handleClick}
                         >
-                            <IconTableExport size={18} />
+                            <IconDotsVertical size={20} />
                         </IconButton>
                         <Menu
                             id="long-menu"

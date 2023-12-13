@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 // ==============================|| TRAINING LISTING COMPONENT ||============================== //
 
-const TrainingList = ({ trainee_id }) => {
+const YourTrainings = ({ trainee_id }) => {
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
@@ -121,7 +121,7 @@ const TrainingList = ({ trainee_id }) => {
     );
 };
 
-TrainingList.propTypes = {
+YourTrainings.propTypes = {
     trainee_id: PropTypes.number
 };
-export default TrainingList;
+export default YourTrainings;

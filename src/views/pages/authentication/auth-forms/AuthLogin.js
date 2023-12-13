@@ -6,10 +6,8 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
-    Checkbox,
     CircularProgress,
     FormControl,
-    FormControlLabel,
     FormHelperText,
     Grid,
     IconButton,
@@ -49,7 +47,7 @@ const FirebaseLogin = ({ ...others }) => {
     const scriptedRef = useScriptRef();
     // const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     // const customization = useSelector((state) => state.customization);
-    const [checked, setChecked] = useState(true);
+    // const [checked, setChecked] = useState(true);
     const [logSpinner, setLogSpinner] = useState(false);
     // const googleHandler = async () => {
     //     console.error('Login');
@@ -279,7 +277,7 @@ const FirebaseLogin = ({ ...others }) => {
                                     size="large"
                                     type="submit"
                                     variant="contained"
-                                    color="secondary"
+                                    color="primary"
                                 >
                                     {logSpinner ? (
                                         <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />

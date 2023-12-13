@@ -56,6 +56,8 @@ const FilledSurveyDetails = Loadable(lazy(() => import('views/training/survey/fi
 const Elements = Loadable(lazy(() => import('views/elements')));
 
 //Trainees page routing
+const TrainingSession = Loadable(lazy(() => import('views/training/session')));
+const TraineeHome = Loadable(lazy(() => import('views/trainee/home')));
 const Trainee = Loadable(lazy(() => import('views/trainee')));
 const TraineeDetails = Loadable(lazy(() => import('views/trainee/detail')));
 const UpdateTrainee = Loadable(lazy(() => import('views/trainee/update')));
@@ -78,14 +80,52 @@ const SamplePage = Loadable(lazy(() => import('views/sample-page')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
+const getRole = () => {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const role = user?.user?.role;
+    return role;
+};
+
+const getElement = (attempt = 1) => {
+    let element;
+    const role = getRole();
+
+    if (role) {
+        switch (role) {
+            case 'Admin':
+                element = <DashboardDefault />;
+                break;
+            case 'Trinee':
+                element = <TraineeHome />;
+                break;
+            case 'Coordinator':
+                element = <DashboardDefault />;
+                break;
+            default:
+                element = <TraineeHome />;
+                break;
+        }
+    } else {
+        if (attempt < 50) {
+            return getElement(attempt + 1);
+        } else {
+            // Handle the case when role is not defined after maximum attempts
+            element = <TraineeHome />;
+        }
+    }
+
+    return element;
+};
+
 const MainRoutes = {
     path: '/',
     element: <MainLayout />,
     children: [
         {
             path: '/',
-            element: <DashboardDefault />
+            element: getElement()
         },
+
         {
             path: 'dashboard',
             children: [
@@ -164,6 +204,14 @@ const MainRoutes = {
             element: <Elements />
         },
         {
+            path: 'trainees/home',
+            element: <TrainingSession />
+        },
+        {
+            path: 'home',
+            element: <TraineeHome />
+        },
+        {
             path: 'trainees',
             element: <Trainee />
         },
@@ -210,7 +258,6 @@ const MainRoutes = {
         },
 
         //categories
-
         {
             path: 'categories',
             element: <Category />
@@ -310,5 +357,5 @@ const MainRoutes = {
         }
     ]
 };
-
+export { getRole };
 export default MainRoutes;

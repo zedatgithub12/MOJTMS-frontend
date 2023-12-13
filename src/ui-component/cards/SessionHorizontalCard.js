@@ -1,11 +1,12 @@
 import { forwardRef } from 'react';
+import { Grid, Box, useTheme, useMediaQuery } from '@mui/material';
+import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
+import { ActionMenu } from 'ui-component/menu/action';
+import { FormattedRound } from 'utils/functions';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Grid, Box, useTheme, useMediaQuery } from '@mui/material';
-import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
-import { ActionMenu } from 'ui-component/menu/action';
 import SessionHorizontalSkel from './Skeleton/SessionHorizontalSkel';
 
 const SessionHorizontalCard = forwardRef(
@@ -15,7 +16,7 @@ const SessionHorizontalCard = forwardRef(
             isLoading,
             image,
             round,
-            level,
+
             title,
             description,
             address,
@@ -24,6 +25,7 @@ const SessionHorizontalCard = forwardRef(
             enddate,
             option,
             optionChildrens,
+            onPress,
             ...others
         },
         ref
@@ -37,21 +39,54 @@ const SessionHorizontalCard = forwardRef(
                     <SessionHorizontalSkel />
                 ) : (
                     <Card
+                        onClick={onPress}
                         ref={ref}
                         sx={{
-                            border: '1px solid',
+                            border: '2px solid',
                             marginTop: 1,
-                            borderColor: theme.palette.secondary.light,
+                            borderColor: theme.palette.primary[200],
                             ':hover': {
                                 boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
                             },
+                            cursor: 'pointer',
                             ...sx
                         }}
                         {...others}
                     >
                         <Grid container sx={{ display: 'flex', flexDirection: 'row' }}>
                             <Grid item xs={12} sm={12} md={4} lg={3} xl={3}>
-                                <CardMedia sx={{ width: '100%', height: 200 }} image={image} title="Training Sessions" />
+                                {image ? (
+                                    <CardMedia
+                                        sx={{
+                                            width: '100%',
+                                            height: 160,
+                                            borderRadius: 1
+                                        }}
+                                        image={image}
+                                        title="Training Sessions"
+                                    />
+                                ) : (
+                                    <Box
+                                        sx={{
+                                            width: '100%',
+                                            minHeight: '100%',
+                                            backgroundColor: theme.palette.primary[200],
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}
+                                    >
+                                        {round && (
+                                            <Box>
+                                                <Typography variant="h1" color="primary">
+                                                    {round}
+                                                    <sup>{FormattedRound(round)}</sup>
+                                                </Typography>
+                                                <Typography variant="subtitle1">Round</Typography>
+                                            </Box>
+                                        )}
+                                    </Box>
+                                )}
                             </Grid>
 
                             <Grid
@@ -78,19 +113,8 @@ const SessionHorizontalCard = forwardRef(
                                         xl={8}
                                         sx={{ borderRightWidth: 4, borderColor: theme.palette.primary.main }}
                                     >
-                                        <Box sx={{ display: 'flex', flexDirection: 'row', paddingX: 2 }}>
-                                            {round && <Typography variant="subtitle2">{round}</Typography>}
-                                            {level && (
-                                                <>
-                                                    <Typography variant="subtitle2" sx={{ marginX: 1 }}>
-                                                        |
-                                                    </Typography>
-                                                    <Typography variant="subtitle2">{level} Level</Typography>
-                                                </>
-                                            )}
-                                        </Box>
                                         {title && (
-                                            <Typography variant="h2" sx={{ paddingX: 2, marginY: 1 }}>
+                                            <Typography variant="h2" sx={{ paddingX: 2, marginBottom: 1 }}>
                                                 {title}
                                             </Typography>
                                         )}
@@ -194,13 +218,13 @@ SessionHorizontalCard.propTypes = {
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     image: PropTypes.string,
     round: PropTypes.string,
-    level: PropTypes.string,
     description: PropTypes.string,
     address: PropTypes.string,
     capacity: PropTypes.number,
     startdate: PropTypes.string,
     enddate: PropTypes.string,
     option: PropTypes.bool,
+    onPress: PropTypes.func,
     optionChildrens: PropTypes.node
 };
 

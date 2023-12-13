@@ -14,6 +14,7 @@ const SessionHorizontalSkel = () => {
                 border: '1px solid',
                 borderColor: theme.palette.secondary.light,
                 borderRadius: 3,
+                margin: 1,
                 ':hover': {
                     boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
                 }

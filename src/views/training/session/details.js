@@ -235,7 +235,7 @@ const SessionDetails = () => {
                             <DetailHeader
                                 back={true}
                                 title={state.title}
-                                option={role === 'Admin' || 'Coordinator' ? true : false}
+                                option={true}
                                 optionChildrens={
                                     <Box>
                                         <MenuItem onClick={() => navigate('/training/session/update', { state: state })}>
@@ -461,7 +461,7 @@ const SessionDetails = () => {
                             <DetailHeader
                                 back={true}
                                 title={state.title}
-                                option={role === 'Admin' || 'Coordinator' ? true : false}
+                                option={false}
                                 optionChildrens={
                                     <Box>
                                         <MenuItem onClick={() => navigate('/training/session/update', { state: state })}>

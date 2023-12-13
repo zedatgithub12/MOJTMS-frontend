@@ -11,7 +11,7 @@ const Pending = ({ enrolledcount }) => {
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <IconInfoCircle size={18} color={theme.palette.primary.main} />
                 <Typography variant="body1" color="primary" marginLeft={0.6}>
-                    You have enrolled & waiting for acceptance
+                    You are enrolled & waiting for acceptance
                 </Typography>
             </Box>
             <Button variant="contained" color="primary" disabled={true} sx={{ marginTop: 2, paddingY: 1.2, paddingX: 8 }}>

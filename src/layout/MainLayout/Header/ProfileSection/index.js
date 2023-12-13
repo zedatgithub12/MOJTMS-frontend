@@ -8,22 +8,17 @@ import { useTheme } from '@mui/material/styles';
 import {
     Avatar,
     Box,
-    Card,
-    CardContent,
     Chip,
     ClickAwayListener,
     Divider,
     Grid,
-    InputAdornment,
     List,
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    OutlinedInput,
     Paper,
     Popper,
     Stack,
-    Switch,
     Typography
 } from '@mui/material';
 
@@ -33,10 +28,9 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
 
 // assets
-import { IconLogout, IconPassword, IconSearch, IconSettings, IconShield, IconShieldHalfFilled, IconUser } from '@tabler/icons';
+import { IconLogout, IconPassword, IconSettings } from '@tabler/icons';
 import { AuthContext } from 'context/context';
 
 // ==============================|| PROFILE MENU ||============================== //
@@ -46,7 +40,8 @@ const ProfileSection = () => {
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
     const { SignOut } = useContext(AuthContext);
-    const LogOut = (status) => {
+
+    const LogOut = async (status) => {
         SignOut(status);
         navigate('/');
     };
@@ -54,9 +49,6 @@ const ProfileSection = () => {
     const userString = sessionStorage.getItem('user');
     const { user } = JSON.parse(userString);
 
-    const [sdm, setSdm] = useState(true);
-    const [value, setValue] = useState('');
-    const [notification, setNotification] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
     /**
@@ -120,8 +112,8 @@ const ProfileSection = () => {
                         sx={{
                             ...theme.typography.mediumAvatar,
                             cursor: 'pointer',
-                            color: theme.palette.primary.dark,
-                            background: theme.palette.background.default
+                            color: theme.palette.primary.main,
+                            background: theme.palette.secondary.light
                         }}
                         ref={anchorRef}
                         aria-controls={open ? 'menu-list-grow' : undefined}

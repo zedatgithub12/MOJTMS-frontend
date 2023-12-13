@@ -47,7 +47,7 @@ const App = () => {
                     sessionStorage.setItem('user', JSON.stringify(users));
                     sessionStorage.setItem('token', users.token);
                     sessionStorage.setItem('tokenExpiration', expirationTime);
-
+                    window.location.reload();
                     setLoged(true);
                 } else {
                     setLoged(false);
@@ -57,7 +57,6 @@ const App = () => {
             SignOut: async (status) => {
                 if (status === 'Signout') {
                     sessionStorage.clear();
-
                     setLoged(false);
                 }
                 {
@@ -75,6 +74,12 @@ const App = () => {
                 const userString = sessionStorage.getItem('user');
                 const userDetails = JSON.parse(userString);
                 return userDetails;
+            },
+
+            getRole: () => {
+                const userData = sessionStorage.getItem('user');
+                const user = JSON.parse(userData);
+                return user.user.role;
             }
         }),
         []

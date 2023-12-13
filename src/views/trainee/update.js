@@ -119,7 +119,7 @@ const UpdateTrainee = () => {
                 <MiniHeader
                     title="Update Profile"
                     back={true}
-                    sx={{ background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.primary.main})` }}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
                 />
 
                 <Grid container>
