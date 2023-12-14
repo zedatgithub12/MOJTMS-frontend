@@ -1,17 +1,17 @@
 const Connections = {
     //local endpoints
 
-    // api: 'http://localhost:8000/api/',
-    // images: 'http://localhost:8000/api/images/',
-    // thumbnails: 'http://localhost:8000/api/thumbnails/',
-    // profiles: 'http://localhost:8000/api/profiles/',
+    api: 'http://localhost:8000/api/',
+    images: 'http://localhost:8000/api/images/',
+    thumbnails: 'http://localhost:8000/api/thumbnails/',
+    profiles: 'http://localhost:8000/api/profiles/',
 
     //remote endpoints
 
-    api: 'https://tms.afrominadigitals.com/backend/api/',
-    images: 'https://tms.afrominadigitals.com/backend/api/images/',
-    thumbnails: 'https://tms.afrominadigitals.com/backend/api/thumbnails/',
-    profiles: 'https://tms.afrominadigitals.com/backend/api/profiles/',
+    // api: 'https://tms.afrominadigitals.com/backend/api/',
+    // images: 'https://tms.afrominadigitals.com/backend/api/images/',
+    // thumbnails: 'https://tms.afrominadigitals.com/backend/api/thumbnails/',
+    // profiles: 'https://tms.afrominadigitals.com/backend/api/profiles/',
 
     signin: 'signin',
     forgotpassword: 'forgotpassword/',
@@ -23,6 +23,7 @@ const Connections = {
 
     // users management api endpoints
     users: 'users',
+    userdata: 'users/',
     searchuser: 'search-user',
     rolebasedsearch: 'role-based-search',
     changerole: 'change-role',
@@ -35,7 +36,7 @@ const Connections = {
     trainee: 'trainees',
     searchtrainee: 'trainee/search',
     traineestatus: 'trainee-status',
-    traineename: 'trainee/name',
+    traineename: 'users/name',
     updateProfile: 'trainee/profile/',
     traineestraining: 'trainee/trainings/',
 

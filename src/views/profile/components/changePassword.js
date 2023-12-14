@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Box, Divider, Grid, IconButton, Typography, useTheme } from '@mui/material';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons';
-import PropTypes from 'prop-types';
 
 const ChangePassword = () => {
     const theme = useTheme();
@@ -15,8 +14,7 @@ const ChangePassword = () => {
                 borderRadius: 2,
                 border: 1,
                 borderColor: theme.palette.grey[300],
-                // backgroundColor: theme.palette.grey[100],
-                marginBottom: 2
+                marginBottom: 4
             }}
         >
             <Grid item xs={12}>
@@ -36,6 +34,25 @@ const ChangePassword = () => {
                     </IconButton>
                 </Box>
                 <Divider />
+
+                {expand && (
+                    <Grid container>
+                        <Grid
+                            item
+                            xs={12}
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                marginY: 2,
+                                paddingX: 3
+                            }}
+                        >
+                            <Typography variant="body2">Change Password</Typography>
+                        </Grid>
+                    </Grid>
+                )}
             </Grid>
         </Grid>
     );

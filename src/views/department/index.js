@@ -37,7 +37,6 @@ const Department = () => {
 
         if (tokenExpiration && currentTime >= tokenExpiration) {
             await RefreshToken();
-            setRefreshed(true);
             FetchDepartments();
         } else {
             FetchDepartments();

@@ -31,7 +31,7 @@ const Trainers = () => {
         page: 1
     });
 
-    const handleCategoryFetching = async () => {
+    const handleDataFetching = async () => {
         const tokenExpiration = sessionStorage.getItem('tokenExpiration');
         const currentTime = new Date().getTime();
 
@@ -63,7 +63,7 @@ const Trainers = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel], () => handleCategoryFetching(), {
+    const { isLoading, error } = useQuery(['data', paginationModel], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 
