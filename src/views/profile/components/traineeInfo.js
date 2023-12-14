@@ -106,7 +106,7 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                 border: 1,
                 borderColor: theme.palette.grey[300],
                 // backgroundColor: theme.palette.grey[100],
-                marginY: 2
+                marginTop: 2
             }}
         >
             <Grid item xs={12} marginBottom={2}>
@@ -287,30 +287,38 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                 </Grid>
 
                                 <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row' }}>
-                                    <AnimateButton>
-                                        <Button
-                                            disabled={isSubmitting ? true : false}
-                                            type="submit"
-                                            variant="contained"
-                                            color="primary"
-                                            sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
-                                        >
-                                            {isSubmitting ? (
-                                                <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
-                                            ) : (
-                                                'Done'
-                                            )}
-                                        </Button>
-                                    </AnimateButton>
+                                    <Grid container>
+                                        <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+                                            <AnimateButton>
+                                                <Button
+                                                    disabled={isSubmitting ? true : false}
+                                                    type="submit"
+                                                    variant="contained"
+                                                    color="primary"
+                                                    fullWidth
+                                                    sx={{ py: 1, px: 4, my: 2 }}
+                                                >
+                                                    {isSubmitting ? (
+                                                        <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
+                                                    ) : (
+                                                        'Done'
+                                                    )}
+                                                </Button>
+                                            </AnimateButton>
+                                        </Grid>
 
-                                    <Button
-                                        variant="text"
-                                        color="primary"
-                                        sx={{ py: 1, px: 4, my: 2, mx: 4 }}
-                                        onClick={() => setEdit(!edit)}
-                                    >
-                                        Cancel
-                                    </Button>
+                                        <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+                                            <Button
+                                                variant="text"
+                                                color="primary"
+                                                fullWidth
+                                                sx={{ py: 1, px: 4, my: 2 }}
+                                                onClick={() => setEdit(!edit)}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </form>

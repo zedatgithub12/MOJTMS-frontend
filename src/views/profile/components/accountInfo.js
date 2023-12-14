@@ -141,22 +141,17 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                 </FormControl>
                             </Box>
 
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'row',
-                                    justifyContent: 'flex-end',
-                                    paddingX: 3
-                                }}
-                            >
-                                <Button type="submit" variant="contained" color="primary" sx={{ paddingX: 6 }}>
-                                    {isSubmitting ? (
-                                        <CircularProgress size={18} sx={{ color: theme.palette.background.default }} />
-                                    ) : (
-                                        'Done'
-                                    )}
-                                </Button>
-                            </Box>
+                            <Grid container paddingX={3}>
+                                <Grid item xs={12} sm={6} md={6} lg={4} xl={4}>
+                                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ paddingX: 6 }}>
+                                        {isSubmitting ? (
+                                            <CircularProgress size={18} sx={{ color: theme.palette.background.default }} />
+                                        ) : (
+                                            'Done'
+                                        )}
+                                    </Button>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </form>
