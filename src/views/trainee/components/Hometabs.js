@@ -27,12 +27,12 @@ function HomeTabs({ home, training }) {
                 sx={{
                     position: 'sticky',
                     top: 75,
-                    backgroundColor: theme.palette.secondary.dark,
                     borderRadius: 4,
                     borderBottomLeftRadius: 0,
                     borderBottomRightRadius: 0,
                     borderBottom: 1,
-                    borderColor: 'divider'
+                    borderColor: 'divider',
+                    backgroundColor: theme.palette.background.default
                 }}
             >
                 <Tabs
@@ -41,10 +41,10 @@ function HomeTabs({ home, training }) {
                     aria-label="trainee tabs"
                     sx={{ paddingTop: 2 }}
                     textColor="white"
-                    indicatorColor="secondary"
+                    indicatorColor="primary"
                 >
-                    <Tab label="Home" {...a11yProps(0)} sx={{ color: theme.palette.background.default }} />
-                    <Tab label="Your Tranings" {...a11yProps(1)} sx={{ color: theme.palette.background.default }} />
+                    <Tab label="Home" {...a11yProps(0)} />
+                    <Tab label="Your Tranings" {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>

@@ -30,7 +30,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 
 // assets
-import { IconLogout, IconPassword, IconSettings } from '@tabler/icons';
+import { IconLogout, IconUser } from '@tabler/icons';
 import { AuthContext } from 'context/context';
 
 // ==============================|| PROFILE MENU ||============================== //
@@ -184,27 +184,9 @@ const ProfileSection = () => {
                                                     onClick={(event) => handleListItemClick(event, 0, '/account-setting')}
                                                 >
                                                     <ListItemIcon>
-                                                        <IconSettings stroke={1.5} size="1.3rem" />
+                                                        <IconUser stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
                                                     <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                                                </ListItemButton>
-                                                <ListItemButton
-                                                    sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                    selected={selectedIndex === 1}
-                                                    onClick={(event) => handleListItemClick(event, 1, '/change-password')}
-                                                >
-                                                    <ListItemIcon>
-                                                        <IconPassword stroke={1.5} size="1.3rem" />
-                                                    </ListItemIcon>
-                                                    <ListItemText
-                                                        primary={
-                                                            <Grid container spacing={1} justifyContent="space-between">
-                                                                <Grid item>
-                                                                    <Typography variant="body2">Change Password</Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        }
-                                                    />
                                                 </ListItemButton>
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}

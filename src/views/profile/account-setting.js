@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Box, Button, Divider, Grid, Typography, useTheme } from '@mui/material';
 import UserAccountModal from './components/updatemodal';
+import AccountInfo from './components/accountInfo';
+import TraineeInfo from './components/traineeInfo';
+import ChangePassword from './components/changePassword';
 
 const AccountSetting = () => {
     const theme = useTheme();
@@ -21,8 +24,8 @@ const AccountSetting = () => {
                 xs={12}
                 sm={12}
                 md={8}
-                lg={8}
-                xl={8}
+                lg={6}
+                xl={6}
                 sx={{
                     backgroundColor: theme.palette.background.default,
                     borderRadius: 2,
@@ -31,93 +34,9 @@ const AccountSetting = () => {
                     justifyContent: 'center'
                 }}
             >
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginY: 2,
-                        paddingX: 3
-                    }}
-                >
-                    <Typography variant="h4">Account Settings</Typography>
-                    <Button onClick={handleOpenModal}>Edit</Button>
-                </Box>
-                <Divider />
-
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        marginY: 2,
-                        paddingX: 3
-                    }}
-                >
-                    <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
-                        Name
-                    </Typography>
-                    <Typography color="grey">Zerihun Tegenu</Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        marginY: 2,
-                        paddingX: 3
-                    }}
-                >
-                    <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
-                        Role
-                    </Typography>
-                    <Typography color="grey">Admin</Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        marginY: 2,
-                        paddingX: 3
-                    }}
-                >
-                    <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
-                        Email address
-                    </Typography>
-                    <Typography color="grey">zerihuntegenu5@gmail.com</Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        marginY: 2,
-                        paddingX: 3
-                    }}
-                >
-                    <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
-                        Phone
-                    </Typography>
-                    <Typography color="grey">(251) 949390840</Typography>
-                </Box>
-
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'flex-start',
-                        alignItems: 'flex-start',
-                        marginY: 2,
-                        paddingX: 2
-                    }}
-                >
-                    <Button>Change Password</Button>
-                </Box>
+                <AccountInfo onEdit={() => handleOpenModal()} />
+                <TraineeInfo />
+                <ChangePassword />
             </Grid>
             <UserAccountModal open={modalOpen} onClose={handleCloseModal} />
         </Grid>

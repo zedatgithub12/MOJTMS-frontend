@@ -73,7 +73,7 @@ const TrainingCard = forwardRef(
                                 {rating ? (
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingBottom: 2 }}>
                                         <Typography variant="h4" marginX={1}>
-                                            {rating}{' '}
+                                            {parseFloat(rating).toFixed(1)}{' '}
                                         </Typography>
                                         <Rating name="read-only" value={rating} readOnly />
                                         <Typography variant="subtitle">({ratingcount})</Typography>

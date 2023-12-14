@@ -11,7 +11,8 @@ import {
     InputLabel,
     OutlinedInput,
     FormHelperText,
-    Button
+    Button,
+    Skeleton
 } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconArrowLeft } from '@tabler/icons';
@@ -39,6 +40,7 @@ const CreateSchedule = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
 
+    const [loading, setLoading] = useState(false);
     const [sessionInfo, setSessionInfo] = useState([]);
 
     const handleDataFetching = async () => {
@@ -54,6 +56,7 @@ const CreateSchedule = () => {
     };
 
     const FetchSession = async () => {
+        setLoading(true);
         var Api = Connections.api + Connections.trainingsession + '/' + state;
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -66,7 +69,10 @@ const CreateSchedule = () => {
         const parsed = await response.json();
         if (parsed.success) {
             const data = parsed.data;
-            setSessionInfo(data);
+            setSessionInfo(data.data);
+            setLoading(false);
+        } else {
+            setLoading(false);
         }
     };
 
@@ -175,13 +181,18 @@ const CreateSchedule = () => {
                     </Grid>
 
                     <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginY: 4 }}>
-                        <Box>
+                        <Box sx={{ width: '70%' }}>
                             <Typography variant="subtitle1" marginY={1}>
                                 Add Schedule for
                             </Typography>
-                            <Typography variant="h3" color="primary">
-                                {sessionInfo.round_name}
-                            </Typography>
+
+                            {loading ? (
+                                <Skeleton variant="rectangular" width={'100%'} height={24} sx={{ borderRadius: 1 }} />
+                            ) : (
+                                <Typography variant="h3" color="primary">
+                                    {sessionInfo.round_name}
+                                </Typography>
+                            )}
                         </Box>
                     </Grid>
                 </Grid>

@@ -156,10 +156,10 @@ const ViewTraining = () => {
                                         pl: 0.5
                                     }}
                                 >
-                                    <Typography variant="subtitle1">{state.trainee_reviews_avg_rating}</Typography>
+                                    <Typography variant="subtitle1"> {parseFloat(state.trainee_reviews_avg_rating).toFixed(1)}</Typography>
                                     <Rating
                                         name="hover-feedback"
-                                        value={state.trainee_reviews_avg_rating}
+                                        value={parseFloat(state.trainee_reviews_avg_rating).toFixed(1)}
                                         readOnly
                                         emptyIcon={<StarOutline style={{ opacity: 0.85 }} fontSize="inherit" />}
                                         sx={{ marginX: 2 }}

@@ -154,7 +154,7 @@ const TrainingResources = ({ session_id }) => {
                             key={item.id}
                             name={item.name}
                             quantity={item.quantity}
-                            availability={item.availability}
+                            availability={parseInt(item.availability)}
                             onRemove={() => handleDeleting(item.id)}
                             removing={deleting}
                         />

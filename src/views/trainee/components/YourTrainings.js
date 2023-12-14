@@ -82,35 +82,39 @@ const YourTrainings = ({ trainee_id }) => {
             ) : (
                 <div>
                     <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingY: 2 }}>
-                        {trainings.map((training, index) => (
-                            <Box key={index} margin={1}>
-                                <Box sx={{ marginLeft: 2, display: 'flex', flexWrap: 'wrap' }}>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            textTransform: 'capitalize',
-                                            paddingY: 1,
-                                            borderTopLeftRadius: 4,
-                                            borderTopRightRadius: 4
-                                        }}
-                                    >
-                                        Enrollment | <b> {training.enrollment_status}</b>
-                                    </Typography>
-                                </Box>
+                        {trainings.map((training, index) => {
+                            if (training.session) {
+                                return (
+                                    <Box key={index} margin={1}>
+                                        <Box sx={{ marginLeft: 2, display: 'flex', flexWrap: 'wrap' }}>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{
+                                                    textTransform: 'capitalize',
+                                                    paddingY: 1,
+                                                    borderTopLeftRadius: 4,
+                                                    borderTopRightRadius: 4
+                                                }}
+                                            >
+                                                Enrollment | <b> {training.enrollment_status}</b>
+                                            </Typography>
+                                        </Box>
 
-                                <TrainingSessionCard
-                                    isLoading={loading}
-                                    status={training.session.status}
-                                    title={training.session.training_name}
-                                    round={training.session.round_number}
-                                    address={training.session.address}
-                                    capacity={training.session.maximum_capacity}
-                                    startdate={training.session.start_date}
-                                    enddate={training.session.end_date}
-                                    onPress={() => navigate('/training/session/detail', { state: training.session })}
-                                />
-                            </Box>
-                        ))}
+                                        <TrainingSessionCard
+                                            isLoading={loading}
+                                            status={training.session.status}
+                                            title={training.session.training_name}
+                                            round={training.session.round_number}
+                                            address={training.session.address}
+                                            capacity={training.session.maximum_capacity}
+                                            startdate={training.session.start_date}
+                                            enddate={training.session.end_date}
+                                            onPress={() => navigate('/training/session/detail', { state: training.session })}
+                                        />
+                                    </Box>
+                                );
+                            }
+                        })}
                     </Box>
                     <Box sx={{ padding: 4 }}>
                         <Pagination showFirstButton showLastButton count={count} page={paginationModel.page} onChange={handleChangePage} />
