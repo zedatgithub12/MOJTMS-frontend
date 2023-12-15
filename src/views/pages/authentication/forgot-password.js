@@ -4,9 +4,8 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
-    // Checkbox,
+    CircularProgress,
     FormControl,
-    // FormControlLabel,
     FormHelperText,
     Grid,
     InputLabel,
@@ -28,7 +27,6 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
 import { IconCircleCheck } from '@tabler/icons';
 import AuthWrapper1 from './AuthWrapper1';
-import AuthCardWrapper from './AuthCardWrapper';
 import MainCard from 'ui-component/cards/MainCard';
 
 // ============================|| AUTH - FORGOT PASSWORD ||============================ //
@@ -84,7 +82,7 @@ const Forgot_Password = ({ ...others }) => {
                                                 </Grid>
                                                 <Box sx={{ mb: 2 }}>
                                                     <Typography variant="subtitle1" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                                                        Enter Email address Associated with your account
+                                                        Enter email address associated with your account
                                                     </Typography>
                                                 </Box>
                                             </Grid>
@@ -136,15 +134,15 @@ const Forgot_Password = ({ ...others }) => {
                                                             setLogSpinner(false);
                                                         }
                                                     })
-                                                    .catch(() => {
+                                                    .catch((error) => {
                                                         setStatus({ success: false });
-                                                        setErrors({ submit: response.message });
+                                                        setErrors({ submit: error.message });
                                                         setSubmitting(false);
                                                         setLogSpinner(false);
                                                     });
                                             }}
                                         >
-                                            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                                            {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
                                                 <form noValidate onSubmit={handleSubmit} {...others}>
                                                     <FormControl
                                                         fullWidth
@@ -179,23 +177,14 @@ const Forgot_Password = ({ ...others }) => {
                                                         <AnimateButton>
                                                             <Button
                                                                 disableElevation
-                                                                disabled={isSubmitting}
+                                                                disabled={logSpinner}
                                                                 fullWidth
                                                                 size="large"
                                                                 type="submit"
                                                                 variant="contained"
                                                                 color="primary"
                                                             >
-                                                                {logSpinner ? (
-                                                                    <div
-                                                                        className="spinner-border spinner-border-sm text-light "
-                                                                        role="status"
-                                                                    >
-                                                                        <span className="visually-hidden">Loading...</span>
-                                                                    </div>
-                                                                ) : (
-                                                                    'Send'
-                                                                )}
+                                                                {logSpinner ? <CircularProgress size={20} color="primary" /> : 'Send'}
                                                             </Button>
                                                         </AnimateButton>
                                                     </Box>

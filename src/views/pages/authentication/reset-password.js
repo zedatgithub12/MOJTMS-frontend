@@ -6,6 +6,7 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
+    CircularProgress,
     // Checkbox,
     FormControl,
     // FormControlLabel,
@@ -33,8 +34,8 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Connections from 'api';
 import AuthWrapper1 from './AuthWrapper1';
-import AuthCardWrapper from './AuthCardWrapper';
 import { useLocation } from 'react-router-dom';
+import MainCard from 'ui-component/cards/MainCard';
 
 // ============================|| RESET PASSWORD ||============================ //
 
@@ -58,21 +59,22 @@ const Reset_Password = ({ ...others }) => {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
+
     return (
         <AuthWrapper1>
             <Grid container direction="column" justifyContent="flex-end" sx={{ minHeight: '100vh' }}>
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 28px)' }}>
                         <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
-                            <AuthCardWrapper>
+                            <MainCard>
                                 {sent ? (
                                     <Box sx={{ textAlign: 'center' }}>
-                                        <IconCircleCheck size={66} variant="success" className="text-success mb-3 mx-auto" />
-                                        <Typography variant="h3" className="text-center">
+                                        <IconCircleCheck size={66} style={{ color: theme.palette.success.dark }} />
+                                        <Typography variant="h3" mt={1}>
                                             New password set successfully
                                         </Typography>
-                                        <Typography variant="body1" className="text-center">
-                                            You can now go back and sign in into Addis Chirchro
+                                        <Typography variant="body1" mt={1}>
+                                            You can now sign in into MOJTMS with your new password
                                         </Typography>
                                     </Box>
                                 ) : (
@@ -101,7 +103,7 @@ const Reset_Password = ({ ...others }) => {
                                                 </Grid>
                                                 <Box sx={{ mb: 2 }}>
                                                     <Typography variant="subtitle1" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                                                        Enter and Confirm New Password
+                                                        Enter and confirm new password
                                                     </Typography>
                                                 </Box>
                                             </Grid>
@@ -170,7 +172,7 @@ const Reset_Password = ({ ...others }) => {
                                                     });
                                             }}
                                         >
-                                            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                                            {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
                                                 <form noValidate onSubmit={handleSubmit} {...others}>
                                                     <FormControl
                                                         fullWidth
@@ -243,23 +245,14 @@ const Reset_Password = ({ ...others }) => {
                                                         <AnimateButton>
                                                             <Button
                                                                 disableElevation
-                                                                disabled={isSubmitting}
+                                                                disabled={logSpinner}
                                                                 fullWidth
                                                                 size="large"
                                                                 type="submit"
                                                                 variant="contained"
                                                                 color="primary"
                                                             >
-                                                                {logSpinner ? (
-                                                                    <div
-                                                                        className="spinner-border spinner-border-sm text-light "
-                                                                        role="status"
-                                                                    >
-                                                                        <span className="visually-hidden">Loading...</span>
-                                                                    </div>
-                                                                ) : (
-                                                                    'Send'
-                                                                )}
+                                                                {logSpinner ? <CircularProgress size={20} color="primary" /> : 'Submit'}
                                                             </Button>
                                                         </AnimateButton>
                                                     </Box>
@@ -271,7 +264,7 @@ const Reset_Password = ({ ...others }) => {
                                 <Button component="a" href="/" fullWidth size="large" variant="text" color="primary" sx={{ marginTop: 1 }}>
                                     Sign In
                                 </Button>
-                            </AuthCardWrapper>
+                            </MainCard>
                         </Grid>
                     </Grid>
                 </Grid>
