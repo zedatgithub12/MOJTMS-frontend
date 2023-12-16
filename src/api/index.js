@@ -51,11 +51,13 @@ const Connections = {
     trainers: 'trainers',
     trainersearch: 'trainer/search',
 
-    //training api endpoints
+    //training session api endpoints
     round: 'training/round/',
     trainingsession: 'training-sessions',
     sessions: 'training/sessions/',
     sessionStatus: 'session/status/',
+    sharetraining: 'training/share/',
+
     trainingtrainees: 'training/trainees/',
     filledsurveys: 'training/filled/surveys/',
 

@@ -199,7 +199,7 @@ const SessionDetails = () => {
                 setOpenSurvey(true);
             }
         }, 4000);
-    });
+    }, []);
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
@@ -429,6 +429,7 @@ const SessionDetails = () => {
                     <ShareDialog
                         open={openShare}
                         url={'https://tms.afrominadigitals.com/training/session/detail/'}
+                        session_id={state.id}
                         onClose={() => handleShareDialogClose()}
                     />
 

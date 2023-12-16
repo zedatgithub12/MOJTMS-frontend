@@ -1,7 +1,7 @@
-import React from 'react';
-import { Helmet } from 'react-helmet-async';
+import { useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import {
+    FacebookShareButton,
     FacebookIcon,
     TwitterShareButton,
     TwitterIcon,
@@ -12,27 +12,55 @@ import {
     TelegramShareButton,
     TelegramIcon
 } from 'react-share';
+import { useQuery } from 'react-query';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import Connections from 'api';
+import PropTypes from 'prop-types';
 
-const ShareDialog = ({ open, onClose, url, title, description, image }) => {
-    const ShareOnFacebook = () => {
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, 'Share on Facebook', 'width=800,height=400');
+const ShareDialog = ({ open, onClose, session_id }) => {
+    const [metadata, setMetadata] = useState([]);
+
+    const handleSharing = async (session_id) => {
+        var Api = Connections.api + Connections.sharetraining + session_id;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, { method: 'GET', headers: headers })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    const data = response.data;
+                    setMetadata(data);
+                } else {
+                    handlePrompts(response.message, 'error');
+                }
+            })
+            .catch((error) => {
+                handlePrompts(error.message, 'error');
+            });
+    };
+    const url = metadata['og:url'];
+    useQuery(['data', session_id], () => handleSharing(session_id));
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
     };
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <Helmet>
-                <meta property="og:title" content={title} />
-                <meta property="og:description" content={description} />
-                <meta property="og:image" content={image} />
-                <meta property="og:url" content={url} />
-            </Helmet>
-
             <DialogTitle variant="h4">Share</DialogTitle>
-            <DialogContent>
-                <Button variant="text" color="primary" onClick={() => ShareOnFacebook()}>
-                    <FacebookIcon size={32} round={true} />
-                </Button>
 
+            <DialogContent>
+                <FacebookShareButton url={url}>
+                    <Button variant="text" color="primary">
+                        <FacebookIcon size={32} round={true} />
+                    </Button>
+                </FacebookShareButton>
                 <TwitterShareButton url={url}>
                     <Button variant="text" color="primary">
                         <TwitterIcon size={32} round={true} />
@@ -48,6 +76,7 @@ const ShareDialog = ({ open, onClose, url, title, description, image }) => {
                         <WhatsappIcon size={32} round={true} />
                     </Button>
                 </WhatsappShareButton>
+
                 <TelegramShareButton url={url}>
                     <Button variant="text" color="primary">
                         <TelegramIcon size={32} round={true} />
@@ -59,8 +88,15 @@ const ShareDialog = ({ open, onClose, url, title, description, image }) => {
                     Close
                 </Button>
             </DialogActions>
+            <SnackbarProvider maxSnack={3} />
         </Dialog>
     );
+};
+
+ShareDialog.propTypes = {
+    open: PropTypes.bool,
+    onClose: PropTypes.func,
+    session_id: PropTypes.number
 };
 
 export default ShareDialog;
