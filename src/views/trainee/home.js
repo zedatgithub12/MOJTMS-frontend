@@ -9,7 +9,6 @@ const TraineeHome = () => {
     const getTraineeId = () => {
         const userString = sessionStorage.getItem('user');
         const userDetails = JSON.parse(userString);
-        console.log(userDetails);
         return userDetails.trainee[0].id;
     };
 

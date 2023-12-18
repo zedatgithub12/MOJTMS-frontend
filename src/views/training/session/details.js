@@ -648,12 +648,6 @@ const SessionDetails = () => {
                         />
                     )}
 
-                    <ShareDialog
-                        open={openShare}
-                        url={'https://tms.afrominadigitals.com/training/session/detail/'}
-                        onClose={() => handleShareDialogClose()}
-                    />
-
                     <SnackbarProvider maxSnack={3} />
                 </Grid>
             )}

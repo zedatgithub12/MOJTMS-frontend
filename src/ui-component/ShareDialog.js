@@ -20,7 +20,7 @@ import PropTypes from 'prop-types';
 const ShareDialog = ({ open, onClose, session_id }) => {
     const [metadata, setMetadata] = useState([]);
 
-    const handleSharing = async (session_id) => {
+    const handleSharing = async () => {
         var Api = Connections.api + Connections.sharetraining + session_id;
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -44,7 +44,7 @@ const ShareDialog = ({ open, onClose, session_id }) => {
             });
     };
     const url = metadata['og:url'];
-    useQuery(['data', session_id], () => handleSharing(session_id));
+    useQuery(['data', session_id], () => handleSharing());
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default

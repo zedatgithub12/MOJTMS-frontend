@@ -324,13 +324,19 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                         </form>
                     ) : (
                         <div>
-                            <ListingComponent content={DateFormatter(traineeInfo.date_of_birth)} label="Birth date" />
-                            <ListingComponent content={traineeInfo.gender} label="Gender" />
-                            <ListingComponent content={traineeInfo.phone} label="Phone" />
-                            <ListingComponent content={traineeInfo.address} label="Address" />
-                            <ListingComponent content={traineeInfo.education_level} label="Education Level" />
-                            <ListingComponent content={traineeInfo.job_title} label="Job Title" />
-                            <ListingComponent content={DateFormatter(traineeInfo.created_at)} label="Joined on" />
+                            {traineeInfo.date_of_birth && (
+                                <ListingComponent content={DateFormatter(traineeInfo.date_of_birth)} label="Birth date" />
+                            )}
+                            {traineeInfo.gender && <ListingComponent content={traineeInfo.gender} label="Gender" />}
+                            {traineeInfo.phone && <ListingComponent content={traineeInfo.phone} label="Phone" />}
+                            {traineeInfo.address && <ListingComponent content={traineeInfo.address} label="Address" />}
+                            {traineeInfo.education_level && (
+                                <ListingComponent content={traineeInfo.education_level} label="Education Level" />
+                            )}
+                            {traineeInfo.job_title && <ListingComponent content={traineeInfo.job_title} label="Job Title" />}
+                            {traineeInfo.created_at && (
+                                <ListingComponent content={DateFormatter(traineeInfo.created_at)} label="Joined on" />
+                            )}
                         </div>
                     )}
                 </Box>
