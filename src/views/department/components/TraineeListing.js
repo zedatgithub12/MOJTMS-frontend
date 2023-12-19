@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { NoResult } from 'utils/components/noresult';
 import TraineeTable from './TraineeTable';
 
-const DepartmentTrainees = ({ data }) => {
+const TraineeListing = ({ data }) => {
     return (
         <Grid container>
             <Grid item xs={12}>
@@ -13,9 +13,9 @@ const DepartmentTrainees = ({ data }) => {
     );
 };
 
-DepartmentTrainees.propTypes = {
+TraineeListing.propTypes = {
     isLoading: PropTypes.bool,
     data: PropTypes.array
 };
 
-export default DepartmentTrainees;
+export default TraineeListing;

@@ -3,13 +3,13 @@ import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Grid, Box, useTheme, Stack, Link, Avatar } from '@mui/material';
+import { Grid, Box, useTheme, Link, Avatar } from '@mui/material';
 import { IconCertificate, IconMail, IconMapPin, IconPhone, IconUser } from '@tabler/icons';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import FacilitatorCardSkel from './Skeleton/FacilitatorCardSkel';
 
 const FacilitatorCard = forwardRef(
-    ({ sx = {}, isLoading, image, name, qualification, address, gender, title, linkedin, email, phone, ...others }, ref) => {
+    ({ sx = {}, isLoading, image, name, qualification, address, gender, title, linkedin, email, phone, onPress, ...others }, ref) => {
         const theme = useTheme();
         return (
             <React.Fragment>
@@ -27,6 +27,7 @@ const FacilitatorCard = forwardRef(
                             },
                             ...sx
                         }}
+                        onClick={onPress}
                         {...others}
                     >
                         <Grid container>

@@ -11,13 +11,13 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-
 import { AuthContext } from 'context/context';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
 import Loadable from 'ui-component/Loadable';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HelmetProvider } from 'react-helmet-async';
+
 // ==============================|| APP ||============================== //
 
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login')));

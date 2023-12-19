@@ -64,6 +64,11 @@ const UpdateTrainee = Loadable(lazy(() => import('views/trainee/update')));
 //users routing
 const Users = Loadable(lazy(() => import('views/users')));
 
+//coordinators page  routing
+const Coordinators = Loadable(lazy(() => import('views/coordinators')));
+const CoordinatorDetails = Loadable(lazy(() => import('views/coordinators/detail')));
+const UpdateCoordinator = Loadable(lazy(() => import('views/coordinators/update')));
+
 //account routing
 const AccountSetting = Loadable(lazy(() => import('views/profile/account-setting')));
 const Changepassword = Loadable(lazy(() => import('views/profile/change-password')));
@@ -221,6 +226,9 @@ const MainRoutes = {
         },
         { path: 'trainee/update', element: <UpdateTrainee /> },
 
+        { path: 'coordinators', element: <Coordinators /> },
+        { path: 'coordinator/details', element: <CoordinatorDetails /> },
+        { path: 'coordinator/update', element: <UpdateCoordinator /> },
         //departments
         {
             path: 'departments',

@@ -39,11 +39,17 @@ const Connections = {
     updateProfile: 'trainee/profile/',
     traineestraining: 'trainee/trainings/',
 
+    // coordinators api endpoints
+    coordinators: 'coordinators',
+    coordinatorname: 'coordinator/name',
+    updateCoordProfile: 'coordinator/profile/',
+
     //departments api endpoints
     departments: 'departments',
     getusers: 'get-users',
-    searchdepartment: 'department/search',
-    assigncoordinator: 'department/assign-coordinator',
+    searchdepartment: 'departments/search',
+    departmentrainees: 'departments/trainees/',
+    assigncoordinator: 'departments/assign-coordinator',
 
     //trainers api endpoints
     trainers: 'trainers',

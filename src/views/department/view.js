@@ -16,18 +16,18 @@ import {
 } from '@mui/material';
 import { PageHeader } from 'ui-component/page-header/PageHeader';
 import { useLocation, useNavigate } from 'react-router';
-import Connections from 'api';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { IconArrowsExchange, IconEdit, IconMail, IconPhone, IconPlus, IconTrash, IconUser } from '@tabler/icons';
-import FacilitatorCard from 'ui-component/cards/FacilitatorCard';
-import TMSTab from 'views/department/components/tab';
 import { DepartmentTabs } from 'data/tabs/department';
-import { AssignCoordDialog } from './components/Dialog';
+import { AssignCoordDialog } from './components/AssingCoordinator';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Delete } from 'ui-component/delete/Delete';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
-import DepartmentTrainees from './components/TraineeListing';
+import Connections from 'api';
+import FacilitatorCard from 'ui-component/cards/FacilitatorCard';
+import TMSTab from 'views/department/components/tab';
+import DepartmentTrainees from './components/Trainees';
 
 // ==============================|| VIEW DEPARTMENT PAGE ||============================== //
 
@@ -42,7 +42,6 @@ const ViewDepartment = () => {
     const { state } = useLocation();
 
     const [loading, setLoading] = useState(false);
-    // const [data, setData] = useState([]);
     const [trainees, setTrainees] = useState([]);
     const [coordinatordata, setCoordinatorData] = useState([]); // the coordinator of this deparment
     const [coordfound, setCoordFound] = useState('');
@@ -110,7 +109,7 @@ const ViewDepartment = () => {
 
         if (coordinator.length == 0) {
             setCoordIsLoading(true);
-            var Api = Connections.api + Connections.getusers + `?role=Coordinator`;
+            var Api = Connections.api + Connections.coordinators;
             const token = sessionStorage.getItem('token');
             var headers = {
                 Authorization: `Bearer` + token,
@@ -123,7 +122,7 @@ const ViewDepartment = () => {
                 .then((response) => {
                     if (response.success) {
                         setCoordIsLoading(false);
-                        setCoordinator(response.data);
+                        setCoordinator(response.data.data);
                     } else {
                         setCoordIsLoading(false);
                         handlePrompts(response.message, 'error');
@@ -326,9 +325,8 @@ const ViewDepartment = () => {
                         </Box>
                     ) : (
                         <div>
-                            <DepartmentTrainees data={trainees} />
-
-                            {trainees.length > paginationModel.pageSize && (
+                            {state.id && <DepartmentTrainees department_id={state.id} />}
+                            {lastPage > 1 && (
                                 <Box sx={{ paddingY: 4 }}>
                                     <Pagination
                                         showFirstButton
@@ -354,12 +352,13 @@ const ViewDepartment = () => {
                         isLoading={false}
                         image={coordinatordata.photo ? profileApi + coordinatordata.photo : null}
                         qualification={coordinatordata.education}
-                        title="Branch Coordinator"
+                        title="Coordinator"
                         name={coordinatordata.name}
                         address={coordinatordata.address}
                         gender={coordinatordata.gender}
                         phone={coordinatordata.phone}
                         email={coordinatordata.email}
+                        onPress={() => navigate('/coordinator/details', { state: coordinatordata })}
                     />
                 ) : coordinatordata && coordfound === 'users' ? (
                     <Box

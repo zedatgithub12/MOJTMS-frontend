@@ -1,6 +1,6 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, Typography, useTheme, Pagination, CircularProgress } from '@mui/material';
+import { Grid, Box, useTheme, Pagination, CircularProgress } from '@mui/material';
 // project imports
 import Connections from 'api';
 import { useQuery } from 'react-query';
@@ -31,7 +31,7 @@ const Department = () => {
         page: 1
     });
 
-    const handleCategoryFetching = async () => {
+    const handleDatFetching = async () => {
         const tokenExpiration = sessionStorage.getItem('tokenExpiration');
         const currentTime = new Date().getTime();
 
@@ -66,7 +66,7 @@ const Department = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel], () => handleCategoryFetching(), {
+    const { error } = useQuery(['data', paginationModel], () => handleDatFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -154,32 +154,32 @@ const Department = () => {
                     ) : error ? (
                         <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the departments!" />
                     ) : (
-                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
-                            {departments.map((department) => (
-                                <DepartmentCard
-                                    isLoading={isLoading}
-                                    image={ImageApi + department.thumbnail}
-                                    title={department.name}
-                                    email={department.email}
-                                    phone={department.phone}
-                                    onPress={() => navigate('/department/view', { state: department })}
+                        <Grid container>
+                            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
+                                {departments.map((department, index) => (
+                                    <DepartmentCard
+                                        key={index}
+                                        isLoading={loading}
+                                        image={ImageApi + department.thumbnail}
+                                        title={department.name}
+                                        email={department.email}
+                                        phone={department.phone}
+                                        onPress={() => navigate('/department/view', { state: department })}
+                                    />
+                                ))}
+                            </Grid>
+                            <Box sx={{ paddingY: 4 }}>
+                                <Pagination
+                                    showFirstButton
+                                    showLastButton
+                                    count={rowCountState}
+                                    page={paginationModel.page}
+                                    onChange={handleChange}
                                 />
-                            ))}
+                            </Box>
                         </Grid>
                     )}
                 </Grid>
-
-                {departments.length > paginationModel.pageSize && (
-                    <Box sx={{ paddingY: 4 }}>
-                        <Pagination
-                            showFirstButton
-                            showLastButton
-                            count={rowCountState}
-                            page={paginationModel.page}
-                            onChange={handleChange}
-                        />
-                    </Box>
-                )}
             </Grid>
         </Grid>
     );

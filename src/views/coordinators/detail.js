@@ -16,13 +16,12 @@ import {
     Badge
 } from '@mui/material';
 
-import { IconArrowLeft, IconCamera, IconCheck, IconEdit, IconTrash } from '@tabler/icons';
+import { IconArrowLeft, IconCamera, IconCheck, IconEdit } from '@tabler/icons';
 import { useLocation, useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
 import { ActionMenu } from 'ui-component/menu/action';
 import { useFormik } from 'formik';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import { Delete } from 'ui-component/delete/Delete';
 import { sizes } from 'constants';
 import { ProfileValidator } from 'utils/functions';
 import { ErrorPrompt } from 'utils/components/errorprompt';
@@ -32,26 +31,22 @@ import DetailTabs from './components/DetailTabs';
 import DetailContent from './components/DetailContent';
 import * as Yup from 'yup';
 import errorImage from 'assets/images/error.jpg';
-import TrainingList from './components/Trainings';
 
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('Name is required')
 });
 
-const TraineeDetails = () => {
+const CoordinatorDetails = () => {
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
     const fileInputRef = useRef(null);
 
-    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const ImageApi = Connections.profiles;
 
     const [loading, setLoading] = useState(false);
-    const [traineeData, setTraineeData] = useState();
+    const [coordinatorData, setCoordinatorData] = useState();
     const [updatename, setUpdateName] = useState(false);
-    const [deleteTrainee, setDeleteTrainee] = useState(false);
-    const [deleting, setDeleting] = useState(false);
     const [profile, setProfile] = useState(null);
     const [previewImage, setPreviewImage] = useState(null);
     const [validImage, setValidImage] = useState({
@@ -61,9 +56,9 @@ const TraineeDetails = () => {
 
     const [uploading, setUploading] = useState(false);
 
-    const FetchUsers = async () => {
+    const FetchCoordinatorDetail = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.trainee + '/' + state.id;
+        var Api = Connections.api + Connections.coordinators + '/' + state.id;
 
         const token = sessionStorage.getItem('token');
         var headers = {
@@ -76,14 +71,15 @@ const TraineeDetails = () => {
         const parsed = await response.json();
         if (parsed.success) {
             const data = parsed.data;
-            setTraineeData(data);
+
+            setCoordinatorData(data);
             setLoading(false);
         } else {
             setLoading(false);
         }
     };
 
-    const { error } = useQuery(['data'], () => FetchUsers(), {
+    const { error } = useQuery(['data'], () => FetchCoordinatorDetail(), {
         refetchOnWindowFocus: false
     });
 
@@ -116,10 +112,10 @@ const TraineeDetails = () => {
         });
     };
 
-    //Update trainee profile
+    //Update coordinator profile
     const handleProfileUpdate = (image) => {
         setUploading(true);
-        const Api = Connections.api + Connections.updateProfile + traineeData.id;
+        const Api = Connections.api + Connections.updateCoordProfile + coordinatorData.id;
         const token = sessionStorage.getItem('token');
         const headers = {
             Authorization: 'Bearer' + token
@@ -145,12 +141,12 @@ const TraineeDetails = () => {
             });
     };
 
-    //a handle trainee name update
+    //a handle coordinator name update
     const handleSubmitting = (values) => {
         // Handle form submission here
         setIsSubmitting(true);
 
-        const Api = Connections.api + Connections.traineename + '/' + traineeData.user_id;
+        const Api = Connections.api + Connections.coordinatorname + '/' + coordinatorData.id;
         const token = sessionStorage.getItem('token');
         const headers = {
             Authorization: 'Bearer' + token
@@ -188,40 +184,6 @@ const TraineeDetails = () => {
     });
 
     const [isSubmitting, setIsSubmitting] = useState(formik.isSubmitting);
-
-    //the following function handles delete trainee functionality
-    const DeleteTrainee = () => {
-        setDeleting(true);
-
-        var Api = Connections.api + Connections.trainee + '/' + state.id;
-        const token = sessionStorage.getItem('token');
-        var headers = {
-            Authorization: `Bearer` + token,
-            accept: 'application/json',
-            'Content-Type': 'application/json'
-        };
-
-        fetch(Api, {
-            method: 'DELETE',
-            headers: headers
-        })
-            .then((response) => response.json())
-            .then((response) => {
-                if (response.success) {
-                    setDeleting(false);
-                    setDeleteTrainee(false);
-                    handlePrompts(response.message, 'success');
-                    navigate(-1);
-                } else {
-                    handlePrompts(response.message, 'error');
-                    setDeleting(false);
-                }
-            })
-            .catch((error) => {
-                setDeleting(false);
-                handlePrompts(error.message, 'error');
-            });
-    };
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
@@ -279,7 +241,7 @@ const TraineeDetails = () => {
                         borderRadius: 2
                     }}
                 >
-                    <ErrorPrompt image={errorImage} title="Server Error" message="Oooops... There is server error fetching trainees" />
+                    <ErrorPrompt image={errorImage} title="Server Error" message="Oooops... There is server error fetching coordinators" />
                 </Grid>
             ) : (
                 <Grid
@@ -321,27 +283,17 @@ const TraineeDetails = () => {
                                 <IconArrowLeft color={theme.palette.grey[500]} />
                             </IconButton>
                             <Typography variant="subtitle1" marginLeft={2}>
-                                Trainee
+                                Coordinator
                             </Typography>
                         </Box>
 
                         <ActionMenu>
-                            <Box>
-                                <MenuItem onClick={() => navigate('/trainee/update', { state: traineeData })}>
-                                    <ListItemIcon>
-                                        <IconEdit size={18} />
-                                    </ListItemIcon>
-                                    Update
-                                </MenuItem>
-                                <Divider />
-
-                                <MenuItem onClick={() => setDeleteTrainee(true)} sx={{ color: theme.palette.error.main }}>
-                                    <ListItemIcon sx={{ color: theme.palette.error.main }}>
-                                        <IconTrash size={18} />
-                                    </ListItemIcon>
-                                    Delete
-                                </MenuItem>
-                            </Box>
+                            <MenuItem onClick={() => navigate('/coordinator/update', { state: coordinatorData })}>
+                                <ListItemIcon>
+                                    <IconEdit size={18} />
+                                </ListItemIcon>
+                                Update
+                            </MenuItem>
                         </ActionMenu>
                     </Box>
 
@@ -363,23 +315,18 @@ const TraineeDetails = () => {
                                 overlap="circular"
                                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                                 badgeContent={
-                                    ActiveUser.user.role === 'Trainee' && (
-                                        <IconButton
-                                            onClick={() => PickProfile()}
-                                            sx={{ backgroundColor: theme.palette.background.default }}
-                                        >
-                                            {uploading ? (
-                                                <CircularProgress size={14} sx={{ color: theme.palette.primary.main }} />
-                                            ) : (
-                                                <IconCamera size={18} />
-                                            )}
-                                        </IconButton>
-                                    )
+                                    <IconButton onClick={() => PickProfile()} sx={{ backgroundColor: theme.palette.background.default }}>
+                                        {uploading ? (
+                                            <CircularProgress size={14} sx={{ color: theme.palette.primary.main }} />
+                                        ) : (
+                                            <IconCamera size={18} />
+                                        )}
+                                    </IconButton>
                                 }
                             >
                                 {profile ? (
                                     <Avatar
-                                        alt="Trainee profile"
+                                        alt="Coordinator profile"
                                         src={previewImage}
                                         sx={{
                                             width: 120,
@@ -392,7 +339,7 @@ const TraineeDetails = () => {
                                 ) : (
                                     <Avatar
                                         alt={formik.values.name}
-                                        src={traineeData && traineeData.profile && ImageApi + traineeData.profile}
+                                        src={coordinatorData && coordinatorData.photo && ImageApi + coordinatorData.photo}
                                         sx={{
                                             width: 120,
                                             height: 120,
@@ -448,16 +395,15 @@ const TraineeDetails = () => {
                                     <Typography variant="h3" sx={{ marginY: 0.5 }}>
                                         {formik.values.name}
                                     </Typography>
-                                    {ActiveUser.user.role === 'Trainee' && (
-                                        <IconButton onClick={() => setUpdateName(true)}>
-                                            <IconEdit size={20} />
-                                        </IconButton>
-                                    )}
+
+                                    <IconButton onClick={() => setUpdateName(true)}>
+                                        <IconEdit size={20} />
+                                    </IconButton>
                                 </Box>
                             )}
 
                             <Typography variant="body2" sx={{ marginBottom: 2 }}>
-                                {traineeData && traineeData.user.email}
+                                {coordinatorData && coordinatorData.email}
                             </Typography>
 
                             {!validImage.status && (
@@ -468,28 +414,12 @@ const TraineeDetails = () => {
                         </Grid>
                     </Grid>
 
-                    <DetailTabs
-                        details={traineeData && <DetailContent data={traineeData} />}
-                        training={<TrainingList trainee_id={state.id} />}
-                    />
+                    <DetailTabs details={coordinatorData && <DetailContent data={coordinatorData} />} />
                 </Grid>
             )}
             <SnackbarProvider maxSnack={3} />
-
-            {deleteTrainee && (
-                <Delete
-                    type="Delete"
-                    open={deleteTrainee}
-                    title="Deleting Trainee"
-                    description={`Are you sure you want to delete the trainee profile. Note, This action will remove all data related to this trainee`}
-                    onNo={() => setDeleteTrainee(false)}
-                    onYes={() => DeleteTrainee()}
-                    deleting={deleting}
-                    handleClose={() => setDeleteTrainee(false)}
-                />
-            )}
         </Grid>
     );
 };
 
-export default TraineeDetails;
+export default CoordinatorDetails;

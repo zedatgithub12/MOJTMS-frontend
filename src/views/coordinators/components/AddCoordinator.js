@@ -4,27 +4,66 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PropTypes from 'prop-types';
-import { Box, CircularProgress, FormControl, FormHelperText, IconButton, InputLabel, OutlinedInput, useTheme } from '@mui/material';
+import {
+    Box,
+    CircularProgress,
+    FormControl,
+    FormHelperText,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    Typography,
+    useTheme
+} from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
+import { useQuery } from 'react-query';
 
-export default function AddUser({ open, handleDialogClose, onRefresh }) {
+const CoordinatorScheme = Yup.object().shape({
+    name: Yup.string().min(2, 'Too short for name').required('Name is required'),
+    email: Yup.string().email('Invalid Email').required('Email is required'),
+    department: Yup.string().required('Department is required')
+});
+
+export default function AddCoordinator({ open, handleDialogClose }) {
     const theme = useTheme();
 
-    const AddUserScheme = Yup.object().shape({
-        name: Yup.string().min(2, 'Too short for name').required('Name is required'),
-        email: Yup.string().email('Invalid Email').required('Email is required')
+    const [department, setDepartment] = useState([]);
+    const role = 'Coordinator';
+    const password = 'coordinator12345';
+
+    const FetchDepartments = async () => {
+        var Api = Connections.api + Connections.departments;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            const data = parsed.data.data;
+            setDepartment(data);
+        }
+    };
+
+    useQuery(['data'], () => FetchDepartments(), {
+        refetchOnWindowFocus: false
     });
 
     const handleSubmitting = (values) => {
         setAdding(true);
         const token = sessionStorage.getItem('token');
 
-        var Api = Connections.api + Connections.users;
+        var Api = Connections.api + Connections.coordinators;
         var headers = {
             Authorization: `Bearer ${token}`,
             accept: 'application/json',
@@ -34,8 +73,9 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
         var data = {
             name: values.name,
             email: values.email,
-            password: values.password,
-            role: values.role
+            password: password,
+            role: role,
+            department_id: values.department
         };
 
         fetch(Api, {
@@ -49,10 +89,9 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                     setAdding(false);
                     handleDialogClose();
                     handlePrompts(response.message, 'success');
-                    onRefresh();
                 } else {
                     setAdding(false);
-                    handlePrompts(response.error, 'error');
+                    handlePrompts(response.message, 'error');
                 }
             })
             .catch((error) => {
@@ -65,10 +104,10 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
         initialValues: {
             name: '',
             email: '',
-            role: 'Admin',
-            password: 'admin12345'
+            role: 'Coordinator',
+            department: ''
         },
-        validationSchema: AddUserScheme,
+        validationSchema: CoordinatorScheme,
         onSubmit: (values) => {
             handleSubmitting(values);
         }
@@ -91,13 +130,13 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                         alignItems: 'center',
                         justifyContent: 'space-between',
                         paddingRight: 1,
-                        backgroundColor: theme.palette.primary[200]
+                        background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})`
                     }}
                 >
-                    <DialogTitle variant="h4">Add new user</DialogTitle>
+                    <DialogTitle variant="h4">Add Coordinator</DialogTitle>
 
                     <IconButton onClick={handleDialogClose}>
-                        <IconX size={22} />
+                        <IconX size={20} />
                     </IconButton>
                 </Box>
 
@@ -147,6 +186,46 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                             )}
                         </FormControl>
 
+                        <FormControl
+                            fullWidth
+                            error={formik.touched.department && Boolean(formik.errors.department)}
+                            sx={{ ...theme.typography.customInput }}
+                        >
+                            <InputLabel htmlFor="outlined-adornment-department">{formik.values.department ? '' : 'Department'}</InputLabel>
+                            <Select
+                                value={formik.values.department}
+                                onChange={formik.handleChange}
+                                id="outlined-adornment-department"
+                                name="department"
+                            >
+                                {department.length === 0 ? (
+                                    <Typography variant="body2" sx={{ padding: 1 }}>
+                                        Department is not found
+                                    </Typography>
+                                ) : (
+                                    department.map((item, index) => (
+                                        <MenuItem key={index} value={item.id}>
+                                            {item.name}
+                                        </MenuItem>
+                                    ))
+                                )}
+                            </Select>
+                            {formik.touched.department && formik.errors.department && (
+                                <FormHelperText error id="standard-weight-helper-text">
+                                    {formik.errors.department}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
+
+                        <Box>
+                            <Typography variant="subtitle2" marginLeft={1} marginTop={1}>
+                                Default password for {role}
+                            </Typography>
+                            <Typography variant="body2" marginLeft={1}>
+                                {password}
+                            </Typography>
+                        </Box>
+
                         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 2 }}>
                             <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginRight: 3 }}>
                                 Cancel
@@ -160,7 +239,7 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                                     color="primary"
                                     sx={{ paddingX: 8, paddingY: 0.8 }}
                                 >
-                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Submit'}
+                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Save'}
                                 </Button>
                             </AnimateButton>
                         </Box>
@@ -172,8 +251,7 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
     );
 }
 
-AddUser.propTypes = {
+AddCoordinator.propTypes = {
     open: PropTypes.bool,
-    handleDialogClose: PropTypes.func,
-    onRefresh: PropTypes.func
+    handleDialogClose: PropTypes.func
 };

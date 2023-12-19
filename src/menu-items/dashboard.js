@@ -9,7 +9,8 @@ import {
     IconSchool,
     IconUser,
     IconUserSearch,
-    IconTestPipe
+    IconTestPipe,
+    IconAffiliate
 } from '@tabler/icons';
 
 // constant
@@ -23,7 +24,8 @@ const icons = {
     IconSchool,
     IconUser,
     IconUserSearch,
-    IconTestPipe
+    IconTestPipe,
+    IconAffiliate
 };
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
@@ -48,6 +50,14 @@ const dashboard = {
             type: 'item',
             url: '/departments',
             icon: icons.IconBuilding,
+            breadcrumbs: false
+        },
+        {
+            id: 'coordinators',
+            title: 'Coordinators',
+            type: 'item',
+            url: '/coordinators',
+            icon: icons.IconAffiliate,
             breadcrumbs: false
         },
         {

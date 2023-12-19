@@ -294,7 +294,7 @@ const Users = () => {
                 )}
             </Grid>
 
-            <AddUser open={openDialog} handleDialogClose={() => handleDialogClose()} />
+            <AddUser open={openDialog} handleDialogClose={() => handleDialogClose()} onRefresh={() => FetchUsers()} />
             {selectedUser && rolePanel && (
                 <Box
                     sx={{

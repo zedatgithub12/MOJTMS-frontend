@@ -157,22 +157,30 @@ export const AssignCoordDialog = ({
                                                     flexDirection: 'row',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
-                                                    marginY: 0.5,
-                                                    paddingX: 1.2,
+                                                    marginY: 1,
+                                                    padding: 1.2,
+                                                    border: 1,
+                                                    borderColor: theme.palette.primary[200],
                                                     borderRadius: 2,
                                                     backgroundColor:
                                                         selectedCoordinator &&
-                                                        selectedCoordinator.id == coordinator.id &&
+                                                        selectedCoordinator.id === coordinator.id &&
                                                         theme.palette.primary[200],
                                                     cursor: 'pointer'
                                                 }}
                                             >
-                                                <IconLabel content={coordinator.name} label={coordinator.email} sx={{ paddinY: 3 }}>
-                                                    <Person fontSize="small" />
-                                                </IconLabel>
+                                                <Box>
+                                                    <Typography variant="subtitle2">
+                                                        Currently |
+                                                        <b> {coordinator.department ? coordinator.department.name : 'unsigned'}</b>
+                                                    </Typography>
+                                                    <IconLabel content={coordinator.name} label={coordinator.email} sx={{ paddinY: 3 }}>
+                                                        <Person fontSize="small" />
+                                                    </IconLabel>
+                                                </Box>
 
                                                 <Box>
-                                                    {selectedCoordinator && selectedCoordinator.id == coordinator.id && (
+                                                    {selectedCoordinator && selectedCoordinator.id === coordinator.id && (
                                                         <CheckCircle color="primary" fontSize="small" />
                                                     )}
                                                 </Box>
@@ -209,6 +217,5 @@ AssignCoordDialog.propTypes = {
     searchText: PropTypes.string,
     onTextChange: PropTypes.func,
     onSubmit: PropTypes.func,
-    searching: PropTypes.bool,
-    children: PropTypes.children
+    searching: PropTypes.bool
 };
