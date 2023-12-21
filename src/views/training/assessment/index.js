@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Button, CircularProgress, Grid, Typography, useTheme } from '@mui/material';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import PropTypes from 'prop-types';
-import { useQuery } from 'react-query';
-import { RefreshToken } from 'utils/token-refresh';
-import AssessmentListing from './components/Listing';
 import { Box } from '@mui/system';
 import { IconPlus } from '@tabler/icons';
+import { useQuery } from 'react-query';
+import { RefreshToken } from 'utils/token-refresh';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
+import AssessmentListing from './components/Listing';
+import Connections from 'api';
 
 const TrainingAssessment = ({ session_id }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
@@ -163,7 +165,7 @@ const TrainingAssessment = ({ session_id }) => {
     };
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -203,10 +205,10 @@ const TrainingAssessment = ({ session_id }) => {
                                                 disabled={removing}
                                                 onClick={() => handleRemoving(pre.id)}
                                             >
-                                                Remove
+                                                {t('Remove')}
                                             </Button>
                                         }
-                                        type="Pre"
+                                        type={t('Pre')}
                                     />
                                 ) : (
                                     <Box
@@ -220,7 +222,7 @@ const TrainingAssessment = ({ session_id }) => {
                                     >
                                         <IconPlus size={24} />
                                         <Typography variant="subtitle1" marginLeft={2}>
-                                            Pre Training Assessment
+                                            {t('Pre Training Assessment')}
                                         </Typography>
                                     </Box>
                                 )}
@@ -254,10 +256,10 @@ const TrainingAssessment = ({ session_id }) => {
                                                 disabled={removing}
                                                 onClick={() => handleRemoving(post.id)}
                                             >
-                                                Remove
+                                                {t('Remove')}
                                             </Button>
                                         }
-                                        type="post"
+                                        type={t('post')}
                                     />
                                 ) : (
                                     <Box
@@ -271,7 +273,7 @@ const TrainingAssessment = ({ session_id }) => {
                                     >
                                         <IconPlus size={24} />
                                         <Typography variant="subtitle1" marginLeft={2}>
-                                            Post Training Assessment
+                                            {t('Post Training Assessment')}
                                         </Typography>
                                     </Box>
                                 )}
@@ -296,7 +298,7 @@ const TrainingAssessment = ({ session_id }) => {
                                             disabled={!selected.status || assigning ? true : false}
                                             onClick={() => handleAssessmentAddition(item)}
                                         >
-                                            Select
+                                            {t('Select')}
                                         </Button>
                                     }
                                 />

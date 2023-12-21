@@ -14,12 +14,14 @@ import { DateFormatter } from 'utils/functions';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import errorImage from 'assets/images/error.jpg';
 import PropTypes from 'prop-types';
 
-const columns = ['No', 'Name', 'Email', 'Gender', 'Address', 'Phone', 'Department', 'Joined on', 'Status'];
+const columns = ['Roll', 'Name', 'Email', 'Gender', 'Address', 'Phone', 'Department', 'Joined on', 'Status'];
 
 function CoordinatorTable({ rows, isLoading, error }) {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -47,7 +49,7 @@ function CoordinatorTable({ rows, isLoading, error }) {
                 <TableHead sx={{ backgroundColor: theme.palette.primary[200] }}>
                     <TableRow>
                         {columns.map((item) => (
-                            <TableCell sx={{ minWidth: 100 }}>{item}</TableCell>
+                            <TableCell sx={{ minWidth: 100 }}>{t(item)}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>

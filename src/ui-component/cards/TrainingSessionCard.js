@@ -1,16 +1,18 @@
 import React, { forwardRef } from 'react';
+import { Grid, Box, useTheme } from '@mui/material';
+import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
+import { FormatStatus, formatDate } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Grid, Box, useTheme } from '@mui/material';
-import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
 import TrainingSessionSkel from './Skeleton/TrainingSessionSkel';
-import { formatDate } from 'utils/functions';
 
 const TrainingSessionCard = forwardRef(
     ({ sx = {}, isLoading, image, status, title, round, level, address, capacity, startdate, enddate, onPress, ...others }, ref) => {
         const theme = useTheme();
+        const { t } = useTranslation();
 
         //round count formatter
         const FormattedRound = (number) => {
@@ -31,32 +33,6 @@ const TrainingSessionCard = forwardRef(
                     break;
             }
             return count;
-        };
-
-        const FormatStatus = (statusInput) => {
-            var statusColor;
-
-            switch (statusInput) {
-                case 'draft':
-                    statusColor = '#808080';
-                    break;
-                case 'upcoming':
-                    statusColor = '#007bff';
-                    break;
-                case 'scheduled':
-                    statusColor = '#656666';
-                    break;
-                case 'inprogress':
-                    statusColor = '#21a300';
-                    break;
-                case 'cancelled':
-                    statusColor = '#c20013';
-                    break;
-                default:
-                    statusColor = '#1a1a1a';
-                    break;
-            }
-            return statusColor;
         };
 
         return (
@@ -89,7 +65,7 @@ const TrainingSessionCard = forwardRef(
                                     borderRadius: 1
                                 }}
                                 image={image}
-                                title="Training picture"
+                                title={t('Training thumbnail')}
                             />
                         ) : (
                             <Box
@@ -106,9 +82,9 @@ const TrainingSessionCard = forwardRef(
                                     <Box>
                                         <Typography variant="h1" color="primary">
                                             {round}
-                                            <sup>{FormattedRound(round)}</sup>
+                                            <sup>{t(FormattedRound(round))}</sup>
                                         </Typography>
-                                        <Typography variant="subtitle1">Round</Typography>
+                                        <Typography variant="subtitle1">{t('Round')}</Typography>
                                     </Box>
                                 )}
                             </Box>
@@ -118,7 +94,7 @@ const TrainingSessionCard = forwardRef(
                             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                                 {image && round && (
                                     <Typography variant="subtitle1" color="secondary">
-                                        {round}
+                                        {t(round)}
                                     </Typography>
                                 )}
                             </Box>
@@ -126,10 +102,10 @@ const TrainingSessionCard = forwardRef(
                             <Box marginY={1}>
                                 {status && (
                                     <Typography variant="subtitle2" sx={{ textTransform: 'capitalize' }} color={FormatStatus(status)}>
-                                        {status}
+                                        {t(status)}
                                     </Typography>
                                 )}
-                                <Typography variant="h3"> {title}</Typography>
+                                <Typography variant="h3"> {t(title)}</Typography>
                             </Box>
 
                             {startdate && (
@@ -145,7 +121,7 @@ const TrainingSessionCard = forwardRef(
                                     <IconClockPlay size={18} />
                                     <Box sx={{ marginX: 1 }}>
                                         <Typography variant="subtitle1">{formatDate(startdate)}</Typography>
-                                        <Typography variant="subtitle2">From </Typography>
+                                        <Typography variant="subtitle2">{t('From')} </Typography>
                                     </Box>
                                 </Box>
                             )}
@@ -163,7 +139,7 @@ const TrainingSessionCard = forwardRef(
                                     <IconClockStop size={18} />
                                     <Box sx={{ marginX: 1 }}>
                                         <Typography variant="subtitle1">{formatDate(enddate)}</Typography>
-                                        <Typography variant="subtitle2">To </Typography>
+                                        <Typography variant="subtitle2">{t('To')} </Typography>
                                     </Box>
                                 </Box>
                             )}
@@ -171,14 +147,16 @@ const TrainingSessionCard = forwardRef(
                             {address && (
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', paddingY: 1.2 }}>
                                     <IconMapPin size={18} />
-                                    <Typography sx={{ marginX: 1 }}>{address}</Typography>
+                                    <Typography sx={{ marginX: 1 }}>{t(address)}</Typography>
                                 </Box>
                             )}
 
                             {capacity && (
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignContent: 'center', paddingY: 1.2 }}>
                                     <IconUsers size={18} />
-                                    <Typography sx={{ marginX: 1 }}>{capacity} Trainees</Typography>
+                                    <Typography sx={{ marginX: 1 }}>
+                                        {capacity} {t('Trainees')}
+                                    </Typography>
                                 </Box>
                             )}
                         </Grid>

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Grid, Pagination } from '@mui/material';
-import PropTypes from 'prop-types';
 import { SearchAdd } from './searchadd';
-import Connections from 'api';
-import CreateModule from './createmodule';
-import ModuleList from './modulelist';
 import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
+import ModuleList from './modulelist';
+import CreateModule from './createmodule';
+import Connections from 'api';
+import PropTypes from 'prop-types';
 
 const TrainingModules = ({ training_id }) => {
+    const { t } = useTranslation();
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
 
@@ -19,7 +21,6 @@ const TrainingModules = ({ training_id }) => {
     const [searching, setSearching] = useState(false);
     const [create, setCreate] = useState(false);
     const [lastPage, setLastPage] = useState(1);
-    const [rowCountState] = useState(lastPage);
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 10,
         page: 1
@@ -147,15 +148,15 @@ const TrainingModules = ({ training_id }) => {
                     </React.Fragment>
                 ) : null}
 
-                <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} o />
+                <ModuleList modules={modules} loading={loading} error={error} sx={{ marginTop: 1.5 }} />
 
                 {/* the pagination will be shown when the number of modules exceed five */}
-                {modules.length > paginationModel.pageSize && (
+                {lastPage > 1 && (
                     <Box sx={{ paddingY: 4 }}>
                         <Pagination
                             showFirstButton
                             showLastButton
-                            count={rowCountState}
+                            count={parseInt(lastPage * paginationModel.pageSize)}
                             page={paginationModel.page}
                             onChange={() => handlePageChange()}
                         />

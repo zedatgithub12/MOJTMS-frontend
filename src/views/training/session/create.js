@@ -18,13 +18,15 @@ import { IconArrowLeft } from '@tabler/icons';
 import { useLocation, useNavigate } from 'react-router';
 
 // project imports
-import Connections from 'api';
+import { FormattedRound } from 'utils/functions';
 import { useQuery } from 'react-query';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import AddedModal from './components/AddedModal';
+import * as Yup from 'yup';
 
 // ==============================|| CREATE SESSION PAGE ||============================== //
 
@@ -36,6 +38,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateSession = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -74,30 +77,9 @@ const CreateSession = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => handleDataFetching(), {
+    useQuery(['data'], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
-
-    //round count formatter
-    const FormattedRound = (number) => {
-        var count;
-
-        switch (number) {
-            case 1:
-                count = 'st';
-                break;
-            case 2:
-                count = 'nd';
-                break;
-            case 3:
-                count = 'rd';
-                break;
-            default:
-                count = 'th';
-                break;
-        }
-        return count;
-    };
 
     const handleSubmitting = (values) => {
         // Handle form submission here
@@ -213,7 +195,7 @@ const CreateSession = () => {
                     <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginY: 4 }}>
                         <Box>
                             <Typography variant="h2" color="primary">
-                                {state.title}
+                                {t(state.title)}
                             </Typography>
                             {state.description && (
                                 <Typography
@@ -221,7 +203,7 @@ const CreateSession = () => {
                                     marginTop={1}
                                     sx={{ maxWidth: '500px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                 >
-                                    {state.description}
+                                    {t(state.description)}
                                 </Typography>
                             )}
                         </Box>
@@ -246,11 +228,11 @@ const CreateSession = () => {
                             >
                                 {roundNumber && (
                                     <Typography variant="h4" color="primary">
-                                        {roundNumber} <sup>{FormattedRound(roundNumber)}</sup>
+                                        {roundNumber} <sup>{t(FormattedRound(roundNumber))}</sup>
                                     </Typography>
                                 )}
                             </Box>
-                            <Typography variant="h4">Round</Typography>
+                            <Typography variant="h4">{t('Round')}</Typography>
                         </Box>
 
                         <form noValidate onSubmit={formik.handleSubmit}>
@@ -261,11 +243,11 @@ const CreateSession = () => {
                                         error={formik.touched.session_name && Boolean(formik.errors.session_name)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="session-name">Session name</InputLabel>
+                                        <InputLabel htmlFor="session-name">{t('Session name')}</InputLabel>
                                         <OutlinedInput
                                             id="session-name"
                                             name="session_name"
-                                            label="Session name"
+                                            label={t('Session name')}
                                             value={formik.values.session_name}
                                             onChange={formik.handleChange}
                                             fullWidth
@@ -273,7 +255,7 @@ const CreateSession = () => {
                                         />
                                         {formik.touched.session_name && formik.errors.session_name && (
                                             <FormHelperText error id="standard-weight-helper-text-session_name">
-                                                {formik.errors.session_name}
+                                                {t(formik.errors.session_name)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -285,11 +267,11 @@ const CreateSession = () => {
                                         error={formik.touched.session_description && Boolean(formik.errors.session_description)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="session_description">Description </InputLabel>
+                                        <InputLabel htmlFor="session_description">{t('Description')} </InputLabel>
                                         <OutlinedInput
                                             id="session_description"
                                             name="session_description"
-                                            label="Description"
+                                            label={t('Description')}
                                             value={formik.values.session_description}
                                             onChange={formik.handleChange}
                                             fullWidth
@@ -299,7 +281,7 @@ const CreateSession = () => {
                                         />
                                         {formik.touched.session_description && formik.errors.session_description && (
                                             <FormHelperText error id="standard-weight-helper-text-name">
-                                                {formik.errors.session_description}
+                                                {t(formik.errors.session_description)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -321,12 +303,12 @@ const CreateSession = () => {
                                                 error={formik.touched.startdate && Boolean(formik.errors.startdate)}
                                                 sx={{ ...theme.typography.customInput }}
                                             >
-                                                <InputLabel htmlFor="startdate">Start date & time</InputLabel>
+                                                <InputLabel htmlFor="startdate">{t('Start date & time')}</InputLabel>
                                                 <OutlinedInput
                                                     id="startdate"
                                                     type="datetime-local"
                                                     name="startdate"
-                                                    label="startdate"
+                                                    label={t('Starting date')}
                                                     value={formik.values.startdate}
                                                     onChange={formik.handleChange}
                                                     fullWidth
@@ -335,7 +317,7 @@ const CreateSession = () => {
                                                 />
                                                 {formik.touched.startdate && formik.errors.startdate && (
                                                     <FormHelperText error id="standard-weight-helper-text-startdate">
-                                                        {formik.errors.startdate}
+                                                        {t(formik.errors.startdate)}
                                                     </FormHelperText>
                                                 )}
                                             </FormControl>
@@ -347,12 +329,12 @@ const CreateSession = () => {
                                                 error={formik.touched.enddate && Boolean(formik.errors.enddate)}
                                                 sx={{ ...theme.typography.customInput }}
                                             >
-                                                <InputLabel htmlFor="enddate">End date & time</InputLabel>
+                                                <InputLabel htmlFor="enddate">{t('End date & time')}</InputLabel>
                                                 <OutlinedInput
                                                     id="enddate"
                                                     type="datetime-local"
                                                     name="enddate"
-                                                    label="enddate"
+                                                    label={t('End date')}
                                                     value={formik.values.enddate}
                                                     onChange={formik.handleChange}
                                                     fullWidth
@@ -361,7 +343,7 @@ const CreateSession = () => {
                                                 />
                                                 {formik.touched.enddate && formik.errors.enddate && (
                                                     <FormHelperText error id="standard-weight-helper-text-enddate">
-                                                        {formik.errors.enddate}
+                                                        {t(formik.errors.enddate)}
                                                     </FormHelperText>
                                                 )}
                                             </FormControl>
@@ -375,18 +357,18 @@ const CreateSession = () => {
                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="training-address">Address </InputLabel>
+                                        <InputLabel htmlFor="training-address">{t('Address')} </InputLabel>
                                         <OutlinedInput
                                             id="training-address"
                                             name="address"
-                                            label="Address"
+                                            label={t('Address')}
                                             value={formik.values.address}
                                             onChange={formik.handleChange}
                                             fullWidth
                                         />
                                         {formik.touched.address && formik.errors.address && (
                                             <FormHelperText error id="standard-weight-helper-text-name">
-                                                {formik.errors.address}
+                                                {t(formik.errors.address)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -398,18 +380,18 @@ const CreateSession = () => {
                                         error={formik.touched.maximum_capacity && Boolean(formik.errors.maximum_capacity)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="trainee-maximum_capacity">Maximum capacity </InputLabel>
+                                        <InputLabel htmlFor="trainee-maximum_capacity">{t('Maximum trainees')} </InputLabel>
                                         <OutlinedInput
                                             id="trainee-maximum_capacity"
                                             name="maximum_capacity"
-                                            label="Maximum capacity"
+                                            label={t('Maximum trainees')}
                                             value={formik.values.maximum_capacity}
                                             onChange={formik.handleChange}
                                             fullWidth
                                         />
                                         {formik.touched.maximum_capacity && formik.errors.maximum_capacity && (
                                             <FormHelperText error id="standard-weight-helper-text-name">
-                                                {formik.errors.maximum_capacity}
+                                                {t(formik.errors.maximum_capacity)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -427,13 +409,13 @@ const CreateSession = () => {
                                             {isSubmitting ? (
                                                 <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                             ) : (
-                                                'Submit'
+                                                t('Submit')
                                             )}
                                         </Button>
                                     </AnimateButton>
 
                                     <Button variant="text" color="primary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={() => navigate(-1)}>
-                                        Cancel
+                                        {t('Cancel')}
                                     </Button>
                                 </Grid>
                             </Grid>

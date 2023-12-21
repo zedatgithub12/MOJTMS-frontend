@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { CircularProgress } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -9,9 +11,9 @@ import Popper from '@mui/material/Popper';
 import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 import PropTypes from 'prop-types';
-import { CircularProgress } from '@mui/material';
 
 function ChangeStatus({ options, onPress, selectedIndex, isUpdating }) {
+    const { t } = useTranslation();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
 
@@ -23,7 +25,6 @@ function ChangeStatus({ options, onPress, selectedIndex, isUpdating }) {
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
-
         setOpen(false);
     };
 
@@ -31,7 +32,7 @@ function ChangeStatus({ options, onPress, selectedIndex, isUpdating }) {
         <React.Fragment>
             <ButtonGroup variant="text" ref={anchorRef} aria-label="split button">
                 <Button onClick={handleToggle}>
-                    {options[selectedIndex]}{' '}
+                    {t(options[selectedIndex])}
                     {isUpdating ? <CircularProgress size={14} sx={{ marginX: 1 }} /> : <ArrowDropDownIcon fontSize="small" />}
                 </Button>
             </ButtonGroup>
@@ -62,7 +63,7 @@ function ChangeStatus({ options, onPress, selectedIndex, isUpdating }) {
                                             onClick={(event) => onPress(event, index)}
                                             sx={{ textTransform: 'capitalize' }}
                                         >
-                                            {option}
+                                            {t(option)}
                                         </MenuItem>
                                     ))}
                                 </MenuList>

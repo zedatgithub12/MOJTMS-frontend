@@ -1,11 +1,13 @@
 import { Grid, Box, Paper, InputBase, Divider, IconButton, CircularProgress, useTheme } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import { Add } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
+import SearchIcon from '@mui/icons-material/Search';
 import PropTypes from 'prop-types';
 
 //============================= SEARCH MODULE COMPONENT ===========================//
 
 export const SearchAdd = ({ searchText, searching, onTextChange, onSubmit, onAdd, children }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -44,7 +46,7 @@ export const SearchAdd = ({ searchText, searching, onTextChange, onSubmit, onAdd
                     >
                         <InputBase
                             sx={{ px: 1.5, flex: 1 }}
-                            placeholder="Search"
+                            placeholder={t('Search')}
                             inputProps={{ 'aria-label': 'search' }}
                             value={searchText}
                             onChange={onTextChange}
@@ -71,7 +73,7 @@ export const SearchAdd = ({ searchText, searching, onTextChange, onSubmit, onAdd
                         color="secondary"
                         sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
                         onClick={onAdd}
-                        title="Create module"
+                        title={t('Create module')}
                     >
                         <Add size={12} />
                     </IconButton>

@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { Box, CircularProgress, FormControl, FormHelperText, InputLabel, OutlinedInput, useTheme } from '@mui/material';
+import { useFormik } from 'formik';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import AnimateButton from 'ui-component/extended/AnimateButton';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Connections from 'api';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 export default function UpdateCategory({ open, handleDialogClose, selectedCat, onRefresh }) {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const AddUserScheme = Yup.object().shape({
-        name: Yup.string().min(2, 'Too short for name').max(50, 'Name cannot exceed 50 characters').required('Name is required')
+        name: Yup.string().required('Category name is required')
     });
 
     const handleSubmitting = (values) => {
@@ -71,13 +73,13 @@ export default function UpdateCategory({ open, handleDialogClose, selectedCat, o
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
         <React.Fragment>
             <Dialog open={open} onClose={handleDialogClose}>
-                <DialogTitle variant="h4">Update Category</DialogTitle>
+                <DialogTitle variant="h4">{t('Update Category')}</DialogTitle>
                 <DialogContent>
                     <form noValidate onSubmit={formik.handleSubmit}>
                         <FormControl
@@ -85,19 +87,18 @@ export default function UpdateCategory({ open, handleDialogClose, selectedCat, o
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             sx={{ ...theme.typography.customInput, marginTop: 2 }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-name">Category name</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-name">{t('Category name')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-name"
+                                label={t('Category name')}
                                 type="text"
-                                value={formik.values.name}
                                 name="name"
+                                value={formik.values.name}
                                 onChange={formik.handleChange}
-                                label="Name"
-                                inputProps={{}}
                             />
                             {formik.touched.name && formik.errors.name && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.name}
+                                    {t(formik.errors.name)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -107,22 +108,21 @@ export default function UpdateCategory({ open, handleDialogClose, selectedCat, o
                             error={formik.touched.description && Boolean(formik.errors.description)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-name">Category description</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-name">{t('Description')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-name"
                                 type="text"
-                                value={formik.values.description}
+                                label={t('Description')}
                                 name="description"
+                                value={formik.values.description}
                                 onChange={formik.handleChange}
-                                label="Description"
-                                inputProps={{}}
                                 multiline
                                 rows={4}
                                 sx={{ marginTop: 1 }}
                             />
                             {formik.touched.description && formik.errors.description && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.description}
+                                    {t(formik.errors.description)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -137,12 +137,12 @@ export default function UpdateCategory({ open, handleDialogClose, selectedCat, o
                                     color="primary"
                                     sx={{ paddingX: 6, paddingY: 0.8 }}
                                 >
-                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Update'}
+                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : t('Update')}
                                 </Button>
                             </AnimateButton>
 
                             <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginLeft: 3 }}>
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                         </Box>
                     </form>

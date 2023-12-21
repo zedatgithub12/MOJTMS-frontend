@@ -1,16 +1,18 @@
 import { CircularProgress, Divider, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import Connections from 'api';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
-import TrainerListing from './components/TrainerListing';
-import AssignedListing from './components/AssignedListing';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
+import PropTypes from 'prop-types';
+import TrainerListing from './components/TrainerListing';
+import AssignedListing from './components/AssignedListing';
 
 const TrainingTrainers = ({ session_id }) => {
+    const { t } = useTranslation();
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
 
@@ -142,7 +144,7 @@ const TrainingTrainers = ({ session_id }) => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -153,8 +155,8 @@ const TrainingTrainers = ({ session_id }) => {
                 </Box>
             ) : assigned.length == 0 ? (
                 <Box paddingY={3}>
-                    <Typography variant="subtitle1">No trainer assigned to this training yet!</Typography>
-                    <Typography variant="subtitle2">After the trainer assignment, they will be listed here</Typography>
+                    <Typography variant="subtitle1">{t('No trainer assigned to this training yet!')}</Typography>
+                    <Typography variant="subtitle2">{t('After the trainers assignment, they will be listed here')}</Typography>
                 </Box>
             ) : (
                 assigned.map((trainer) => (
@@ -180,8 +182,10 @@ const TrainingTrainers = ({ session_id }) => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
                     ) : allTrainers.length == 0 ? (
                         <Box paddingY={1.4}>
-                            <Typography variant="subtitle1">No trainer to be assigned found!</Typography>
-                            <Typography variant="subtitle2">Make sure you have trainer in the database and they are active</Typography>
+                            <Typography variant="subtitle1">{t('No trainer to be assigned found!')}</Typography>
+                            <Typography variant="subtitle2">
+                                {t('Make sure you have trainer in the database and they are active')}
+                            </Typography>
                         </Box>
                     ) : (
                         allTrainers.map((trainer) => (
@@ -196,7 +200,7 @@ const TrainingTrainers = ({ session_id }) => {
                                     trainer.id === selectedTrainer && assigning ? (
                                         <CircularProgress size={18} sx={{ color: 'white' }} />
                                     ) : (
-                                        'Assign'
+                                        t('Assign')
                                     )
                                 }
                             />
@@ -210,8 +214,10 @@ const TrainingTrainers = ({ session_id }) => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
                     ) : allTrainers.length == 0 ? (
                         <Box paddingY={1.4}>
-                            <Typography variant="subtitle1">No trainer to be assigned found!</Typography>
-                            <Typography variant="subtitle2">Make sure you have trainer in the database and they are active</Typography>
+                            <Typography variant="subtitle1">{t('No trainer to be assigned found!')}</Typography>
+                            <Typography variant="subtitle2">
+                                {t('Make sure you have trainer in the database and they are active')}
+                            </Typography>
                         </Box>
                     ) : (
                         allTrainers.map((trainer) => (
@@ -226,7 +232,7 @@ const TrainingTrainers = ({ session_id }) => {
                                     trainer.id === selectedTrainer && assigning ? (
                                         <CircularProgress size={18} sx={{ color: 'white' }} />
                                     ) : (
-                                        'Assign'
+                                        t('Assign')
                                     )
                                 }
                             />

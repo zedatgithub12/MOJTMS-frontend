@@ -1,13 +1,15 @@
 import React, { forwardRef } from 'react';
+import { Grid, Box, useTheme, Stack, Rating } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Grid, Box, useTheme, Stack, Rating } from '@mui/material';
 import TrainingCardSkel from './Skeleton/TrainingCardSkel';
 
 const TrainingCard = forwardRef(
     ({ sx = {}, isLoading, image, title, language, category, sessions, traineecount, rating, ratingcount, onPress, ...others }, ref) => {
+        const { t } = useTranslation();
         const theme = useTheme();
         return (
             <React.Fragment>
@@ -36,35 +38,35 @@ const TrainingCard = forwardRef(
                                 borderRadius: 1
                             }}
                             image={image}
-                            title="Training thumbnail"
+                            title={t('Training thumbnail')}
                         />
 
                         <Grid item paddingX={1.5}>
                             <Box marginY={1}>
-                                <Typography variant="h3"> {title}</Typography>
+                                <Typography variant="h3"> {t(title)}</Typography>
                             </Box>
 
                             <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                                <Typography variant="subtitle1">{language}</Typography>
+                                <Typography variant="subtitle1">{t(language)}</Typography>
                                 <Typography variant="subtitle1" marginLeft={1}>
                                     {'|'}
                                 </Typography>
                                 <Typography variant="subtitle1" marginLeft={1}>
-                                    {category}
+                                    {t(category)}
                                 </Typography>
                             </Box>
 
                             <Box paddingY={2} sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', paddingX: 1 }}>
                                 {sessions !== 0 && (
                                     <Box>
-                                        <Typography variant="h3">{sessions}</Typography>
-                                        <Typography variant="subtitle2">{sessions > 0 ? 'Sessions' : 'Session'} </Typography>
+                                        <Typography variant="h3">{t(sessions)}</Typography>
+                                        <Typography variant="subtitle2">{sessions > 0 ? t('Sessions') : t('Session')} </Typography>
                                     </Box>
                                 )}
                                 {traineecount !== 0 && (
                                     <Box marginLeft={4}>
                                         <Typography variant="h3">{traineecount}</Typography>
-                                        <Typography variant="subtitle2">{traineecount > 0 ? 'Trainees' : 'Trainee'} </Typography>
+                                        <Typography variant="subtitle2">{traineecount > 0 ? t('Trainees') : t('Trainee')} </Typography>
                                     </Box>
                                 )}
                             </Box>
@@ -79,7 +81,9 @@ const TrainingCard = forwardRef(
                                         <Typography variant="subtitle">({ratingcount})</Typography>
                                     </Box>
                                 ) : (
-                                    <Typography variant="subtitle2">No rating yet</Typography>
+                                    <Typography variant="subtitle2" marginBottom={1}>
+                                        {t('No rating yet')}
+                                    </Typography>
                                 )}
                             </Stack>
                         </Grid>

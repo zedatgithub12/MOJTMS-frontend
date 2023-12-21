@@ -28,6 +28,7 @@ import { useSelector } from 'react-redux';
 import { saveAs } from 'file-saver';
 import { CSVLink } from 'react-csv';
 import { DateFormatter, calculateAge } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import TraineesTable from './components/TraineesTable';
 import errorImage from 'assets/images/error.jpg';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
@@ -36,6 +37,8 @@ import PropTypes from 'prop-types';
 import * as XLSX from 'xlsx';
 
 const TrainingTrainees = ({ training_id }) => {
+    const { t } = useTranslation();
+
     const [loading, setLoading] = useState(false);
     const [trainees, setTrainees] = useState([]);
 
@@ -205,13 +208,13 @@ const TrainingTrainees = ({ training_id }) => {
                             handleClose={handleClose}
                             filterButton={
                                 <Button variant="outlined" startIcon={<SortOutlinedIcon />} onClick={handleMenuClick}>
-                                    Filter
+                                    {t('Filter')}
                                 </Button>
                             }
                         >
                             <Box sx={{ minWidth: 340, paddingX: 3 }}>
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Typography variant="h4">Filter Data</Typography>
+                                    <Typography variant="h4">{t('Filter Data')}</Typography>
                                     <IconButton onClick={() => handleClose()}>
                                         <IconX size={20} />
                                     </IconButton>
@@ -224,7 +227,7 @@ const TrainingTrainees = ({ training_id }) => {
                                         name="round"
                                         value={filters.round}
                                         onChange={handleFilterChange}
-                                        label="Round"
+                                        label={t('Round')}
                                         InputProps={{
                                             endAdornment: filters.round && (
                                                 <IconButton onClick={() => handleClear('round')}>
@@ -238,7 +241,7 @@ const TrainingTrainees = ({ training_id }) => {
                                         name="age"
                                         value={filters.age}
                                         onChange={handleFilterChange}
-                                        label="Age, Above"
+                                        label={t('Age, Above')}
                                         InputProps={{
                                             endAdornment: filters.age && (
                                                 <IconButton onClick={() => handleClear('age')}>
@@ -250,7 +253,7 @@ const TrainingTrainees = ({ training_id }) => {
                                     />
 
                                     <FormControl component="fieldset" sx={{ marginTop: 3, paddingLeft: 1 }}>
-                                        <FormLabel component="legend">Gender</FormLabel>
+                                        <FormLabel component="legend">{t('Gender')}</FormLabel>
                                         <RadioGroup
                                             aria-label="gender"
                                             name="gender"
@@ -262,14 +265,14 @@ const TrainingTrainees = ({ training_id }) => {
                                                 alignItems: 'center'
                                             }}
                                         >
-                                            <FormControlLabel value="" control={<Radio />} label="All" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Males" />
-                                            <FormControlLabel value="female" control={<Radio />} label="Females" />
+                                            <FormControlLabel value="" control={<Radio />} label={t('All')} />
+                                            <FormControlLabel value="male" control={<Radio />} label={t('Males')} />
+                                            <FormControlLabel value="female" control={<Radio />} label={t('Females')} />
                                         </RadioGroup>
                                     </FormControl>
 
                                     <FormControl sx={{ marginTop: 3 }}>
-                                        <FormLabel component="legend">Department</FormLabel>
+                                        <FormLabel component="legend">{t('Department')}</FormLabel>
                                         <Select
                                             value={filters.department}
                                             onChange={handleFilterChange}
@@ -277,17 +280,17 @@ const TrainingTrainees = ({ training_id }) => {
                                             name="department"
                                             sx={{ marginTop: 1 }}
                                         >
-                                            <MenuItem value={''}>All</MenuItem>
+                                            <MenuItem value={''}>{t('All')}</MenuItem>
 
                                             {filterData.departments && filterData.departments.length == 0 ? (
                                                 <Typography variant="body2" sx={{ padding: 1 }}>
-                                                    Job titles not found
+                                                    {t('Job titles not found')}
                                                 </Typography>
                                             ) : (
                                                 filterData.departments &&
                                                 filterData.departments.map((position, index) => (
                                                     <MenuItem key={index} value={position}>
-                                                        {position}
+                                                        {t(position)}
                                                     </MenuItem>
                                                 ))
                                             )}
@@ -296,7 +299,7 @@ const TrainingTrainees = ({ training_id }) => {
 
                                     <FormControl sx={{ marginY: 3 }}>
                                         <FormLabel component="legend" htmlFor="outlined-adornment-job-title">
-                                            Job Title
+                                            {t('Job Title')}
                                         </FormLabel>
                                         <Select
                                             value={filters.job_title}
@@ -309,13 +312,13 @@ const TrainingTrainees = ({ training_id }) => {
 
                                             {filterData.job_titles && filterData.job_titles.length == 0 ? (
                                                 <Typography variant="body2" sx={{ padding: 1 }}>
-                                                    Job titles not found
+                                                    {t('Job titles not found')}
                                                 </Typography>
                                             ) : (
                                                 filterData.job_titles &&
                                                 filterData.job_titles.map((position, index) => (
                                                     <MenuItem key={index} value={position}>
-                                                        {position}
+                                                        {t(position)}
                                                     </MenuItem>
                                                 ))
                                             )}
@@ -333,7 +336,7 @@ const TrainingTrainees = ({ training_id }) => {
                                     }}
                                 >
                                     <Button variant="text" color="primary" sx={{ marginRight: 2 }} onClick={() => handleReset()}>
-                                        Reset
+                                        {t('Reset')}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -341,7 +344,7 @@ const TrainingTrainees = ({ training_id }) => {
                                         sx={{ minWidth: 120, paddingX: 1 }}
                                         onClick={() => handleApplyingFilter()}
                                     >
-                                        Apply
+                                        {t('Apply')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -380,11 +383,11 @@ const TrainingTrainees = ({ training_id }) => {
                             }}
                         >
                             <MenuItem onClick={handleDownloadExcel}>
-                                <Typography variant="body1">Excel Export</Typography>
+                                <Typography variant="body1">{t('Excel Export')}</Typography>
                             </MenuItem>
                             <MenuItem>
                                 <CSVLink data={csvData} filename={'trainees.csv'} style={{ textDecoration: 'none' }}>
-                                    <Typography variant="body1">CSV Export</Typography>
+                                    <Typography variant="body1">{t('CSV Export')}</Typography>
                                 </CSVLink>
                             </MenuItem>
                         </Menu>

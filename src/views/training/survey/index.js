@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Button, CircularProgress, Grid, Typography, useTheme } from '@mui/material';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
 import { Box } from '@mui/system';
 import { IconPlus } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
+import PropTypes from 'prop-types';
 import SurveyListing from './components/Listing';
 
 const TrainingSurvey = ({ session_id }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
@@ -183,7 +185,7 @@ const TrainingSurvey = ({ session_id }) => {
                                                     disabled={removing}
                                                     onClick={() => handleRemoving(survey.id)}
                                                 >
-                                                    Remove
+                                                    {t('Remove')}
                                                 </Button>
                                             }
                                         />
@@ -215,7 +217,7 @@ const TrainingSurvey = ({ session_id }) => {
                                 >
                                     <IconPlus size={24} />
                                     <Typography variant="subtitle1" marginLeft={2}>
-                                        Add Survey
+                                        {t('Add Survey')}
                                     </Typography>
                                 </Box>
                             </Grid>
@@ -237,7 +239,7 @@ const TrainingSurvey = ({ session_id }) => {
                                                 disabled={!selected.status || assigning ? true : false}
                                                 onClick={() => handleSurveyAddition(item)}
                                             >
-                                                Select
+                                                {t('Select')}
                                             </Button>
                                         }
                                     />

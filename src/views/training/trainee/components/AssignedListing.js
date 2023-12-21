@@ -1,9 +1,11 @@
 import { Button, Typography } from '@mui/material';
 import { Box, useTheme } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 
 const AssignedListing = ({ name, education_level, job_title, status, onAccept, isAccepting, isRemoving }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
@@ -21,12 +23,12 @@ const AssignedListing = ({ name, education_level, job_title, status, onAccept, i
             }}
         >
             <Box>
-                <Typography variant="subtitle1">{name}</Typography>
+                <Typography variant="subtitle1">{t(name)}</Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    {education_level && <Typography variant="body2">{education_level}</Typography>}
+                    {education_level && <Typography variant="body2">{t(education_level)}</Typography>}
                     {job_title && (
                         <Typography variant="body2" marginLeft={1} sx={{ borderLeft: 1, paddingLeft: 1.6 }}>
-                            {job_title}
+                            {t(job_title)}
                         </Typography>
                     )}
                 </Box>
@@ -59,7 +61,7 @@ const AssignedListing = ({ name, education_level, job_title, status, onAccept, i
                                 backgroundColor: theme.palette.primary[200]
                             }}
                         >
-                            {status}
+                            {t(status)}
                         </Typography>
                     )}
 
@@ -92,7 +94,7 @@ const AssignedListing = ({ name, education_level, job_title, status, onAccept, i
                                 backgroundColor: status === 'rejected' ? theme.palette.error.light : theme.palette.primary[200]
                             }}
                         >
-                            {status}
+                            {t(status)}
                         </Typography>
                     )}
 

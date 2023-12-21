@@ -1,9 +1,11 @@
 import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography, CircularProgress } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import { useTranslation } from 'react-i18next';
 import { Add } from '@mui/icons-material';
+import SearchIcon from '@mui/icons-material/Search';
 import PropTypes from 'prop-types';
 
 export const SearchFilterAdd = ({ searchText, searching, children, onTextChange, onSubmit, onAddUser, exportingComponent }) => {
+    const { t } = useTranslation();
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -35,7 +37,7 @@ export const SearchFilterAdd = ({ searchText, searching, children, onTextChange,
                     <Paper component="form" sx={{ p: '3px 4px', boxShadow: 1, display: 'flex', alignItems: 'center' }}>
                         <InputBase
                             sx={{ ml: 1, px: 1.5, flex: 1 }}
-                            placeholder="Search"
+                            placeholder={t('Search')}
                             inputProps={{ 'aria-label': 'search trainee' }}
                             value={searchText}
                             onChange={onTextChange}
@@ -58,7 +60,7 @@ export const SearchFilterAdd = ({ searchText, searching, children, onTextChange,
                     <Button variant="contained" color="primary" padding={2} onClick={onAddUser}>
                         <Add size={10} />
                         <Typography marginLeft={1} variant="subtitle1" color="white">
-                            New Coordinator
+                            {t('New Coordinator')}
                         </Typography>
                     </Button>
                     {exportingComponent}

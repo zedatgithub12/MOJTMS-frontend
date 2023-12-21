@@ -2,21 +2,23 @@ import { useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination } from '@mui/material';
 // project imports
-import Connections from 'api';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
+import { NoResult } from 'utils/components/noresult';
+import { ErrorPrompt } from 'utils/components/errorprompt';
+import { useTranslation } from 'react-i18next';
 import TrainerCard from 'ui-component/cards/TrainerCard';
 import errorImage from 'assets/images/error.jpg';
 import TrainerCardSkel from 'ui-component/cards/Skeleton/TrainerCardSkel';
-import { NoResult } from 'utils/components/noresult';
-import { ErrorPrompt } from 'utils/components/errorprompt';
+import Connections from 'api';
 
 // ==============================|| TRAINERS PAGE ||============================== //
 
 const Trainers = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const ImageApi = Connections.profiles;
@@ -123,7 +125,7 @@ const Trainers = () => {
                     searching={searching}
                     onTextChange={(event) => setSearch(event.target.value)}
                     onSubmit={() => handleSearching()}
-                    addTitle="Add Trainer"
+                    addTitle={t('Add Trainer')}
                     onAdd={() => navigate('/trainer/add')}
                 />
 
@@ -168,7 +170,7 @@ const Trainers = () => {
                             ))
                         )}
                     </Grid>
-                    {trainers.length > paginationModel.pageSize && (
+                    {counts > paginationModel.pageSize && (
                         <Box sx={{ paddingY: 4 }}>
                             <Pagination showFirstButton showLastButton count={counts} page={paginationModel.page} onChange={handleChange} />
                         </Box>

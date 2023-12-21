@@ -2,23 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery, IconButton, Button } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { IconEdit, IconListDetails, IconShare, IconTrash, IconX } from '@tabler/icons';
-import DetailHeader from './components/DetailHeader';
-import SessionDetailCard from 'ui-component/cards/SessionDetailCard';
 import { FormattedRound, formatDate } from 'utils/functions';
-import TabOne from './components/Tabone';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Delete } from 'ui-component/delete/Delete';
 import { SessionStatus } from 'data/static/SessionStatus';
+import { useQuery } from 'react-query';
+import { RefreshToken } from 'utils/token-refresh';
+import { useTranslation } from 'react-i18next';
+import DetailHeader from './components/DetailHeader';
+import SessionDetailCard from 'ui-component/cards/SessionDetailCard';
+import TabOne from './components/Tabone';
+import Connections from 'api';
 import ChangeStatus from './components/ChangeStatus';
 import ShareDialog from 'ui-component/ShareDialog';
 import TraineeTabContainer from './components/TraineeTabs';
 import SessionActions from './Actions';
-import { useQuery } from 'react-query';
 import Accepted from './Actions/Accepted';
-import { RefreshToken } from 'utils/token-refresh';
 
 const SessionDetails = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const { state } = useLocation();
     const navigate = useNavigate();
@@ -234,7 +236,7 @@ const SessionDetails = () => {
                         >
                             <DetailHeader
                                 back={true}
-                                title={state.title}
+                                title={t(state.title)}
                                 option={true}
                                 optionChildrens={
                                     <Box>
@@ -242,14 +244,14 @@ const SessionDetails = () => {
                                             <ListItemIcon>
                                                 <IconEdit size={18} />
                                             </ListItemIcon>
-                                            Update
+                                            {t('Update')}
                                         </MenuItem>
                                         <Divider />
                                         <MenuItem onClick={() => setDeleteSession(true)}>
                                             <ListItemIcon>
                                                 <IconTrash size={18} />
                                             </ListItemIcon>
-                                            Delete
+                                            {t('Delete')}
                                         </MenuItem>
                                     </Box>
                                 }
@@ -289,19 +291,20 @@ const SessionDetails = () => {
                                                 >
                                                     {state.round_number && (
                                                         <Typography variant="h4" color="primary">
-                                                            {state.round_number} <sup>{FormattedRound(state.round_number)} </sup> Round
+                                                            {state.round_number} <sup>{t(FormattedRound(state.round_number))} </sup>{' '}
+                                                            {t('Round')}
                                                         </Typography>
-                                                    )}{' '}
+                                                    )}
                                                 </Box>
                                             </Box>
                                         ) : (
-                                            <Typography variant="subtitle1">Training title</Typography>
+                                            <Typography variant="subtitle1">{t('Training title')}</Typography>
                                         )}
 
                                         {state.round_name ? (
-                                            <Typography variant="h3">{state.round_name}</Typography>
+                                            <Typography variant="h3">{t(state.round_name)}</Typography>
                                         ) : (
-                                            <Typography variant="h4">Session title</Typography>
+                                            <Typography variant="h4">{t('Session title')}</Typography>
                                         )}
                                         {state.round_description && (
                                             <Typography
@@ -309,7 +312,7 @@ const SessionDetails = () => {
                                                 marginTop={2}
                                                 sx={{ maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                             >
-                                                {state.round_description}
+                                                {t(state.round_description)}
                                             </Typography>
                                         )}
                                         <ChangeStatus
@@ -404,7 +407,7 @@ const SessionDetails = () => {
                                         >
                                             <IconShare size={20} />
                                             <Typography variant="subtitle1" color="primary" marginLeft={2}>
-                                                Share training
+                                                {t('Share training')}
                                             </Typography>
                                         </Box>
                                     </Grid>
@@ -426,12 +429,7 @@ const SessionDetails = () => {
                         />
                     )}
 
-                    <ShareDialog
-                        open={openShare}
-                        url={'https://tms.afrominadigitals.com/training/session/detail/'}
-                        session_id={state.id}
-                        onClose={() => handleShareDialogClose()}
-                    />
+                    <ShareDialog open={openShare} session_id={state.id} onClose={() => handleShareDialogClose()} />
 
                     <SnackbarProvider maxSnack={3} />
                 </Grid>
@@ -469,14 +467,14 @@ const SessionDetails = () => {
                                             <ListItemIcon>
                                                 <IconEdit size={18} />
                                             </ListItemIcon>
-                                            Update
+                                            {t('Update')}
                                         </MenuItem>
                                         <Divider />
                                         <MenuItem onClick={() => setDeleteSession(true)}>
                                             <ListItemIcon>
                                                 <IconTrash size={18} />
                                             </ListItemIcon>
-                                            Delete
+                                            {t('Delete')}
                                         </MenuItem>
                                     </Box>
                                 }
@@ -499,7 +497,7 @@ const SessionDetails = () => {
                                     <Box sx={{ marginX: 3, padding: 0.2 }}>
                                         {state.training_name ? (
                                             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2 }}>
-                                                <Typography variant="subtitle1">{state.training_name} </Typography>{' '}
+                                                <Typography variant="subtitle1">{t(state.training_name)} </Typography>{' '}
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
@@ -516,19 +514,20 @@ const SessionDetails = () => {
                                                 >
                                                     {state.round_number && (
                                                         <Typography variant="h4" color="primary">
-                                                            {state.round_number} <sup>{FormattedRound(state.round_number)} </sup> Round
+                                                            {state.round_number} <sup>{t(FormattedRound(state.round_number))} </sup>{' '}
+                                                            {t('Round')}
                                                         </Typography>
-                                                    )}{' '}
+                                                    )}
                                                 </Box>
                                             </Box>
                                         ) : (
-                                            <Typography variant="subtitle1">Training title</Typography>
+                                            <Typography variant="subtitle1">{t('Training title')}</Typography>
                                         )}
 
                                         {state.round_name ? (
-                                            <Typography variant="h3">{state.round_name}</Typography>
+                                            <Typography variant="h3">{t(state.round_name)}</Typography>
                                         ) : (
-                                            <Typography variant="h4">Session title</Typography>
+                                            <Typography variant="h4">{t('Session title')}</Typography>
                                         )}
                                         {state.round_description && (
                                             <Typography
@@ -536,16 +535,16 @@ const SessionDetails = () => {
                                                 marginTop={2}
                                                 sx={{ maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                             >
-                                                {state.round_description}
+                                                {t(state.round_description)}
                                             </Typography>
                                         )}
 
                                         {enrollmentstatus === 'accepted' ? (
                                             assessment.data && assessment.status === 'taken' ? (
                                                 <Typography variant="subtitle1" marginTop={2}>
-                                                    You have already taken {assessment.type} training assessment and
+                                                    {t('You have already taken')} {t(assessment.type)} {t('training assessment and')}
                                                     <b style={{ color: theme.palette.primary.main, fontSize: 14, marginLeft: 2 }}>
-                                                        scored {assessment.data.score}%
+                                                        {t('scored')} {assessment.data.score}%
                                                     </b>
                                                 </Typography>
                                             ) : assessment.data && assessment.status === 'not taken' ? (

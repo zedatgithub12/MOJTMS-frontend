@@ -7,8 +7,10 @@ import { Box, CircularProgress, Divider, IconButton, ListItemIcon, MenuItem, use
 import { IconArchive, IconArchiveOff, IconDownload, IconEdit, IconPaperclip } from '@tabler/icons';
 import FileTypes from 'data/static/fileTypes';
 import { MaterialMenu } from 'ui-component/menu/material';
+import { useTranslation } from 'react-i18next';
 
 const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUnarchive, onDownload }, ref) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
@@ -59,7 +61,7 @@ const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUna
                                                 <ListItemIcon>
                                                     <IconEdit size={18} />
                                                 </ListItemIcon>
-                                                Update
+                                                {t('Update')}
                                             </MenuItem>
 
                                             <Divider />
@@ -68,14 +70,14 @@ const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUna
                                                     <ListItemIcon>
                                                         <IconArchiveOff size={18} />
                                                     </ListItemIcon>
-                                                    Un Archive
+                                                    {t('Un Archive')}
                                                 </MenuItem>
                                             ) : (
                                                 <MenuItem onClick={onUnarchive}>
                                                     <ListItemIcon>
                                                         <IconArchive size={18} />
                                                     </ListItemIcon>
-                                                    Archive
+                                                    {t('Archive')}
                                                 </MenuItem>
                                             )}
                                         </Box>
@@ -89,7 +91,7 @@ const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUna
                                                 <ListItemIcon>
                                                     <IconEdit size={18} />
                                                 </ListItemIcon>
-                                                Update
+                                                {t('Update')}
                                             </MenuItem>
 
                                             <Divider />
@@ -98,14 +100,14 @@ const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUna
                                                     <ListItemIcon>
                                                         <IconArchiveOff size={18} />
                                                     </ListItemIcon>
-                                                    Un Archive
+                                                    {t('Un Archive')}
                                                 </MenuItem>
                                             ) : (
                                                 <MenuItem onClick={onUnarchive}>
                                                     <ListItemIcon>
                                                         <IconArchive size={18} />
                                                     </ListItemIcon>
-                                                    Archive
+                                                    {t('Archive')}
                                                 </MenuItem>
                                             )}
                                         </Box>

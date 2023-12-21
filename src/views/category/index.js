@@ -2,25 +2,27 @@ import { useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination, CircularProgress, IconButton, Typography } from '@mui/material';
 // project imports
-import Connections from 'api';
 import { useQuery } from 'react-query';
 import { useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import errorImage from 'assets/images/error.jpg';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import AddCategory from './components/add';
 import { IconChevronDown, IconChevronRight, IconEdit, IconTrash } from '@tabler/icons';
 import { IconLabel } from 'ui-component/content/IconLabel';
 import { Delete } from 'ui-component/delete/Delete';
+import { useTranslation } from 'react-i18next';
 import UpdateCategory from './components/update';
+import Connections from 'api';
+import errorImage from 'assets/images/error.jpg';
+import AddCategory from './components/add';
 
 // ==============================|| CATEGORY PAGE ||============================== //
 
 const Category = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -226,7 +228,7 @@ const Category = () => {
                                     message="Oooops... There is server error fetching category!"
                                 />
                             ) : categories.length == 0 ? (
-                                <NoResult title="" message="Oooops... No category found in the moment!" />
+                                <NoResult title="" message="Oooops... No category found" />
                             ) : (
                                 <div>
                                     {categories.map((category) => (
@@ -275,7 +277,7 @@ const Category = () => {
                                             </Box>
                                             {expand && selectedCategory && selectedCategory.id == category.id && (
                                                 <Box sx={{ paddingLeft: 7, paddingY: 0.5 }}>
-                                                    <Typography variant="body2">{category.description}</Typography>
+                                                    <Typography variant="body2">{t(category.description)}</Typography>
                                                 </Box>
                                             )}
                                         </Box>
@@ -303,7 +305,7 @@ const Category = () => {
                 <Delete
                     open={deleteCategory}
                     title="Deleting Category"
-                    description={`Are you sure, do you want to delete ` + selectedCategory.name}
+                    description={t('Are you sure, do you want to delete ') + selectedCategory.name}
                     onNo={() => setDeleteCategory(false)}
                     onYes={() => handleDeleteCategories()}
                     deleting={deleting}

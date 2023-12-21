@@ -12,6 +12,7 @@ import ProfileSection from './ProfileSection';
 import { IconMenu2 } from '@tabler/icons';
 import { useContext } from 'react';
 import { AuthContext } from 'context/context';
+import Language from 'ui-component/language';
 
 // ==============================|| MAIN NAVBAR / HEADER ||============================== //
 
@@ -69,6 +70,7 @@ const Header = ({ handleLeftDrawerToggle }) => {
 
             {/* notification & profile */}
             {/* <NotificationSection /> */}
+            <Language />
             <ProfileSection />
         </>
     );

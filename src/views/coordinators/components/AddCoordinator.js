@@ -18,12 +18,13 @@ import {
     useTheme
 } from '@mui/material';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import AnimateButton from 'ui-component/extended/AnimateButton';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
 import { useQuery } from 'react-query';
+import { useTranslation } from 'react-i18next';
+import AnimateButton from 'ui-component/extended/AnimateButton';
+import Connections from 'api';
+import * as Yup from 'yup';
 
 const CoordinatorScheme = Yup.object().shape({
     name: Yup.string().min(2, 'Too short for name').required('Name is required'),
@@ -32,6 +33,7 @@ const CoordinatorScheme = Yup.object().shape({
 });
 
 export default function AddCoordinator({ open, handleDialogClose }) {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [department, setDepartment] = useState([]);
@@ -133,7 +135,7 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                         background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})`
                     }}
                 >
-                    <DialogTitle variant="h4">Add Coordinator</DialogTitle>
+                    <DialogTitle variant="h4">{t('Add Coordinator')}</DialogTitle>
 
                     <IconButton onClick={handleDialogClose}>
                         <IconX size={20} />
@@ -147,19 +149,19 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             sx={{ ...theme.typography.customInput, marginTop: 2 }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-name">Full name</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-name">{t('Full name')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-name"
                                 type="text"
                                 value={formik.values.name}
                                 name="name"
                                 onChange={formik.handleChange}
-                                label="Full name"
+                                label={t('Full name')}
                                 inputProps={{}}
                             />
                             {formik.touched.name && formik.errors.name && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.name}
+                                    {t(formik.errors.name)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -169,19 +171,18 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                             error={formik.touched.email && Boolean(formik.errors.email)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-email">Email address</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-email">{t('Email address')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email"
                                 type="email"
                                 value={formik.values.email}
                                 name="email"
                                 onChange={formik.handleChange}
-                                label="Email Address"
-                                inputProps={{}}
+                                label={t('Email Address')}
                             />
                             {formik.touched.email && formik.errors.email && (
                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                    {formik.errors.email}
+                                    {t(formik.errors.email)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -191,7 +192,9 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                             error={formik.touched.department && Boolean(formik.errors.department)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-department">{formik.values.department ? '' : 'Department'}</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-department">
+                                {formik.values.department ? '' : t('Department')}
+                            </InputLabel>
                             <Select
                                 value={formik.values.department}
                                 onChange={formik.handleChange}
@@ -200,7 +203,7 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                             >
                                 {department.length === 0 ? (
                                     <Typography variant="body2" sx={{ padding: 1 }}>
-                                        Department is not found
+                                        {t('Department is not found')}
                                     </Typography>
                                 ) : (
                                     department.map((item, index) => (
@@ -212,14 +215,14 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                             </Select>
                             {formik.touched.department && formik.errors.department && (
                                 <FormHelperText error id="standard-weight-helper-text">
-                                    {formik.errors.department}
+                                    {t(formik.errors.department)}
                                 </FormHelperText>
                             )}
                         </FormControl>
 
                         <Box>
                             <Typography variant="subtitle2" marginLeft={1} marginTop={1}>
-                                Default password for {role}
+                                {t('Default password')}
                             </Typography>
                             <Typography variant="body2" marginLeft={1}>
                                 {password}
@@ -228,7 +231,7 @@ export default function AddCoordinator({ open, handleDialogClose }) {
 
                         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 2 }}>
                             <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginRight: 3 }}>
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                             <AnimateButton>
                                 <Button
@@ -239,7 +242,7 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                                     color="primary"
                                     sx={{ paddingX: 8, paddingY: 0.8 }}
                                 >
-                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Save'}
+                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : t('Save')}
                                 </Button>
                             </AnimateButton>
                         </Box>

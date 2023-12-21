@@ -2,21 +2,24 @@ import { useState } from 'react';
 // material-ui
 import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, Pagination } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
-import Connections from 'api';
 import { IconEdit, IconTrash } from '@tabler/icons';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Delete } from 'ui-component/delete/Delete';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import TrainerDetailCard from 'ui-component/cards/TrainerDetailCard';
-import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
-import { useQuery } from 'react-query';
-import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
+import { useQuery } from 'react-query';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
+import TrainerDetailCard from 'ui-component/cards/TrainerDetailCard';
+import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
+import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 import errorImage from 'assets/images/error.jpg';
+
 // ==============================|| VIEW TRAINER PAGE ||============================== //
 
 const ViewTrainer = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -117,7 +120,7 @@ const ViewTrainer = () => {
     };
 
     const handlePrompts = (message, severity) => {
-        enqueueSnackbar(message, { severity });
+        enqueueSnackbar(t(message), { severity });
     };
 
     return (
@@ -138,7 +141,7 @@ const ViewTrainer = () => {
                             <ListItemIcon>
                                 <IconEdit size={18} />
                             </ListItemIcon>
-                            Update
+                            {t('Update')}
                         </MenuItem>
 
                         <Divider />
@@ -146,7 +149,7 @@ const ViewTrainer = () => {
                             <ListItemIcon>
                                 <IconTrash size={18} />
                             </ListItemIcon>
-                            Delete
+                            {t('Delete')}
                         </MenuItem>
                     </Box>
                 }
@@ -172,10 +175,10 @@ const ViewTrainer = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={12} md={12} lg={8} xl={8} sx={{ alignItems: 'center', justifyContent: 'center', paddingY: 3 }}>
-                    <Typography variant="h4">Training </Typography>
+                    <Typography variant="h4">{t('Trainings')} </Typography>
                     <Typography variant="body2">
                         {' '}
-                        The training that given by <b> {state.name}</b>
+                        {t('The training that given by')} <b> {state.name}</b>
                     </Typography>
                     {loading ? (
                         <Grid container>

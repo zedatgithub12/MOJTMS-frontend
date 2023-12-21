@@ -3,8 +3,10 @@ import { IconArrowLeft } from '@tabler/icons';
 import { useNavigate } from 'react-router';
 import { ActionMenu } from 'ui-component/menu/action';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 export const MediumHeader = ({ title, back, option, optionChildrens, sx }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     return (
@@ -32,7 +34,7 @@ export const MediumHeader = ({ title, back, option, optionChildrens, sx }) => {
                     )}
 
                     <Typography variant="h4" sx={{ paddingX: 1 }}>
-                        {title}
+                        {t(title)}
                     </Typography>
                 </Box>
 

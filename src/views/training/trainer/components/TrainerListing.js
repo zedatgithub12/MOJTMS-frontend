@@ -1,9 +1,11 @@
 import { Button, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 
 const TrainerListing = ({ name, education_level, specialisation, onAssign, isAssigning }) => {
+    const { t } = useTranslation();
     return (
         <Box
             sx={{
@@ -16,11 +18,11 @@ const TrainerListing = ({ name, education_level, specialisation, onAssign, isAss
             }}
         >
             <Box>
-                <Typography variant="subtitle1">{name}</Typography>
+                <Typography variant="subtitle1">{t(name)}</Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Typography variant="body2">{education_level}</Typography>
+                    <Typography variant="body2">{t(education_level)}</Typography>
                     <Typography variant="body2" marginLeft={1}>
-                        {specialisation}
+                        {t(specialisation)}
                     </Typography>
                 </Box>
             </Box>

@@ -2,10 +2,12 @@ import * as React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableBody, TableRow, TableCell, useTheme, Box, Typography } from '@mui/material';
 import { DateFormatter, FormattedRound } from 'utils/functions';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const columns = ['Survey', 'Session', 'Round', 'User name', 'Email', 'Filled on'];
 
 export default function FilledSurveyTable({ rows }) {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     return (
@@ -14,7 +16,7 @@ export default function FilledSurveyTable({ rows }) {
                 <TableHead sx={{ backgroundColor: theme.palette.primary[200] }}>
                     <TableRow>
                         {columns.map((item) => (
-                            <TableCell>{item}</TableCell>
+                            <TableCell>{t(item)}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>

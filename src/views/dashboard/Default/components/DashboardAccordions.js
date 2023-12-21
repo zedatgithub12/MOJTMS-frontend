@@ -1,8 +1,10 @@
 import { Box, Accordion, AccordionSummary, Typography, useTheme } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const DashboardAccordions = ({ categories, departments }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     return (
         <Box
@@ -18,13 +20,13 @@ const DashboardAccordions = ({ categories, departments }) => {
         >
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="departments-content" id="departments-header">
-                    <Typography>Departments</Typography>
+                    <Typography>{t('Departments')}</Typography>
                 </AccordionSummary>
                 {departments}
             </Accordion>
             <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="category-content" id="category-header">
-                    <Typography>Categories</Typography>
+                    <Typography>{t('Categories')}</Typography>
                 </AccordionSummary>
                 {categories}
             </Accordion>

@@ -35,8 +35,10 @@ import Connections from 'api';
 import PropTypes from 'prop-types';
 import * as XLSX from 'xlsx';
 import ELevel from 'data/static/ELevel';
+import { useTranslation } from 'react-i18next';
 
 const DepartmentTrainees = ({ department_id }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [trainees, setTrainees] = useState([]);
 
@@ -203,13 +205,13 @@ const DepartmentTrainees = ({ department_id }) => {
                             handleClose={handleClose}
                             filterButton={
                                 <Button variant="outlined" startIcon={<SortOutlinedIcon />} onClick={handleMenuClick}>
-                                    Filter
+                                    {t('Filter')}
                                 </Button>
                             }
                         >
                             <Box sx={{ minWidth: 340, paddingX: 3 }}>
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Typography variant="h4">Filter Data</Typography>
+                                    <Typography variant="h4">{t('Filter Data')}</Typography>
                                     <IconButton onClick={() => handleClose()}>
                                         <IconX size={20} />
                                     </IconButton>
@@ -219,7 +221,7 @@ const DepartmentTrainees = ({ department_id }) => {
 
                                 <Box sx={{ minHeight: 200, display: 'flex', flexDirection: 'column', marginTop: 1 }}>
                                     <FormControl component="fieldset" sx={{ marginTop: 3, paddingLeft: 1 }}>
-                                        <FormLabel component="legend">Gender</FormLabel>
+                                        <FormLabel component="legend">{t('Gender')}</FormLabel>
                                         <RadioGroup
                                             aria-label="gender"
                                             name="gender"
@@ -231,9 +233,9 @@ const DepartmentTrainees = ({ department_id }) => {
                                                 alignItems: 'center'
                                             }}
                                         >
-                                            <FormControlLabel value="" control={<Radio />} label="All" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Males" />
-                                            <FormControlLabel value="female" control={<Radio />} label="Females" />
+                                            <FormControlLabel value="" control={<Radio />} label={t('All')} />
+                                            <FormControlLabel value="male" control={<Radio />} label={t('Males')} />
+                                            <FormControlLabel value="female" control={<Radio />} label={t('Females')} />
                                         </RadioGroup>
                                     </FormControl>
 
@@ -241,7 +243,7 @@ const DepartmentTrainees = ({ department_id }) => {
                                         name="age"
                                         value={filters.age}
                                         onChange={handleFilterChange}
-                                        label="Age, Above"
+                                        label={t('Age, Above')}
                                         InputProps={{
                                             endAdornment: filters.age && (
                                                 <IconButton onClick={() => handleClear('age')}>
@@ -254,7 +256,7 @@ const DepartmentTrainees = ({ department_id }) => {
 
                                     <FormControl sx={{ marginTop: 3 }}>
                                         <FormLabel component="legend" htmlFor="outlined-adornment-education">
-                                            Education
+                                            {t('Education')}
                                         </FormLabel>
                                         <Select
                                             value={filters.education}
@@ -263,16 +265,16 @@ const DepartmentTrainees = ({ department_id }) => {
                                             name="education"
                                             sx={{ marginTop: 1 }}
                                         >
-                                            <MenuItem value={''}>All</MenuItem>
+                                            <MenuItem value={''}>{t('All')}</MenuItem>
 
                                             {ELevel.length == 0 ? (
                                                 <Typography variant="body2" sx={{ padding: 1 }}>
-                                                    Education level not found
+                                                    {t('Education level not found')}
                                                 </Typography>
                                             ) : (
                                                 ELevel.map((level, index) => (
                                                     <MenuItem key={index} value={level.value}>
-                                                        {level.value}
+                                                        {t(level.value)}
                                                     </MenuItem>
                                                 ))
                                             )}
@@ -281,7 +283,7 @@ const DepartmentTrainees = ({ department_id }) => {
 
                                     <FormControl sx={{ marginY: 3 }}>
                                         <FormLabel component="legend" htmlFor="outlined-adornment-job-title">
-                                            Job Title
+                                            {t('Job Title')}
                                         </FormLabel>
                                         <Select
                                             value={filters.job_title}
@@ -290,11 +292,11 @@ const DepartmentTrainees = ({ department_id }) => {
                                             name="job_title"
                                             sx={{ marginTop: 1 }}
                                         >
-                                            <MenuItem value={''}>All</MenuItem>
+                                            <MenuItem value={''}>{t('All')}</MenuItem>
 
                                             {filterData.job_titles && filterData.job_titles.length == 0 ? (
                                                 <Typography variant="body2" sx={{ padding: 1 }}>
-                                                    Job titles not found
+                                                    {t('Job title not found')}
                                                 </Typography>
                                             ) : (
                                                 filterData.job_titles &&
@@ -318,7 +320,7 @@ const DepartmentTrainees = ({ department_id }) => {
                                     }}
                                 >
                                     <Button variant="text" color="primary" sx={{ marginRight: 2 }} onClick={() => handleReset()}>
-                                        Reset
+                                        {t('Reset')}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -326,7 +328,7 @@ const DepartmentTrainees = ({ department_id }) => {
                                         sx={{ minWidth: 120, paddingX: 1 }}
                                         onClick={() => handleApplyingFilter()}
                                     >
-                                        Apply
+                                        {t('Apply')}
                                     </Button>
                                 </Box>
                             </Box>
@@ -366,11 +368,11 @@ const DepartmentTrainees = ({ department_id }) => {
                             }}
                         >
                             <MenuItem onClick={handleDownloadExcel}>
-                                <Typography variant="body1">Excel Export</Typography>
+                                <Typography variant="body1">{t('Export Excel')}</Typography>
                             </MenuItem>
                             <MenuItem>
                                 <CSVLink data={csvData} filename={'trainees.csv'} style={{ textDecoration: 'none' }}>
-                                    <Typography variant="body1">CSV Export</Typography>
+                                    <Typography variant="body1">{t('Export CSV')}</Typography>
                                 </CSVLink>
                             </MenuItem>
                         </Menu>
@@ -384,9 +386,9 @@ const DepartmentTrainees = ({ department_id }) => {
                         </Grid>
                     </Grid>
                 ) : error ? (
-                    <ErrorPrompt image={errorImage} title="Server Error" message="Oooops... There is server error fetching trainees" />
+                    <ErrorPrompt image={errorImage} title="Server Error" message={t('Oooops... There is server error fetching trainees')} />
                 ) : trainees.length === 0 ? (
-                    <NoResult title="" message="Oooops... No trainee found" />
+                    <NoResult title="" message={t('Oooops... No trainee found')} />
                 ) : (
                     <div>
                         <TraineeTable rows={trainees} />

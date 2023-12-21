@@ -1,15 +1,17 @@
 import { Grid, CircularProgress, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import Connections from 'api';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import ResourceListing from './components/ResourceListing';
 import AddResource from './components/addresource';
+import Connections from 'api';
+import PropTypes from 'prop-types';
 
 const TrainingResources = ({ session_id }) => {
+    const { t } = useTranslation();
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
 
@@ -128,7 +130,7 @@ const TrainingResources = ({ session_id }) => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -145,8 +147,8 @@ const TrainingResources = ({ session_id }) => {
                     </Box>
                 ) : resources.length == 0 ? (
                     <Box paddingY={3} paddingX={1}>
-                        <Typography variant="subtitle1">No resource here</Typography>
-                        <Typography variant="subtitle2">Add some, and they will be listed here</Typography>
+                        <Typography variant="subtitle1">{t('No resource here')}</Typography>
+                        <Typography variant="subtitle2">{t('Add some, and they will be listed here')}</Typography>
                     </Box>
                 ) : (
                     resources.map((item) => (

@@ -23,6 +23,7 @@ import { TrainingTabs } from 'data/tabs/training';
 import { TabPanel } from './components/tabpanel';
 import { StarOutline } from '@mui/icons-material';
 import { ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import TrainingModules from './module';
 import SessionListing from './session/components/Listing';
@@ -44,6 +45,7 @@ const letterConfig = {
 };
 
 const ViewTraining = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -88,7 +90,7 @@ const ViewTraining = () => {
                                     <ListItemIcon>
                                         <IconEdit size={18} />
                                     </ListItemIcon>
-                                    Update
+                                    {t('Update')}
                                 </MenuItem>
                             </Box>
                         }
@@ -114,15 +116,15 @@ const ViewTraining = () => {
                                         aspectRatio: 1
                                     }}
                                     image={ImageApi + state.thumbnail}
-                                    title={state.name}
+                                    title={t(state.name)}
                                 />
                             )}
 
                             <Box sx={{ marginX: 3, padding: 0.2 }}>
                                 {state.title ? (
-                                    <Typography variant="h3">{state.title}</Typography>
+                                    <Typography variant="h3">{t(state.title)}</Typography>
                                 ) : (
-                                    <Typography variant="h4">Training title</Typography>
+                                    <Typography variant="h4">{t('Training title')}</Typography>
                                 )}
                                 {state.description && (
                                     <Typography
@@ -130,7 +132,7 @@ const ViewTraining = () => {
                                         marginTop={1}
                                         sx={{ maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                     >
-                                        {state.description}
+                                        {t(state.description)}
                                     </Typography>
                                 )}
 
@@ -172,7 +174,7 @@ const ViewTraining = () => {
                                     sx={{ marginY: 3, paddingX: 5, paddingY: 1.4, borderRadius: 50 }}
                                     onClick={() => navigate('/training/session/create', { state: state })}
                                 >
-                                    Create new session
+                                    {t('Create new session')}
                                 </Button>
                             </Box>
                         </Box>
@@ -192,7 +194,7 @@ const ViewTraining = () => {
                         <Grid item xs={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
                             <Tabs value={tab} onChange={handleChange} aria-label="tabs">
                                 {TrainingTabs.map((tab, index) => (
-                                    <Tab label={tab.name} {...a11yProps(index)} />
+                                    <Tab label={t(tab.name)} {...a11yProps(index)} />
                                 ))}
                             </Tabs>
 
@@ -228,16 +230,14 @@ const ViewTraining = () => {
                     }}
                 >
                     <Typography variant="h4" sx={{}}>
-                        {' '}
-                        Training Summarries
+                        {t('Training')} {t('Summaries')}
                     </Typography>
 
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginY: 3 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <IconChalkboard size={20} sx={{ color: theme.palette.primary.main }} />
                             <Typography variant="body2" sx={{ paddingLeft: 1 }}>
-                                {' '}
-                                Sessions
+                                {t('Sessions')}
                             </Typography>
                         </Box>
 
@@ -248,8 +248,7 @@ const ViewTraining = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <IconUser size={20} />
                             <Typography variant="body2" sx={{ paddingLeft: 1 }}>
-                                {' '}
-                                Trainees
+                                {t('Trainees')}
                             </Typography>
                         </Box>
 
@@ -260,8 +259,7 @@ const ViewTraining = () => {
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                             <IconPaperclip size={20} />
                             <Typography variant="body2" sx={{ paddingLeft: 1 }}>
-                                {' '}
-                                Modules
+                                {t('Modules')}
                             </Typography>
                         </Box>
 
@@ -270,7 +268,7 @@ const ViewTraining = () => {
                     <Divider />
                     {state.prerequisites && (
                         <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 3 }}>
-                            <Typography variant="subtitle2">Training Pre-requisites</Typography>
+                            <Typography variant="subtitle2">{t('Training Pre-requisites')}</Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 1 }}>
                                 <Typography variant="body2">
                                     {ReadMore(state.prerequisites, letterConfig.startfrom, letterConfig.endat, collapse)}
@@ -282,7 +280,7 @@ const ViewTraining = () => {
                                         onClick={() => ExpndText()}
                                         sx={{ marginTop: 1, color: theme.palette.primary.main }}
                                     >
-                                        {collapse ? 'Read More' : 'Read Less'}
+                                        {collapse ? t('Read More') : t('Read Less')}
                                     </Typography>
                                 )}
                             </Box>

@@ -4,9 +4,10 @@ import { Grid, Button, useTheme, CircularProgress, TextField, FormHelperText, Ty
 
 // project imports
 import { useFormik } from 'formik';
+import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { Box } from '@mui/system';
 
 // ==============================|| ADD RATING COMPONENT ||============================== //
 
@@ -21,6 +22,7 @@ const labels = {
 };
 
 const AddRating = ({ handleSubmittion, isSubmitting }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [rating, setRating] = useState(0);
@@ -61,7 +63,7 @@ const AddRating = ({ handleSubmittion, isSubmitting }) => {
                 <Grid item xs={10} sx={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                     <Box>
                         <Typography variant="subtitle1" color="primary" paddingLeft={0.5}>
-                            Add your reviews
+                            {t('Add your reviews')}
                         </Typography>
                         <Box
                             sx={{
@@ -78,12 +80,12 @@ const AddRating = ({ handleSubmittion, isSubmitting }) => {
                                 }}
                                 sx={{ paddingY: 1 }}
                             />
-                            {rating > 0 && <Box sx={{ ml: 1 }}>{labels[rating]}</Box>}
+                            {rating > 0 && <Box sx={{ ml: 1 }}>{t(labels[rating])}</Box>}
                         </Box>
                     </Box>
 
                     <Button disabled={isSubmitting || rating == 0 ? true : false} type="submit" variant="contained" color="primary">
-                        {isSubmitting ? <CircularProgress size={20} sx={{ color: theme.palette.background.default }} /> : 'Submit'}
+                        {isSubmitting ? <CircularProgress size={20} sx={{ color: theme.palette.background.default }} /> : t('Submit')}
                     </Button>
                 </Grid>
 
@@ -92,7 +94,7 @@ const AddRating = ({ handleSubmittion, isSubmitting }) => {
                         <TextField
                             id="reviews"
                             name="review"
-                            label="Tell us your experience (optional)"
+                            label={t('Tell us your experience (optional)')}
                             value={formik.values.review}
                             onChange={formik.handleChange}
                             fullWidth
@@ -102,7 +104,7 @@ const AddRating = ({ handleSubmittion, isSubmitting }) => {
                         />
                         {formik.touched.review && formik.errors.review && (
                             <FormHelperText error id="standard-weight-helper-text-review">
-                                {formik.errors.review}
+                                {t(formik.errors.review)}
                             </FormHelperText>
                         )}
                     </Grid>

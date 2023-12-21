@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { forwardRef } from 'react';
+import { Box, Link, useTheme } from '@mui/material';
+import { IconLanguage, IconMail, IconMapPin, IconPhone, IconSchool, IconUser } from '@tabler/icons';
+import { ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import TrainerDetailsCardSkel from './Skeleton/TrainerDetailCardSkel';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Box, Link, useTheme } from '@mui/material';
-import { IconBadge, IconLanguage, IconMail, IconMapPin, IconPhone, IconSchool, IconUser } from '@tabler/icons';
-import { ReadMore } from 'utils/functions';
-import TrainerDetailsCardSkel from './Skeleton/TrainerDetailCardSkel';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import VerifiedOutlinedIcon from '@mui/icons-material/VerifiedOutlined';
-import { IconLabel } from 'ui-component/content/IconLabel';
 
 const letterConfig = {
     startfrom: 0,
@@ -39,6 +39,7 @@ const TrainerDetailCard = forwardRef(
         },
         ref
     ) => {
+        const { t } = useTranslation();
         const theme = useTheme();
 
         const [collapse, setCollapse] = React.useState(true);
@@ -67,7 +68,7 @@ const TrainerDetailCard = forwardRef(
                         }}
                         {...others}
                     >
-                        <CardMedia sx={{ height: 200 }} image={image} title={title} />
+                        <CardMedia sx={{ height: 200 }} image={image} title={t(title)} />
                         <CardContent>
                             <Box
                                 sx={{
@@ -79,7 +80,7 @@ const TrainerDetailCard = forwardRef(
                                 }}
                             >
                                 <Typography gutterBottom variant="h4" component="div">
-                                    {title}
+                                    {t(title)}
                                 </Typography>
 
                                 {linkedin && (
@@ -94,7 +95,7 @@ const TrainerDetailCard = forwardRef(
                                         <IconUser size={18} />{' '}
                                         <Typography sx={{ marginX: 1, textTransform: 'capitalize' }}>{gender}</Typography>{' '}
                                     </Box>
-                                    <Typography variant="subtitle2">Gender</Typography>
+                                    <Typography variant="subtitle2">{t('Gender')}</Typography>
                                 </Box>
                             )}
 
@@ -102,9 +103,9 @@ const TrainerDetailCard = forwardRef(
                                 <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 2 }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                         <VerifiedOutlinedIcon fontSize="small" />{' '}
-                                        <Typography sx={{ marginX: 1 }}>{specialisation}</Typography>
+                                        <Typography sx={{ marginX: 1 }}>{t(specialisation)}</Typography>
                                     </Box>
-                                    <Typography variant="subtitle2">Trainer specialisation</Typography>
+                                    <Typography variant="subtitle2">{t('Trainer specialisation')}</Typography>
                                 </Box>
                             )}
 
@@ -115,7 +116,7 @@ const TrainerDetailCard = forwardRef(
                                         <Typography sx={{ marginX: 1 }}>{qualification}</Typography>{' '}
                                     </Box>
 
-                                    <Typography variant="subtitle2">Education Level</Typography>
+                                    <Typography variant="subtitle2">{t('Education Level')}</Typography>
                                 </Box>
                             )}
 
@@ -125,7 +126,7 @@ const TrainerDetailCard = forwardRef(
                                         <IconMail size={18} /> <Typography sx={{ marginX: 1 }}>{email}</Typography>{' '}
                                     </Box>
 
-                                    <Typography variant="subtitle2">Email addres</Typography>
+                                    <Typography variant="subtitle2">{t('Email addres')}</Typography>
                                 </Box>
                             )}
 
@@ -134,7 +135,7 @@ const TrainerDetailCard = forwardRef(
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                         <IconPhone size={18} sx={{ marginRight: 2 }} /> <Typography sx={{ marginX: 1 }}>{phone}</Typography>{' '}
                                     </Box>
-                                    <Typography variant="subtitle2">Phone</Typography>
+                                    <Typography variant="subtitle2">{t('Phone')}</Typography>
                                 </Box>
                             )}
 
@@ -142,27 +143,27 @@ const TrainerDetailCard = forwardRef(
                                 <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 3 }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                         <IconLanguage size={18} sx={{ marginRight: 2 }} />{' '}
-                                        <Typography sx={{ marginX: 1 }}>{language}</Typography>{' '}
+                                        <Typography sx={{ marginX: 1 }}>{t(language)}</Typography>{' '}
                                     </Box>
-                                    <Typography variant="subtitle2">Primary language</Typography>
+                                    <Typography variant="subtitle2">{t('Primary language')}</Typography>
                                 </Box>
                             )}
 
                             {address && (
                                 <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 3 }}>
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                        <IconMapPin size={18} sx={{ marginRight: 2 }} />{' '}
-                                        <Typography sx={{ marginX: 1 }}>{address}</Typography>{' '}
+                                        <IconMapPin size={18} sx={{ marginRight: 2 }} />
+                                        <Typography sx={{ marginX: 1 }}>{t(address)}</Typography>
                                     </Box>
-                                    <Typography variant="subtitle2">Address</Typography>
+                                    <Typography variant="subtitle2">{t('Address')}</Typography>
                                 </Box>
                             )}
 
                             {bio && (
                                 <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 3 }}>
-                                    <Typography variant="subtitle2">Bio</Typography>
+                                    <Typography variant="subtitle2">{t('Bio')}</Typography>
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <Typography>{ReadMore(bio, letterConfig.startfrom, letterConfig.endat, collapse)}</Typography>
+                                        <Typography>{t(ReadMore(bio, letterConfig.startfrom, letterConfig.endat, collapse))}</Typography>
 
                                         {bio.length > letterConfig.endat && (
                                             <Typography
@@ -170,7 +171,7 @@ const TrainerDetailCard = forwardRef(
                                                 onClick={() => ExpndText()}
                                                 sx={{ marginTop: 1, color: theme.palette.primary.main }}
                                             >
-                                                {collapse ? 'Read More' : 'Read Less'}
+                                                {collapse ? t('Read More') : t('Read Less')}
                                             </Typography>
                                         )}
                                     </Box>

@@ -1,8 +1,10 @@
 import { Typography } from '@mui/material';
 import { Box, useTheme } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 const AssignedListing = ({ name, email, isRemoving }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
@@ -37,7 +39,7 @@ const AssignedListing = ({ name, email, isRemoving }) => {
                             backgroundColor: theme.palette.primary[200]
                         }}
                     >
-                        Assigned
+                        {t('Assigned')}
                     </Typography>
                     {isRemoving}
                 </Box>
@@ -54,7 +56,7 @@ const AssignedListing = ({ name, email, isRemoving }) => {
                             backgroundColor: theme.palette.primary[200]
                         }}
                     >
-                        Assigned
+                        {t('Assigned')}
                     </Typography>
                     {isRemoving}
                 </Box>

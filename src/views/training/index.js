@@ -8,17 +8,20 @@ import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
+import { MediumHeader } from 'ui-component/page-header/mediumHeader';
+import { useDispatch } from 'react-redux';
+import { setbasicinfos } from 'store/actions';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import errorImage from 'assets/images/error.jpg';
 import TrainingCard from 'ui-component/cards/TrainingCard';
 import TrainingCardSkel from 'ui-component/cards/Skeleton/TrainingCardSkel';
-import { MediumHeader } from 'ui-component/page-header/mediumHeader';
-import { useDispatch } from 'react-redux';
-import { setbasicinfos } from 'store/actions';
 
 // ==============================|| TRAINING PAGE ||============================== //
 
 const Training = () => {
+    const { t } = useTranslation();
+
     const theme = useTheme();
     const ImageApi = Connections.thumbnails;
 
@@ -177,13 +180,13 @@ const Training = () => {
                             <ErrorPrompt
                                 image={errorImage}
                                 title="Server Error"
-                                message="Oooops... There is server error fetching trainings!"
+                                message="Oooops... There is server error fetching trainings"
                                 buttontitle="Go Back"
                                 onPress={() => navigate(-1)}
                             />
                         ) : trainings.length == 0 ? (
                             <NoResult
-                                title="Result Not Found"
+                                title=""
                                 message="Oooops... no training found in the moment!"
                                 buttontitle="Go Back"
                                 onPress={() => navigate(-1)}

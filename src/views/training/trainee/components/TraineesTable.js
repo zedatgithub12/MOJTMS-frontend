@@ -1,23 +1,13 @@
 import * as React from 'react';
-import {
-    TableContainer,
-    Paper,
-    Table,
-    TableHead,
-    TableBody,
-    TableRow,
-    TableCell,
-    useTheme,
-    Box,
-    Typography,
-    Checkbox
-} from '@mui/material';
+import { TableContainer, Paper, Table, TableHead, TableBody, TableRow, TableCell, useTheme, Box, Typography } from '@mui/material';
 import { DateFormatter, FormattedRound, calculateAge } from 'utils/functions';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const columns = ['Name', 'Email', 'Gender', 'Age', 'Department', 'Job Title', 'Round', 'Pre Assessment', 'Post Assessment', 'Enrolled on'];
 
 export default function TraineesTable({ rows }) {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     return (
@@ -26,7 +16,7 @@ export default function TraineesTable({ rows }) {
                 <TableHead sx={{ backgroundColor: theme.palette.primary[200] }}>
                     <TableRow>
                         {columns.map((item) => (
-                            <TableCell>{item}</TableCell>
+                            <TableCell>{t(item)}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>
@@ -61,7 +51,7 @@ export default function TraineesTable({ rows }) {
                                     >
                                         {row.round_number && (
                                             <Typography variant="subtitle1" color="primary">
-                                                {row.round_number} <sup>{FormattedRound(row.round_number)} </sup>
+                                                {row.round_number} <sup>{t(FormattedRound(row.round_number))} </sup>
                                             </Typography>
                                         )}{' '}
                                     </Box>

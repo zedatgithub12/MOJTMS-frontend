@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { Grid, Typography, useTheme, Rating, Pagination, CircularProgress, MenuItem, ListItemIcon } from '@mui/material';
 import { Box } from '@mui/system';
+import { useQuery } from 'react-query';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { formatDateOnly } from 'utils/functions';
+import { ActionMenu } from 'ui-component/menu/action';
+import { IconTrash } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import RatingProgressBarList from './components/RatingProgressBarList ';
 import ReviewsListing from './components/ReviewsList';
 import AddRating from './components/addrating';
 import Connections from 'api';
-import { useQuery } from 'react-query';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import { formatDateOnly } from 'utils/functions';
-import PropTypes from 'prop-types';
-import { ActionMenu } from 'ui-component/menu/action';
-import { IconTrash } from '@tabler/icons';
 
 const Review = ({ session_id }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
@@ -157,7 +159,7 @@ const Review = ({ session_id }) => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -193,7 +195,7 @@ const Review = ({ session_id }) => {
                                     <Box sx={{ marginY: 0.5 }}>
                                         <Rating name="trainee review" value={averageRating} readOnly sx={{ marginY: 1 }} />
                                         <Typography variant="body2" marginLeft={0.5}>
-                                            {totalreviews} reviews
+                                            {totalreviews} {t('reviews')}
                                         </Typography>
                                     </Box>
                                 </Grid>
@@ -238,13 +240,13 @@ const Review = ({ session_id }) => {
                                             alignItems: 'center'
                                         }}
                                     >
-                                        <Typography variant="subtitle1">Your review</Typography>
+                                        <Typography variant="subtitle1">{t('Your review')}</Typography>
                                         <ActionMenu>
                                             <MenuItem onClick={() => handleDeleting()}>
                                                 <ListItemIcon>
                                                     <IconTrash size={18} />
                                                 </ListItemIcon>
-                                                Delete
+                                                {t('Delete')}
                                             </MenuItem>
                                         </ActionMenu>
                                     </Box>

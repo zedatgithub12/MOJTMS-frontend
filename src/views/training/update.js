@@ -27,6 +27,7 @@ import { sizes } from 'constants';
 import { useLocation, useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
 import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -43,6 +44,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const UpdateTraining = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -218,7 +220,7 @@ const UpdateTraining = () => {
                                                             resize: 'contain',
                                                             borderRadius: 4
                                                         }}
-                                                        alt="Thumbnail"
+                                                        alt={t('Thumbnail')}
                                                     />
                                                 </Box>
                                             ) : (
@@ -248,8 +250,8 @@ const UpdateTraining = () => {
                                                             <IconUpload size={28} color={theme.palette.primary.main} />
                                                         </IconButton>
                                                     </label>
-                                                    <Typography variant="subtitle1">Upload Thumbnail</Typography>
-                                                    <Typography variant="subtitle2">Image that emphesize the training</Typography>
+                                                    <Typography variant="subtitle1">{t('Upload Thumbnail')}</Typography>
+                                                    <Typography variant="subtitle2">{t('Image that emphesize the training')}</Typography>
                                                 </Box>
                                             )}
                                             {state.thumbnail && (
@@ -271,14 +273,14 @@ const UpdateTraining = () => {
                                                                 borderRadius: 1
                                                             }}
                                                         >
-                                                            Update Picture
+                                                            {t('Change Picture')}
                                                         </Typography>
                                                     </label>
                                                 </Box>
                                             )}
                                             {imageprompt.status && (
                                                 <Typography variant="subtitle" color="error" marginY={2}>
-                                                    {imageprompt.message}
+                                                    {t(imageprompt.message)}
                                                 </Typography>
                                             )}
                                         </Box>
@@ -318,7 +320,7 @@ const UpdateTraining = () => {
 
                                                         {ImageValidation && (
                                                             <Typography variant="subtitle2" color="error">
-                                                                {ImageValidation.message}
+                                                                {t(ImageValidation.message)}
                                                             </Typography>
                                                         )}
                                                     </Box>
@@ -337,11 +339,11 @@ const UpdateTraining = () => {
                                             sx={{ ...theme.typography.customInput }}
                                             disabled
                                         >
-                                            <InputLabel htmlFor="training-title">Training title</InputLabel>
+                                            <InputLabel htmlFor="training-title">{t('Training title')}</InputLabel>
                                             <OutlinedInput
                                                 id="training-title"
                                                 name="name"
-                                                label="Training title"
+                                                label={t('Training title')}
                                                 value={formik.values.name}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -349,7 +351,7 @@ const UpdateTraining = () => {
                                             />
                                             {formik.touched.name && formik.errors.name && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.name}
+                                                    {t(formik.errors.name)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -362,7 +364,7 @@ const UpdateTraining = () => {
                                             sx={{ ...theme.typography.customInput }}
                                         >
                                             <InputLabel htmlFor="outlined-adornment-category">
-                                                {formik.values.category ? '' : 'Category'}
+                                                {formik.values.category ? '' : t('Category')}
                                             </InputLabel>
                                             <Select
                                                 value={formik.values.category}
@@ -372,19 +374,19 @@ const UpdateTraining = () => {
                                             >
                                                 {categories.length == 0 ? (
                                                     <Typography variant="body2" sx={{ padding: 1 }}>
-                                                        Categories Not Found
+                                                        {t('Categories Not Found')}
                                                     </Typography>
                                                 ) : (
                                                     categories.map((category, index) => (
                                                         <MenuItem key={index} value={category.name}>
-                                                            {category.name}
+                                                            {t(category.name)}
                                                         </MenuItem>
                                                     ))
                                                 )}
                                             </Select>
                                             {formik.touched.category && formik.errors.category && (
                                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                                    {formik.errors.category}
+                                                    {t(formik.errors.category)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -397,7 +399,7 @@ const UpdateTraining = () => {
                                             sx={{ ...theme.typography.customInput }}
                                         >
                                             <InputLabel htmlFor="outlined-adornment-language">
-                                                {formik.values.language ? '' : 'Language'}
+                                                {formik.values.language ? '' : t('Language')}
                                             </InputLabel>
                                             <Select
                                                 value={formik.values.language}
@@ -407,19 +409,19 @@ const UpdateTraining = () => {
                                             >
                                                 {TrainingLanguages.length == 0 ? (
                                                     <Typography variant="body2" sx={{ padding: 1 }}>
-                                                        Language not found
+                                                        {t('Language not found')}
                                                     </Typography>
                                                 ) : (
                                                     TrainingLanguages.map((lang, index) => (
                                                         <MenuItem key={index} value={lang.name}>
-                                                            {lang.name}
+                                                            {t(lang.name)}
                                                         </MenuItem>
                                                     ))
                                                 )}
                                             </Select>
                                             {formik.touched.language && formik.errors.language && (
                                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                                    {formik.errors.language}
+                                                    {t(formik.errors.language)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -431,11 +433,11 @@ const UpdateTraining = () => {
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="training-description">Description </InputLabel>
+                                            <InputLabel htmlFor="training-description">{t('Description')} </InputLabel>
                                             <OutlinedInput
                                                 id="training-description"
                                                 name="description"
-                                                label="Description"
+                                                label={t('Description')}
                                                 value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -445,7 +447,7 @@ const UpdateTraining = () => {
                                             />
                                             {formik.touched.description && formik.errors.description && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.description}
+                                                    {t(formik.errors.description)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -457,11 +459,11 @@ const UpdateTraining = () => {
                                             error={formik.touched.prerequisites && Boolean(formik.errors.prerequisites)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="training-pre-requisites">Pre-requisites </InputLabel>
+                                            <InputLabel htmlFor="training-pre-requisites">{t('Pre-requisites')} </InputLabel>
                                             <OutlinedInput
                                                 id="training-pre-requisites"
                                                 name="prerequisites"
-                                                label="Pre-requisites"
+                                                label={t('Pre-requisites')}
                                                 value={formik.values.prerequisites}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -471,7 +473,7 @@ const UpdateTraining = () => {
                                             />
                                             {formik.touched.prerequisites && formik.errors.prerequisites && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.prerequisites}
+                                                    {t(formik.errors.prerequisites)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -489,7 +491,7 @@ const UpdateTraining = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Update Training'
+                                                    t('Update Training')
                                                 )}
                                             </Button>
                                         </AnimateButton>
@@ -500,7 +502,7 @@ const UpdateTraining = () => {
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
                                     </Grid>
                                 </Grid>

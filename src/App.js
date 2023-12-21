@@ -17,6 +17,8 @@ import { useMemo } from 'react';
 import Loadable from 'ui-component/Loadable';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HelmetProvider } from 'react-helmet-async';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
 
 // ==============================|| APP ||============================== //
 
@@ -94,34 +96,36 @@ const App = () => {
     }, [loged]);
 
     return (
-        <StyledEngineProvider injectFirst>
-            <AuthContext.Provider value={authContext}>
-                <QueryClientProvider client={queryClient}>
-                    <ThemeProvider theme={themes(customization)}>
-                        <HelmetProvider>
-                            <CssBaseline />
-                            <NavigationScroll>
-                                {loged ? (
-                                    <Routes />
-                                ) : location.pathname === '/pages/register/register' ? (
-                                    <AuthRegister />
-                                ) : location.pathname === '/forgot-password' ? (
-                                    <Forgot_Password />
-                                ) : location.pathname === `/reset-password/${token}` ? (
-                                    <Reset_Password />
-                                ) : location.pathname === '/pages/login/login' ? (
-                                    <AuthLogin />
-                                ) : location.pathname === '/' ? (
-                                    <AuthLogin />
-                                ) : (
-                                    <NotFound />
-                                )}
-                            </NavigationScroll>
-                        </HelmetProvider>
-                    </ThemeProvider>
-                </QueryClientProvider>
-            </AuthContext.Provider>
-        </StyledEngineProvider>
+        <I18nextProvider i18n={i18n}>
+            <StyledEngineProvider injectFirst>
+                <AuthContext.Provider value={authContext}>
+                    <QueryClientProvider client={queryClient}>
+                        <ThemeProvider theme={themes(customization)}>
+                            <HelmetProvider>
+                                <CssBaseline />
+                                <NavigationScroll>
+                                    {loged ? (
+                                        <Routes />
+                                    ) : location.pathname === '/pages/register/register' ? (
+                                        <AuthRegister />
+                                    ) : location.pathname === '/forgot-password' ? (
+                                        <Forgot_Password />
+                                    ) : location.pathname === `/reset-password/${token}` ? (
+                                        <Reset_Password />
+                                    ) : location.pathname === '/pages/login/login' ? (
+                                        <AuthLogin />
+                                    ) : location.pathname === '/' ? (
+                                        <AuthLogin />
+                                    ) : (
+                                        <NotFound />
+                                    )}
+                                </NavigationScroll>
+                            </HelmetProvider>
+                        </ThemeProvider>
+                    </QueryClientProvider>
+                </AuthContext.Provider>
+            </StyledEngineProvider>
+        </I18nextProvider>
     );
 };
 

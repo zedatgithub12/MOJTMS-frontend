@@ -2,8 +2,10 @@ import { Grid, Box, Paper, InputBase, Divider, IconButton, Button, Typography, C
 import SearchIcon from '@mui/icons-material/Search';
 import { Add } from '@mui/icons-material';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit, addTitle, onAdd, children }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -35,7 +37,7 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                     <Paper component="form" sx={{ p: '3px 4px', boxShadow: 1, display: 'flex', alignItems: 'center', width: 400 }}>
                         <InputBase
                             sx={{ ml: 1, px: 1.5, flex: 1 }}
-                            placeholder="Search"
+                            placeholder={t('Search')}
                             inputProps={{ 'aria-label': 'search' }}
                             value={searchText}
                             onChange={onTextChange}
@@ -61,7 +63,7 @@ export const SearchFilterAdd = ({ searchText, searching, onTextChange, onSubmit,
                     <Button variant="contained" color="primary" padding={3} onClick={onAdd}>
                         <Add size={10} />
                         <Typography marginLeft={1} variant="subtitle1" sx={{ color: theme.palette.background.default }}>
-                            {addTitle}
+                            {t(addTitle)}
                         </Typography>
                     </Button>
                 </Box>

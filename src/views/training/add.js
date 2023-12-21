@@ -27,6 +27,7 @@ import { sizes } from 'constants';
 import { useNavigate } from 'react-router';
 import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
 import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -41,11 +42,12 @@ const validationSchema = Yup.object().shape({
     category: Yup.string().required('Training category is required'),
     name: Yup.string().required('Training title is required').max(80),
     language: Yup.string().required('Training language is required'),
-    description: Yup.string().max(800),
-    prerequisites: Yup.string().max(750)
+    description: Yup.string().max(5000),
+    prerequisites: Yup.string().max(5000)
 });
 
 const AddTraining = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const bigDevice = useMediaQuery(theme.breakpoints.up('md'));
@@ -158,7 +160,7 @@ const AddTraining = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -220,7 +222,7 @@ const AddTraining = () => {
                                                             resize: 'contain',
                                                             borderRadius: 4
                                                         }}
-                                                        alt="Thumbnail"
+                                                        alt={t('Thumbnail')}
                                                     />
                                                 </Box>
                                             ) : (
@@ -250,8 +252,8 @@ const AddTraining = () => {
                                                             <IconUpload size={28} color={theme.palette.primary.main} />
                                                         </IconButton>
                                                     </label>
-                                                    <Typography variant="subtitle1">Upload Thumbnail</Typography>
-                                                    <Typography variant="subtitle2">Image that emphesize the training</Typography>
+                                                    <Typography variant="subtitle1">{t('Upload Thumbnail')}</Typography>
+                                                    <Typography variant="subtitle2">{t('Image that emphesize the training')}</Typography>
                                                 </Box>
                                             )}
                                             {thumbnail && (
@@ -273,14 +275,14 @@ const AddTraining = () => {
                                                                 borderRadius: 1
                                                             }}
                                                         >
-                                                            Update Picture
+                                                            {t('Change Picture')}
                                                         </Typography>
                                                     </label>
                                                 </Box>
                                             )}
                                             {imageprompt.status && (
                                                 <Typography variant="subtitle" color="error" marginY={2}>
-                                                    {imageprompt.message}
+                                                    {t(imageprompt.message)}
                                                 </Typography>
                                             )}
                                         </Box>
@@ -320,7 +322,7 @@ const AddTraining = () => {
 
                                                         {ImageValidation && (
                                                             <Typography variant="subtitle2" color="error">
-                                                                {ImageValidation.message}
+                                                                {t(ImageValidation.message)}
                                                             </Typography>
                                                         )}
                                                     </Box>
@@ -339,7 +341,7 @@ const AddTraining = () => {
                                             sx={{ ...theme.typography.customInput }}
                                         >
                                             <InputLabel htmlFor="outlined-adornment-category">
-                                                {formik.values.category ? '' : 'Category'}
+                                                {formik.values.category ? '' : t('Category')}
                                             </InputLabel>
                                             <Select
                                                 value={formik.values.category}
@@ -349,19 +351,19 @@ const AddTraining = () => {
                                             >
                                                 {categories.length == 0 ? (
                                                     <Typography variant="body2" sx={{ padding: 1 }}>
-                                                        Categories Not Found
+                                                        {t('Categories Not Found')}
                                                     </Typography>
                                                 ) : (
                                                     categories.map((category, index) => (
                                                         <MenuItem key={index} value={category.name}>
-                                                            {category.name}
+                                                            {t(category.name)}
                                                         </MenuItem>
                                                     ))
                                                 )}
                                             </Select>
                                             {formik.touched.category && formik.errors.category && (
                                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                                    {formik.errors.category}
+                                                    {t(formik.errors.category)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -373,11 +375,11 @@ const AddTraining = () => {
                                             error={formik.touched.name && Boolean(formik.errors.name)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="training-title">Training title</InputLabel>
+                                            <InputLabel htmlFor="training-title">{t('Training title')}</InputLabel>
                                             <OutlinedInput
                                                 id="training-title"
                                                 name="name"
-                                                label="Training title"
+                                                label={t('Training title')}
                                                 value={formik.values.name}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -385,7 +387,7 @@ const AddTraining = () => {
                                             />
                                             {formik.touched.name && formik.errors.name && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.name}
+                                                    {t(formik.errors.name)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -398,7 +400,7 @@ const AddTraining = () => {
                                             sx={{ ...theme.typography.customInput }}
                                         >
                                             <InputLabel htmlFor="outlined-adornment-language">
-                                                {formik.values.language ? '' : 'Language'}
+                                                {formik.values.language ? '' : t('Language')}
                                             </InputLabel>
                                             <Select
                                                 value={formik.values.language}
@@ -408,19 +410,19 @@ const AddTraining = () => {
                                             >
                                                 {TrainingLanguages.length == 0 ? (
                                                     <Typography variant="body2" sx={{ padding: 1 }}>
-                                                        Language not found
+                                                        {t('Language not found')}
                                                     </Typography>
                                                 ) : (
                                                     TrainingLanguages.map((lang, index) => (
                                                         <MenuItem key={index} value={lang.name}>
-                                                            {lang.name}
+                                                            {t(lang.name)}
                                                         </MenuItem>
                                                     ))
                                                 )}
                                             </Select>
                                             {formik.touched.language && formik.errors.language && (
                                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                                    {formik.errors.language}
+                                                    {t(formik.errors.language)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -432,11 +434,11 @@ const AddTraining = () => {
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="training-description">Description </InputLabel>
+                                            <InputLabel htmlFor="training-description">{t('Description')} </InputLabel>
                                             <OutlinedInput
                                                 id="training-description"
                                                 name="description"
-                                                label="Description"
+                                                label={t('Description')}
                                                 value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -446,7 +448,7 @@ const AddTraining = () => {
                                             />
                                             {formik.touched.description && formik.errors.description && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.description}
+                                                    {t(formik.errors.description)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -458,11 +460,11 @@ const AddTraining = () => {
                                             error={formik.touched.prerequisites && Boolean(formik.errors.prerequisites)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="training-pre-requisites">Pre-requisites </InputLabel>
+                                            <InputLabel htmlFor="training-pre-requisites">{t('Pre-requisites')} </InputLabel>
                                             <OutlinedInput
                                                 id="training-pre-requisites"
                                                 name="prerequisites"
-                                                label="Pre-requisites"
+                                                label={t('Pre-requisites')}
                                                 value={formik.values.prerequisites}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -472,7 +474,7 @@ const AddTraining = () => {
                                             />
                                             {formik.touched.prerequisites && formik.errors.prerequisites && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.prerequisites}
+                                                    {t(formik.errors.prerequisites)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -490,7 +492,7 @@ const AddTraining = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Add Training'
+                                                    t('Add Training')
                                                 )}
                                             </Button>
                                         </AnimateButton>
@@ -501,7 +503,7 @@ const AddTraining = () => {
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
                                     </Grid>
                                 </Grid>

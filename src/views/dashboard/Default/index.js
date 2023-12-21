@@ -17,10 +17,12 @@ import TrainingChart from './components/TrainingChart';
 import Connections from 'api';
 import UpcomingSkeleton from 'ui-component/cards/Skeleton/UpcomingSkeleton';
 import DashboardAccordions from './components/DashboardAccordions';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const theme = useTheme();
 
@@ -113,7 +115,7 @@ const Dashboard = () => {
                     <Grid container>
                         <Grid item xs={12} sm={12} md={8} lg={8} sx={{ paddingY: 4, paddingX: 2 }}>
                             <Typography variant="subtitle1" marginLeft={2}>
-                                Male and Female trainee in each month
+                                {t('Monthly trainees, both male and female')}
                             </Typography>
 
                             {loading ? (
@@ -138,7 +140,7 @@ const Dashboard = () => {
 
                         <Grid item xs={12} sm={12} md={4} lg={4} sx={{ paddingY: 4, paddingLeft: 2 }}>
                             <Typography variant="subtitle1" marginLeft={2}>
-                                Upcoming Trainings
+                                {t('Upcoming Trainings')}
                             </Typography>
                             {loading ? (
                                 <React.Fragment>
@@ -161,16 +163,16 @@ const Dashboard = () => {
                             )}
 
                             <Typography variant="subtitle1" marginLeft={2}>
-                                Summaries
+                                {t('Summaries')}
                             </Typography>
                             <DashboardAccordions
                                 departments={
                                     <Table sx={{ width: '100%' }} stickyHeader>
                                         <TableHead>
                                             <TableRow sx={{ backgroundColor: theme.palette.primary[200] }}>
-                                                <TableCell>Name</TableCell>
-                                                <TableCell>M</TableCell>
-                                                <TableCell>F</TableCell>
+                                                <TableCell>{t('Name')}</TableCell>
+                                                <TableCell>{t('M')}</TableCell>
+                                                <TableCell>{t('F')}</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         {data &&
@@ -195,8 +197,8 @@ const Dashboard = () => {
                                     <Table sx={{ width: '100%' }} stickyHeader>
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell>Name</TableCell>
-                                                <TableCell>Training</TableCell>
+                                                <TableCell>{t('Name')}</TableCell>
+                                                <TableCell>{t('Training')}</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         {data &&

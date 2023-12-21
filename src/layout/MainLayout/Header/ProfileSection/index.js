@@ -32,10 +32,12 @@ import Transitions from 'ui-component/extended/Transitions';
 // assets
 import { IconLogout, IconUser } from '@tabler/icons';
 import { AuthContext } from 'context/context';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
@@ -186,7 +188,9 @@ const ProfileSection = () => {
                                                     <ListItemIcon>
                                                         <IconUser stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                                                    <ListItemText
+                                                        primary={<Typography variant="body2">{t('Account Settings')}</Typography>}
+                                                    />
                                                 </ListItemButton>
                                                 <ListItemButton
                                                     sx={{ borderRadius: `${customization.borderRadius}px` }}
@@ -196,7 +200,7 @@ const ProfileSection = () => {
                                                     <ListItemIcon>
                                                         <IconLogout stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                                                    <ListItemText primary={<Typography variant="body2">{t('Logout')}</Typography>} />
                                                 </ListItemButton>
                                             </List>
                                         </Box>

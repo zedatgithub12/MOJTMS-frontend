@@ -12,10 +12,12 @@ import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import noresult from 'assets/images/no_result.png';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| DEPARTMENT PAGE ||============================== //
 
 const Department = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const ImageApi = Connections.thumbnails;

@@ -8,16 +8,18 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import * as Yup from 'yup';
 import Connections from 'api';
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import { useTranslation } from 'react-i18next';
 
 const validationSchema = Yup.object().shape({
     currentPassword: Yup.string().required('Current Password is required'),
-    newPassword: Yup.string().required('New Password is required').min(6, 'New Password must be at least 6 characters'),
+    newPassword: Yup.string().required('New Password is required').min(4, 'New Password must be at least 4 characters'),
     confirmPassword: Yup.string()
         .required('Confirm Password is required')
         .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
 });
 
 const ChangePassword = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const [expand, setExpand] = useState(false);
 
@@ -108,7 +110,7 @@ const ChangePassword = () => {
                         paddingX: 3
                     }}
                 >
-                    <Typography variant="h4">Change Password</Typography>
+                    <Typography variant="h4">{t('Change Password')}</Typography>
                     <IconButton onClick={() => setExpand(!expand)}>
                         {expand ? <IconChevronUp size={18} /> : <IconChevronDown size={18} />}
                     </IconButton>
@@ -130,36 +132,36 @@ const ChangePassword = () => {
                                     <TextField
                                         name="currentPassword"
                                         type={showPassword ? 'text' : 'password'}
-                                        label="Current Password"
+                                        label={t('Current Password')}
                                         variant="outlined"
                                         fullWidth
                                         {...formik.getFieldProps('currentPassword')}
-                                        error={formik.touched.currentPassword && formik.errors.currentPassword}
-                                        helperText={formik.touched.currentPassword && formik.errors.currentPassword}
+                                        error={formik.touched.currentPassword && t(formik.errors.currentPassword)}
+                                        helperText={formik.touched.currentPassword && t(formik.errors.currentPassword)}
                                     />
                                 </Box>
                                 <Box sx={{ paddingY: 1.5 }}>
                                     <TextField
                                         name="newPassword"
                                         type={showPassword ? 'text' : 'password'}
-                                        label="New Password"
+                                        label={t('New Password')}
                                         variant="outlined"
                                         fullWidth
                                         {...formik.getFieldProps('newPassword')}
-                                        error={formik.touched.newPassword && formik.errors.newPassword}
-                                        helperText={formik.touched.newPassword && formik.errors.newPassword}
+                                        error={formik.touched.newPassword && t(formik.errors.newPassword)}
+                                        helperText={formik.touched.newPassword && t(formik.errors.newPassword)}
                                     />
                                 </Box>
                                 <Box sx={{ paddingY: 1.5 }}>
                                     <TextField
                                         name="confirmPassword"
                                         type={showPassword ? 'text' : 'password'}
-                                        label="Confirm Password"
+                                        label={t('Confirm Password')}
                                         variant="outlined"
                                         fullWidth
                                         {...formik.getFieldProps('confirmPassword')}
-                                        error={formik.touched.confirmPassword && formik.errors.confirmPassword}
-                                        helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                                        error={formik.touched.confirmPassword && t(formik.errors.confirmPassword)}
+                                        helperText={formik.touched.confirmPassword && t(formik.errors.confirmPassword)}
                                         InputProps={{
                                             endAdornment: (
                                                 <InputAdornment position="end">
@@ -186,7 +188,7 @@ const ChangePassword = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Change Password'
+                                                    t('Change Password')
                                                 )}
                                             </Button>
                                         </AnimateButton>

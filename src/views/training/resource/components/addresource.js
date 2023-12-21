@@ -15,6 +15,7 @@ import {
 
 // project imports
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 
@@ -26,6 +27,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const AddResource = ({ handleSubmittion, isSubmitting }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const handleSubmitting = (values) => {
@@ -56,7 +58,7 @@ const AddResource = ({ handleSubmittion, isSubmitting }) => {
             }}
         >
             <Typography variant="subtitle1" color="primary" marginLeft={1.4}>
-                Add resources
+                {t('Add resources')}
             </Typography>
             <form noValidate onSubmit={formik.handleSubmit}>
                 <Grid item xs={12}>
@@ -75,8 +77,8 @@ const AddResource = ({ handleSubmittion, isSubmitting }) => {
                                 justifyContent: 'space-around'
                             }}
                         >
-                            <FormControlLabel value={true} control={<Radio />} label="Provided" />
-                            <FormControlLabel value={false} control={<Radio />} label="Not Provided" />
+                            <FormControlLabel value={true} control={<Radio />} label={t('Provided')} />
+                            <FormControlLabel value={false} control={<Radio />} label={t('Not Provided')} />
                         </RadioGroup>
                     </FormControl>
                 </Grid>
@@ -86,7 +88,7 @@ const AddResource = ({ handleSubmittion, isSubmitting }) => {
                         <TextField
                             id="resource-name"
                             name="name"
-                            label="Resource name"
+                            label={t('Resource name')}
                             value={formik.values.name}
                             onChange={formik.handleChange}
                             fullWidth
@@ -94,7 +96,7 @@ const AddResource = ({ handleSubmittion, isSubmitting }) => {
                         />
                         {formik.touched.name && formik.errors.name && (
                             <FormHelperText error id="standard-weight-helper-text-name">
-                                {formik.errors.name}
+                                {t(formik.errors.name)}
                             </FormHelperText>
                         )}
                     </Grid>
@@ -105,7 +107,7 @@ const AddResource = ({ handleSubmittion, isSubmitting }) => {
                                 variant="outlined"
                                 id="quantity"
                                 name="quantity"
-                                label="Quantity"
+                                label={t('Quantity')}
                                 value={formik.values.quantity}
                                 onChange={formik.handleChange}
                                 fullWidth
@@ -113,7 +115,7 @@ const AddResource = ({ handleSubmittion, isSubmitting }) => {
                             />
                             {formik.touched.quantity && formik.errors.quantity && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.quantity}
+                                    {t(formik.errors.quantity)}
                                 </FormHelperText>
                             )}
                         </Grid>
@@ -128,7 +130,7 @@ const AddResource = ({ handleSubmittion, isSubmitting }) => {
                             sx={{ py: 1.4 }}
                             fullWidth
                         >
-                            {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : 'Submit'}
+                            {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : t('Submit')}
                         </Button>
                     </Grid>
                 </Grid>

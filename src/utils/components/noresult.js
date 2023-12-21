@@ -1,9 +1,11 @@
 import { Button, Grid, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import PropTypes from 'prop-types';
 import noresult from 'assets/images/no_result.png';
 
 export const NoResult = ({ image, title, message, buttontitle, onPress }) => {
+    const { t } = useTranslation();
     return (
         <Grid container>
             <Grid
@@ -18,11 +20,11 @@ export const NoResult = ({ image, title, message, buttontitle, onPress }) => {
                     borderRadius: 4
                 }}
             >
-                <img src={noresult} alt="No result found" width="240px" height="240px" />
+                <img src={noresult} alt={t('No result found')} width="240px" height="240px" />
                 <Typography variant="h3" marginY={0.5}>
-                    {title}
+                    {t(title)}
                 </Typography>
-                <Typography variant="subtitle2"> {message} </Typography>
+                <Typography variant="subtitle2"> {t(message)} </Typography>
                 {buttontitle && (
                     <Button
                         variant="contained"
@@ -30,7 +32,7 @@ export const NoResult = ({ image, title, message, buttontitle, onPress }) => {
                         onClick={onPress}
                         sx={{ padding: 1, paddingX: 5, marginTop: 4, borderRadius: 20 }}
                     >
-                        {buttontitle}
+                        {t(buttontitle)}
                     </Button>
                 )}
             </Grid>

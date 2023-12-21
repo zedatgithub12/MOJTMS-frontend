@@ -12,6 +12,7 @@ import { IconLabel } from 'ui-component/content/IconLabel';
 import { CheckCircle, Person } from '@mui/icons-material';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
 export const AssignCoordDialog = ({
     open,
@@ -25,6 +26,7 @@ export const AssignCoordDialog = ({
     onSubmit,
     onRefresh
 }) => {
+    const { t } = useTranslation();
     const [selectedCoordinator, setSelectedCoordinator] = useState(null);
     const [assigning, setAssigning] = useState(false);
     const theme = useTheme();
@@ -78,7 +80,7 @@ export const AssignCoordDialog = ({
     };
 
     const handlePrompts = (message, variant) => {
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -94,7 +96,7 @@ export const AssignCoordDialog = ({
                     }}
                 >
                     <DialogTitle variant="h4" color="grey">
-                        Assign branch coordinator
+                        {t('Assign branch coordinator')}
                     </DialogTitle>
                     <IconButton onClick={handleDialogClose}>
                         <IconX size={20} />
@@ -105,7 +107,7 @@ export const AssignCoordDialog = ({
                     <Paper component="form" sx={{ boxShadow: 1, display: 'flex', alignItems: 'center' }}>
                         <InputBase
                             sx={{ ml: 1, px: 1.5, flex: 1 }}
-                            placeholder="Search coordinator"
+                            placeholder={t('Search')}
                             inputProps={{ 'aria-label': 'search' }}
                             value={searchText}
                             onChange={onTextChange}
@@ -145,7 +147,7 @@ export const AssignCoordDialog = ({
                                             }}
                                         >
                                             <IconMoodEmpty />
-                                            <Typography variant="body2">Coordinator not found</Typography>
+                                            <Typography variant="body2">{t('Coordinator not found')}</Typography>
                                         </Box>
                                     ) : (
                                         coordinators.map((coordinator) => (
@@ -171,8 +173,8 @@ export const AssignCoordDialog = ({
                                             >
                                                 <Box>
                                                     <Typography variant="subtitle2">
-                                                        Currently |
-                                                        <b> {coordinator.department ? coordinator.department.name : 'unsigned'}</b>
+                                                        {t('Currently')} |
+                                                        <b> {coordinator.department ? coordinator.department.name : t('Not assigned')}</b>
                                                     </Typography>
                                                     <IconLabel content={coordinator.name} label={coordinator.email} sx={{ paddinY: 3 }}>
                                                         <Person fontSize="small" />
@@ -193,14 +195,14 @@ export const AssignCoordDialog = ({
                     </Grid>
                 </DialogContent>
                 <DialogActions sx={{ padding: 2 }}>
-                    <Button onClick={handleDialogClose}>Cancel</Button>
+                    <Button onClick={handleDialogClose}>{t('Cancel')}</Button>
                     <Button
                         onClick={() => handleCoordinatorAssigning()}
                         variant="outlined"
                         sx={{ paddingX: 6 }}
                         disabled={selectedCoordinator ? false : true}
                     >
-                        {assigning ? <CircularProgress size={16} /> : 'Assign'}
+                        {assigning ? <CircularProgress size={16} /> : t('Assign')}
                     </Button>
                 </DialogActions>
                 <SnackbarProvider maxSnack={2} />

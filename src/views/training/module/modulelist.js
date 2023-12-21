@@ -11,6 +11,7 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { AddMaterial } from 'views/materials/addmaterial';
 import { useNavigate } from 'react-router';
 import { UpdateMaterial } from 'views/materials/updatematerial';
+import { useTranslation } from 'react-i18next';
 
 import noresult from 'assets/images/no_result.png';
 import errorImage from 'assets/images/error.jpg';
@@ -20,6 +21,7 @@ import Connections from 'api';
 import MaterialCard from 'ui-component/cards/materialCard';
 
 const ModuleList = ({ modules, loading, error, sx }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -215,7 +217,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                     window.URL.revokeObjectURL(url);
                 } else {
                     // Handle error response
-                    throw new Error('File download failed');
+                    throw new Error(t('File download failed'));
                 }
             })
             .catch((error) => {
@@ -329,9 +331,9 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                     {module.module_description && (
                                         <Box>
                                             <Typography variant="subtitle2" marginY={0.5}>
-                                                Module description
+                                                {t('Module description')}
                                             </Typography>
-                                            <Typography variant="body2">{module.module_description}</Typography>
+                                            <Typography variant="body2">{t(module.module_description)}</Typography>
                                         </Box>
                                     )}
 
@@ -344,14 +346,14 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                             marginTop: 2
                                         }}
                                     >
-                                        <Typography variant="subtitle1">Training Materials</Typography>
+                                        <Typography variant="subtitle1">{t('Training Materials')}</Typography>
                                         {role === 'Admin' ? (
                                             <Button variant="text" color="primary" onClick={() => handleAddMaterial()}>
-                                                Add New
+                                                {t('Add New')}
                                             </Button>
                                         ) : role === 'Coordinator' ? (
                                             <Button variant="text" color="primary" onClick={() => handleAddMaterial()}>
-                                                Add New
+                                                {t('Add New')}
                                             </Button>
                                         ) : null}
                                     </Box>
@@ -390,7 +392,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                                                 sx={{ maxWidth: 180, py: 1, px: 4, my: 4 }}
                                                 onClick={() => navigate('/training/module/materials', { state: selectedModule })}
                                             >
-                                                More Materials
+                                                {t('More Materials')}
                                             </Button>
                                         )}
                                     </Box>
@@ -420,7 +422,7 @@ const ModuleList = ({ modules, loading, error, sx }) => {
                     type="Archive"
                     open={archive}
                     title="Archive Module"
-                    description={`Are you sure you want to Archive ` + selectedModule.module_title}
+                    description={t('Are you sure you want to Archive ') + selectedModule.module_title}
                     onNo={() => setArchive(false)}
                     onYes={() => handleArchiving()}
                     deleting={archiving}

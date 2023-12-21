@@ -19,12 +19,13 @@ import Connections from 'api';
 import PropTypes from 'prop-types';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
-
+import { useTranslation } from 'react-i18next';
 const validationSchema = Yup.object().shape({
     name: Yup.string().required('New full name is required')
 });
 
 const AccountInfo = ({ userInfo, onRefresh }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [edit, setEdit] = useState(false);
@@ -102,7 +103,7 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                     paddingX: 3
                                 }}
                             >
-                                <Typography variant="h4">Account Settings</Typography>
+                                <Typography variant="h4">{t('Account Settings')}</Typography>
                                 <Box>
                                     <IconButton onClick={() => setEdit(!edit)}>
                                         <IconX size={20} />
@@ -124,7 +125,7 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                     error={formik.touched.name && Boolean(formik.errors.name)}
                                     sx={{ ...theme.typography.customInput }}
                                 >
-                                    <InputLabel htmlFor="user-name">Full name</InputLabel>
+                                    <InputLabel htmlFor="user-name">{t('Full name')}</InputLabel>
                                     <OutlinedInput
                                         id="user-name"
                                         name="name"
@@ -147,7 +148,7 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                         {isSubmitting ? (
                                             <CircularProgress size={18} sx={{ color: theme.palette.background.default }} />
                                         ) : (
-                                            'Done'
+                                            t('Done')
                                         )}
                                     </Button>
                                 </Grid>
@@ -176,8 +177,8 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                 paddingX: 3
                             }}
                         >
-                            <Typography variant="h4">Account Settings</Typography>
-                            <Button onClick={() => setEdit(!edit)}>Edit</Button>
+                            <Typography variant="h4">{t('Account Settings')}</Typography>
+                            <Button onClick={() => setEdit(!edit)}>{t('Edit')}</Button>
                         </Box>
                         <Divider />
                         {userInfo && (
@@ -193,7 +194,7 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                 <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
                                     {userInfo.name}
                                 </Typography>
-                                <Typography color="grey"> Name </Typography>
+                                <Typography color="grey"> {t('Name')} </Typography>
                             </Box>
                         )}
 
@@ -210,7 +211,7 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                 <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
                                     {userInfo.email}
                                 </Typography>
-                                <Typography color="grey"> Email address</Typography>
+                                <Typography color="grey"> {t('Email address')}</Typography>
                             </Box>
                         )}
 
@@ -227,7 +228,7 @@ const AccountInfo = ({ userInfo, onRefresh }) => {
                                 <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
                                     {userInfo.role}
                                 </Typography>
-                                <Typography color="grey"> Role</Typography>
+                                <Typography color="grey"> {t('Role')}</Typography>
                             </Box>
                         )}
                     </Grid>

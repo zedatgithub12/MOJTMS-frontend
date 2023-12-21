@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Grid, Box, Typography, Checkbox, FormControlLabel, Radio, RadioGroup, CircularProgress, useTheme, Button } from '@mui/material';
 import { useLocation } from 'react-router';
-
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import SurveyHeader from 'views/evaluations/survey/components/surveyHeader';
 
 const FilledDetails = () => {
+    const { t } = useTranslation();
     const { state } = useLocation();
     const theme = useTheme();
     const userResponses = JSON.parse(state.response);
@@ -103,7 +104,7 @@ const FilledDetails = () => {
                         minHeight: '90vh'
                     }}
                 >
-                    <SurveyHeader back={true} name={data.title} description={data.description} />
+                    <SurveyHeader back={true} name={t(data.title)} description={t(data.description)} />
 
                     {questions.map((question, index) => {
                         const giveAnswer = userResponses.find((ans) => ans.qid === question.id);
@@ -136,7 +137,7 @@ const FilledDetails = () => {
                                     {question.question_type === 'multiple-choice' && question.surveyoptions ? (
                                         <Box paddingY={1.6}>
                                             <Typography variant="subtitle2" color="secondary">
-                                                Answer {`->`} checked
+                                                {t('Answer')} {`->`} {t('checked')}
                                             </Typography>
 
                                             <Box
@@ -174,7 +175,7 @@ const FilledDetails = () => {
                                             }}
                                         >
                                             <Typography variant="subtitle2" color="secondary">
-                                                Answer
+                                                {t('Answer')}
                                             </Typography>
                                             <Typography variant="body2" marginLeft={1.6}>
                                                 {giveAnswer && giveAnswer.answers[0].text_ans}
@@ -184,7 +185,7 @@ const FilledDetails = () => {
                                         question.surveyoptions && (
                                             <Box paddingY={1.6}>
                                                 <Typography variant="subtitle2" color="secondary">
-                                                    Answer {`->`} checked
+                                                    {t('Answer')} {`->`} {t('checked')}
                                                 </Typography>
 
                                                 <Box
@@ -205,7 +206,7 @@ const FilledDetails = () => {
                                                             <FormControlLabel
                                                                 value={option.id}
                                                                 control={<Radio />}
-                                                                label={option.option_text}
+                                                                label={t(option.option_text)}
                                                             />
                                                         ))}
                                                     </RadioGroup>
@@ -223,7 +224,7 @@ const FilledDetails = () => {
                         sx={{ marginLeft: 0.8, paddingX: 4, marginTop: 2 }}
                         onClick={() => window.print()}
                     >
-                        Print
+                        {t('Print')}
                     </Button>
                 </Grid>
             )}

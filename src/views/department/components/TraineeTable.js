@@ -2,9 +2,12 @@ import * as React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableBody, TableRow, TableCell, useTheme } from '@mui/material';
 import { calculateAge } from 'utils/functions';
 import { useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 const columns = ['Name', 'Email', 'Gender', 'Age', 'Job Title', 'Education Level'];
+
 export default function TraineeTable({ rows }) {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     return (
@@ -13,7 +16,7 @@ export default function TraineeTable({ rows }) {
                 <TableHead sx={{ backgroundColor: theme.palette.primary[200] }}>
                     <TableRow>
                         {columns.map((item) => (
-                            <TableCell>{item}</TableCell>
+                            <TableCell>{t(item)}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>

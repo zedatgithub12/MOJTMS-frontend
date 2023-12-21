@@ -12,10 +12,12 @@ import { MENU_OPEN, SET_MENU } from 'store/actions';
 
 // assets
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| SIDEBAR MENU LIST ITEMS ||============================== //
 
 const NavItem = ({ item, level }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const dispatch = useDispatch();
     const customization = useSelector((state) => state.customization);
@@ -82,13 +84,13 @@ const NavItem = ({ item, level }) => {
             <ListItemText
                 primary={
                     <Typography variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} color="inherit">
-                        {item.title}
+                        {t(item.title)}
                     </Typography>
                 }
                 secondary={
                     item.caption && (
                         <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
-                            {item.caption}
+                            {t(item.caption)}
                         </Typography>
                     )
                 }

@@ -10,6 +10,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
 import { IconChalkboard } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -42,6 +43,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 // ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
 
 const TotalTrainerCard = ({ isLoading, total }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     return (
@@ -77,7 +79,7 @@ const TotalTrainerCard = ({ isLoading, total }) => {
                                     }
                                     secondary={
                                         <Typography variant="subtitle2" sx={{ color: 'primary.dark', mt: 0.25 }}>
-                                            Trainers
+                                            {t('Trainers')}
                                         </Typography>
                                     }
                                 />

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Typography } from '@mui/material';
+import { Tabs, Tab } from '@mui/material';
 import { TabPanel } from 'views/training/components/tabpanel';
+import { TraineeTabs } from 'data/tabs/traineetabs';
+import { useTranslation } from 'react-i18next';
 import TrainingModules from 'views/training/module';
 import TrainingSchedule from 'views/training/schedule';
 import TrainingTrainers from 'views/training/trainer';
@@ -8,7 +10,6 @@ import TraineeEnrollment from 'views/training/trainee';
 import PropTypes from 'prop-types';
 import TrainingFacilitators from 'views/training/facilitator';
 import TrainingResources from 'views/training/resource';
-import { TraineeTabs } from 'data/tabs/traineetabs';
 import Review from 'views/training/review';
 
 function a11yProps(index) {
@@ -19,6 +20,7 @@ function a11yProps(index) {
 }
 
 const TraineeTabContainer = ({ training_id, session_id }) => {
+    const { t } = useTranslation();
     const [tab, setTab] = useState(0);
     const handleChange = (event, newValue) => {
         setTab(newValue);
@@ -28,7 +30,7 @@ const TraineeTabContainer = ({ training_id, session_id }) => {
         <React.Fragment>
             <Tabs value={tab} onChange={handleChange} aria-label="tabs" variant="scrollable" scrollButtons="auto">
                 {TraineeTabs.map((tab, index) => (
-                    <Tab label={tab.name} {...a11yProps(index)} />
+                    <Tab label={t(tab.name)} {...a11yProps(index)} />
                 ))}
             </Tabs>
             <TabPanel value={tab} index={0}>

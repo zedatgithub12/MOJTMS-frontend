@@ -1,20 +1,22 @@
 import React, { useState } from 'react';
 import { Box, CircularProgress, FormControl, FormHelperText, InputLabel, OutlinedInput, useTheme } from '@mui/material';
+import { useFormik } from 'formik';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Connections from 'api';
-import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 export default function AddCategory({ open, handleDialogClose, onRefresh }) {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const AddUserScheme = Yup.object().shape({
-        name: Yup.string().min(2, 'Too short for name').max(50, 'Name cannot exceed 50 characters').required('Name is required')
+        name: Yup.string().required('Category name is required')
     });
 
     const handleSubmitting = (values) => {
@@ -71,13 +73,13 @@ export default function AddCategory({ open, handleDialogClose, onRefresh }) {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
         <React.Fragment>
             <Dialog open={open} onClose={handleDialogClose}>
-                <DialogTitle variant="h4">Add Category</DialogTitle>
+                <DialogTitle variant="h4">{t('Add Category')}</DialogTitle>
                 <DialogContent>
                     <form noValidate onSubmit={formik.handleSubmit}>
                         <FormControl
@@ -85,19 +87,19 @@ export default function AddCategory({ open, handleDialogClose, onRefresh }) {
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             sx={{ ...theme.typography.customInput, marginTop: 2 }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-name">Category name</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-name">{t('Category name')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-name"
                                 type="text"
-                                value={formik.values.name}
+                                label={t('Name')}
                                 name="name"
+                                value={formik.values.name}
                                 onChange={formik.handleChange}
-                                label="Name"
                                 inputProps={{}}
                             />
                             {formik.touched.name && formik.errors.name && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.name}
+                                    {t(formik.errors.name)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -107,14 +109,14 @@ export default function AddCategory({ open, handleDialogClose, onRefresh }) {
                             error={formik.touched.description && Boolean(formik.errors.description)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-name">Description (optional)</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-name">{t('Description (optional)')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-name"
                                 type="text"
                                 value={formik.values.description}
                                 name="description"
                                 onChange={formik.handleChange}
-                                label="Description"
+                                label={t('Description')}
                                 inputProps={{}}
                                 multiline
                                 rows={4}
@@ -122,7 +124,7 @@ export default function AddCategory({ open, handleDialogClose, onRefresh }) {
                             />
                             {formik.touched.description && formik.errors.description && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.description}
+                                    {t(formik.errors.description)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -137,12 +139,12 @@ export default function AddCategory({ open, handleDialogClose, onRefresh }) {
                                     color="primary"
                                     sx={{ paddingX: 6, paddingY: 0.8 }}
                                 >
-                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Save'}
+                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : t('Save')}
                                 </Button>
                             </AnimateButton>
 
                             <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginLeft: 3 }}>
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                         </Box>
                     </form>

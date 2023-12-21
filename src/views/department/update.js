@@ -29,6 +29,7 @@ import { useLocation, useNavigate } from 'react-router';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| UPDATE DEPARTMENT PAGE ||============================== //
 const validationSchema = Yup.object().shape({
@@ -36,6 +37,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const UpdateDepartment = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -140,7 +142,7 @@ const UpdateDepartment = () => {
                 }}
             >
                 <MiniHeader
-                    title="Update Department "
+                    title="Update Department"
                     back={true}
                     sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
                 />
@@ -184,7 +186,7 @@ const UpdateDepartment = () => {
                                                             resize: 'contain',
                                                             borderRadius: 4
                                                         }}
-                                                        alt="Thumbnail"
+                                                        alt={t('Thumbnail')}
                                                     />
                                                 </Box>
                                             ) : (
@@ -204,7 +206,7 @@ const UpdateDepartment = () => {
                                                 >
                                                     <input
                                                         type="file"
-                                                        name="thumbnail"
+                                                        name={t('thumbnail')}
                                                         onChange={(event) => handleImageUpload(event)}
                                                         hidden
                                                         id="image-upload"
@@ -214,8 +216,8 @@ const UpdateDepartment = () => {
                                                             <IconUpload size={28} color={theme.palette.primary.main} />
                                                         </IconButton>
                                                     </label>
-                                                    <Typography variant="subtitle1">Upload Thumbnail</Typography>
-                                                    <Typography variant="subtitle2">Image that emphesize the department</Typography>
+                                                    <Typography variant="subtitle1">{t('Upload Thumbnail')}</Typography>
+                                                    <Typography variant="subtitle2">{t('Image that emphesize the department')}</Typography>
                                                 </Box>
                                             )}
                                             {state.thumbnail && (
@@ -237,14 +239,14 @@ const UpdateDepartment = () => {
                                                                 borderRadius: 1
                                                             }}
                                                         >
-                                                            Update Thumbnail
+                                                            {t('Change Thumbnail')}
                                                         </Typography>
                                                     </label>
                                                 </Box>
                                             )}
                                             {imageprompt.status && (
                                                 <Typography variant="subtitle" color="error" marginY={2}>
-                                                    {imageprompt.message}
+                                                    {t(imageprompt.message)}
                                                 </Typography>
                                             )}
                                         </Box>
@@ -284,7 +286,7 @@ const UpdateDepartment = () => {
 
                                                         {ImageValidation && (
                                                             <Typography variant="subtitle2" color="error">
-                                                                {ImageValidation.message}
+                                                                {t(ImageValidation.message)}
                                                             </Typography>
                                                         )}
                                                     </Box>
@@ -302,11 +304,11 @@ const UpdateDepartment = () => {
                                             error={formik.touched.name && Boolean(formik.errors.name)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-name">Department name</InputLabel>
+                                            <InputLabel htmlFor="department-name">{t('Department name')}</InputLabel>
                                             <OutlinedInput
                                                 id="department-name"
                                                 name="name"
-                                                label="Department name"
+                                                label={t('Department name')}
                                                 value={formik.values.name}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -314,7 +316,7 @@ const UpdateDepartment = () => {
                                             />
                                             {formik.touched.name && formik.errors.name && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.name}
+                                                    {t(formik.errors.name)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -326,11 +328,11 @@ const UpdateDepartment = () => {
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-description">Description </InputLabel>
+                                            <InputLabel htmlFor="department-description">{t('Description')} </InputLabel>
                                             <OutlinedInput
                                                 id="department-description"
                                                 name="description"
-                                                label="Description"
+                                                label={t('Description')}
                                                 value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -352,18 +354,18 @@ const UpdateDepartment = () => {
                                             error={formik.touched.email && Boolean(formik.errors.email)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-email">email </InputLabel>
+                                            <InputLabel htmlFor="department-email">{t('Email')} </InputLabel>
                                             <OutlinedInput
                                                 id="department-email"
                                                 name="email"
-                                                label="Email"
+                                                label={t('Email')}
                                                 value={formik.values.email}
                                                 onChange={formik.handleChange}
                                                 fullWidth
                                             />
                                             {formik.touched.email && formik.errors.email && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.email}
+                                                    {t(formik.errors.email)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -375,18 +377,18 @@ const UpdateDepartment = () => {
                                             error={formik.touched.phone && Boolean(formik.errors.phone)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="department-phone">Phone </InputLabel>
+                                            <InputLabel htmlFor="department-phone">{t('Phone')} </InputLabel>
                                             <OutlinedInput
                                                 id="department-phone"
                                                 name="phone"
-                                                label="Phone"
+                                                label={t('Phone')}
                                                 value={formik.values.phone}
                                                 onChange={formik.handleChange}
                                                 fullWidth
                                             />
                                             {formik.touched.phone && formik.errors.phone && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.phone}
+                                                    {t(formik.errors.phone)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -399,7 +401,7 @@ const UpdateDepartment = () => {
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
 
                                         <AnimateButton>
@@ -413,7 +415,7 @@ const UpdateDepartment = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Update Department'
+                                                    t('Update Department')
                                                 )}
                                             </Button>
                                         </AnimateButton>

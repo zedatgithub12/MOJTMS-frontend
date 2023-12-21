@@ -1,16 +1,18 @@
 import { CircularProgress, Divider, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import Connections from 'api';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
-import FacilitatorListing from './components/FacilitatorListing';
-import AssignedListing from './components/AssignedListing';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
+import PropTypes from 'prop-types';
+import FacilitatorListing from './components/FacilitatorListing';
+import AssignedListing from './components/AssignedListing';
 
 const TrainingFacilitators = ({ session_id }) => {
+    const { t } = useTranslation();
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
 
@@ -153,8 +155,8 @@ const TrainingFacilitators = ({ session_id }) => {
                 </Box>
             ) : assigned.length == 0 ? (
                 <Box paddingY={3} paddingX={1}>
-                    <Typography variant="subtitle1">Facilitator is not assigned to this training yet!</Typography>
-                    <Typography variant="subtitle2">After the facilitators assigned, they will be listed here</Typography>
+                    <Typography variant="subtitle1">{t('Facilitator is not assigned to this training yet!')}</Typography>
+                    <Typography variant="subtitle2">{t('After the facilitators assigned, they will be listed here')}</Typography>
                 </Box>
             ) : (
                 assigned.map((fac) => (
@@ -179,8 +181,8 @@ const TrainingFacilitators = ({ session_id }) => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
                     ) : allFacailitators.length == 0 ? (
                         <Box paddingY={1.4} paddingX={1}>
-                            <Typography variant="subtitle1">No facilitator to be assigned found!</Typography>
-                            <Typography variant="subtitle2">Make sure you have active facilitator </Typography>
+                            <Typography variant="subtitle1">{t('No facilitator to be assigned found!')}</Typography>
+                            <Typography variant="subtitle2">{t('Make sure you have active facilitator')} </Typography>
                         </Box>
                     ) : (
                         allFacailitators.map((fac) => (
@@ -194,7 +196,7 @@ const TrainingFacilitators = ({ session_id }) => {
                                     fac.id === selectedFacilitator && assigning ? (
                                         <CircularProgress size={18} sx={{ color: 'white' }} />
                                     ) : (
-                                        'Assign'
+                                        t('Assign')
                                     )
                                 }
                             />
@@ -208,8 +210,8 @@ const TrainingFacilitators = ({ session_id }) => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
                     ) : allFacailitators.length == 0 ? (
                         <Box paddingY={1.4} paddingX={1}>
-                            <Typography variant="subtitle1">No facilitator to be assigned found!</Typography>
-                            <Typography variant="subtitle2">Make sure you have active facilitator </Typography>
+                            <Typography variant="subtitle1">{t('No facilitator to be assigned found!')}</Typography>
+                            <Typography variant="subtitle2">{t('Make sure you have active facilitator ')}</Typography>
                         </Box>
                     ) : (
                         allFacailitators.map((fac) => (
@@ -223,7 +225,7 @@ const TrainingFacilitators = ({ session_id }) => {
                                     fac.id === selectedFacilitator && assigning ? (
                                         <CircularProgress size={18} sx={{ color: 'white' }} />
                                     ) : (
-                                        'Assign'
+                                        t('Assign')
                                     )
                                 }
                             />

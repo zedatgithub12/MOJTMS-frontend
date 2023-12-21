@@ -20,6 +20,7 @@ import { useFormik } from 'formik';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useLocation, useNavigate } from 'react-router';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import ELevel from 'data/static/ELevel';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -30,6 +31,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const UpdateCoordinator = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -124,7 +126,7 @@ const UpdateCoordinator = () => {
                             <Grid container paddingX={5} paddingY={2} spacing={1}>
                                 <Grid item xs={12}>
                                     <FormControl error={formik.touched.gender && Boolean(formik.errors.gender)} sx={{ marginLeft: 1.4 }}>
-                                        <FormLabel id="gender">Gender</FormLabel>
+                                        <FormLabel id="gender">{t('Gender')}</FormLabel>
                                         <RadioGroup
                                             aria-labelledby="gender"
                                             name="gender"
@@ -136,8 +138,8 @@ const UpdateCoordinator = () => {
                                                 justifyContent: 'space-around'
                                             }}
                                         >
-                                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                            <FormControlLabel value="female" control={<Radio />} label="Female" />
+                                            <FormControlLabel value="male" control={<Radio />} label={t('Male')} />
+                                            <FormControlLabel value="female" control={<Radio />} label={t('Female')} />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -148,18 +150,18 @@ const UpdateCoordinator = () => {
                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="trainee-address">Address </InputLabel>
+                                        <InputLabel htmlFor="trainee-address">{t('Address')} </InputLabel>
                                         <OutlinedInput
                                             id="trainee-address"
                                             name="address"
-                                            label="Address"
+                                            label={t('Address')}
                                             value={formik.values.address}
                                             onChange={formik.handleChange}
                                             fullWidth
                                         />
                                         {formik.touched.address && formik.errors.address && (
                                             <FormHelperText error id="standard-weight-helper-text-name">
-                                                {formik.errors.address}
+                                                {t(formik.errors.address)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -171,18 +173,18 @@ const UpdateCoordinator = () => {
                                         error={formik.touched.phone && Boolean(formik.errors.phone)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="trainee-phone">Phone </InputLabel>
+                                        <InputLabel htmlFor="trainee-phone">{t('Phone')} </InputLabel>
                                         <OutlinedInput
                                             id="trainee-phone"
                                             name="phone"
-                                            label="Phone"
+                                            label={t('Phone')}
                                             value={formik.values.phone}
                                             onChange={formik.handleChange}
                                             fullWidth
                                         />
                                         {formik.touched.phone && formik.errors.phone && (
                                             <FormHelperText error id="standard-weight-helper-text-name">
-                                                {formik.errors.phone}
+                                                {t(formik.errors.phone)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -195,7 +197,7 @@ const UpdateCoordinator = () => {
                                         sx={{ ...theme.typography.customInput }}
                                     >
                                         <InputLabel htmlFor="outlined-adornment-education">
-                                            {formik.values.education ? '' : 'Education Level'}
+                                            {formik.values.education ? '' : t('Education Level')}
                                         </InputLabel>
                                         <Select
                                             value={formik.values.education}
@@ -205,12 +207,12 @@ const UpdateCoordinator = () => {
                                         >
                                             {ELevel.length == 0 ? (
                                                 <Typography variant="body2" sx={{ padding: 1 }}>
-                                                    Education level is not found
+                                                    {t('Education level is not found')}
                                                 </Typography>
                                             ) : (
                                                 ELevel.map((item, index) => (
                                                     <MenuItem key={index} value={item.value}>
-                                                        {item.value}
+                                                        {t(item.value)}
                                                     </MenuItem>
                                                 ))
                                             )}
@@ -218,7 +220,7 @@ const UpdateCoordinator = () => {
 
                                         {formik.touched.education && formik.errors.education && (
                                             <FormHelperText error id="standard-weight-helper-text-email-login">
-                                                {formik.errors.education}
+                                                {t(formik.errors.education)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -236,13 +238,13 @@ const UpdateCoordinator = () => {
                                             {isSubmitting ? (
                                                 <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                             ) : (
-                                                'Submit'
+                                                t('Submit')
                                             )}
                                         </Button>
                                     </AnimateButton>
 
                                     <Button variant="text" color="primary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={() => navigate(-1)}>
-                                        Cancel
+                                        {t('Cancel')}
                                     </Button>
                                 </Grid>
                             </Grid>

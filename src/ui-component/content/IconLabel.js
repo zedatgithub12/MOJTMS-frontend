@@ -1,8 +1,10 @@
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 export const IconLabel = ({ content, onTitleClick, label, children, sx }) => {
+    const { t } = useTranslation();
     return (
         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 1.2, ...sx }}>
             <Box>{children}</Box>
@@ -17,9 +19,9 @@ export const IconLabel = ({ content, onTitleClick, label, children, sx }) => {
                     }}
                     onClick={onTitleClick}
                 >
-                    {content}
+                    {t(content)}
                 </Typography>
-                <Typography variant="subtitle2">{label}</Typography>
+                <Typography variant="subtitle2">{t(label)}</Typography>
             </Box>
         </Box>
     );

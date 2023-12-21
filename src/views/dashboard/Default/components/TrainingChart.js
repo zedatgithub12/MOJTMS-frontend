@@ -1,15 +1,17 @@
 import { Grid } from '@mui/material';
 import Chart from 'react-apexcharts';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 const TrainingChart = ({ data, width }) => {
+    const { t } = useTranslation();
     const series = [
         {
-            name: 'Male',
+            name: t('Male'),
             data: data.map((item) => parseInt(item.maleCount))
         },
         {
-            name: 'Female',
+            name: t('Female'),
             data: data.map((item) => parseInt(item.femaleCount))
         }
     ];
@@ -19,7 +21,7 @@ const TrainingChart = ({ data, width }) => {
             type: 'line'
         },
         xaxis: {
-            categories: data.map((item) => item.monthName)
+            categories: data.map((item) => t(item.monthName))
         },
         yaxis: {},
         legend: {

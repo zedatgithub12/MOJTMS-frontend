@@ -19,13 +19,14 @@ import { IconArrowLeft } from '@tabler/icons';
 import { useLocation, useNavigate } from 'react-router';
 
 // project imports
-import Connections from 'api';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import AnimateButton from 'ui-component/extended/AnimateButton';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import AnimateButton from 'ui-component/extended/AnimateButton';
+import Connections from 'api';
 
 // ==============================|| CREATE SCHEDULE PAGE ||============================== //
 
@@ -36,6 +37,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateSchedule = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -183,14 +185,14 @@ const CreateSchedule = () => {
                     <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginY: 4 }}>
                         <Box sx={{ width: '70%' }}>
                             <Typography variant="subtitle1" marginY={1}>
-                                Add Schedule for
+                                {t('Add schedule for')}
                             </Typography>
 
                             {loading ? (
                                 <Skeleton variant="rectangular" width={'100%'} height={24} sx={{ borderRadius: 1 }} />
                             ) : (
                                 <Typography variant="h3" color="primary">
-                                    {sessionInfo.round_name}
+                                    {t(sessionInfo.round_name)}
                                 </Typography>
                             )}
                         </Box>
@@ -207,11 +209,11 @@ const CreateSchedule = () => {
                                         error={formik.touched.scheduled_title && Boolean(formik.errors.scheduled_title)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="session-title">Schedule title</InputLabel>
+                                        <InputLabel htmlFor="session-title">{t('Schedule title')}</InputLabel>
                                         <OutlinedInput
                                             id="session-title"
                                             name="scheduled_title"
-                                            label="Schedule title"
+                                            label={t('Schedule title')}
                                             value={formik.values.scheduled_title}
                                             onChange={formik.handleChange}
                                             fullWidth
@@ -219,7 +221,7 @@ const CreateSchedule = () => {
                                         />
                                         {formik.touched.scheduled_title && formik.errors.scheduled_title && (
                                             <FormHelperText error id="standard-weight-helper-text-scheduled_title">
-                                                {formik.errors.scheduled_title}
+                                                {t(formik.errors.scheduled_title)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -231,11 +233,11 @@ const CreateSchedule = () => {
                                         error={formik.touched.scheduled_description && Boolean(formik.errors.scheduled_description)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="scheduled_description">Description </InputLabel>
+                                        <InputLabel htmlFor="scheduled_description">{t('Description')} </InputLabel>
                                         <OutlinedInput
                                             id="scheduled_description"
                                             name="scheduled_description"
-                                            label="Description"
+                                            label={t('Description')}
                                             value={formik.values.scheduled_description}
                                             onChange={formik.handleChange}
                                             fullWidth
@@ -245,7 +247,7 @@ const CreateSchedule = () => {
                                         />
                                         {formik.touched.scheduled_description && formik.errors.scheduled_description && (
                                             <FormHelperText error id="standard-weight-helper-text-description">
-                                                {formik.errors.scheduled_description}
+                                                {t(formik.errors.scheduled_description)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -267,21 +269,20 @@ const CreateSchedule = () => {
                                                 error={formik.touched.startdate && Boolean(formik.errors.startdate)}
                                                 sx={{ ...theme.typography.customInput }}
                                             >
-                                                <InputLabel htmlFor="startdate">Start date & time</InputLabel>
+                                                <InputLabel htmlFor="startdate">{t('Start date & time')}</InputLabel>
                                                 <OutlinedInput
                                                     id="startdate"
                                                     type="datetime-local"
                                                     name="startdate"
-                                                    label="startdate"
+                                                    label={t('Starting date')}
                                                     value={formik.values.startdate}
                                                     onChange={formik.handleChange}
                                                     fullWidth
-                                                    inputProps={{}}
                                                     sx={{ marginTop: 1 }}
                                                 />
                                                 {formik.touched.startdate && formik.errors.startdate && (
                                                     <FormHelperText error id="standard-weight-helper-text-startdate">
-                                                        {formik.errors.startdate}
+                                                        {t(formik.errors.startdate)}
                                                     </FormHelperText>
                                                 )}
                                             </FormControl>
@@ -293,12 +294,12 @@ const CreateSchedule = () => {
                                                 error={formik.touched.enddate && Boolean(formik.errors.enddate)}
                                                 sx={{ ...theme.typography.customInput }}
                                             >
-                                                <InputLabel htmlFor="enddate">End date & time</InputLabel>
+                                                <InputLabel htmlFor="enddate">{t('End date & time')}</InputLabel>
                                                 <OutlinedInput
                                                     id="enddate"
                                                     type="datetime-local"
                                                     name="enddate"
-                                                    label="enddate"
+                                                    label={t('End date')}
                                                     value={formik.values.enddate}
                                                     onChange={formik.handleChange}
                                                     fullWidth
@@ -307,7 +308,7 @@ const CreateSchedule = () => {
                                                 />
                                                 {formik.touched.enddate && formik.errors.enddate && (
                                                     <FormHelperText error id="standard-weight-helper-text-enddate">
-                                                        {formik.errors.enddate}
+                                                        {t(formik.errors.enddate)}
                                                     </FormHelperText>
                                                 )}
                                             </FormControl>
@@ -327,13 +328,13 @@ const CreateSchedule = () => {
                                             {isSubmitting ? (
                                                 <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                             ) : (
-                                                'Submit'
+                                                t('Submit')
                                             )}
                                         </Button>
                                     </AnimateButton>
 
                                     <Button variant="text" color="primary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={() => navigate(-1)}>
-                                        Cancel
+                                        {t('Cancel')}
                                     </Button>
                                 </Grid>
                             </Grid>

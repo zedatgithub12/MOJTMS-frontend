@@ -28,10 +28,12 @@ import Connections from 'api';
 import FacilitatorCard from 'ui-component/cards/FacilitatorCard';
 import TMSTab from 'views/department/components/tab';
 import DepartmentTrainees from './components/Trainees';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| VIEW DEPARTMENT PAGE ||============================== //
 
 const ViewDepartment = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -238,7 +240,7 @@ const ViewDepartment = () => {
                                 <ListItemIcon>
                                     <IconArrowsExchange size={18} />
                                 </ListItemIcon>
-                                Change Coordinator
+                                {t('Change Coordinator')}
                             </MenuItem>
 
                             <Divider />
@@ -246,7 +248,7 @@ const ViewDepartment = () => {
                                 <ListItemIcon>
                                     <IconEdit size={18} />
                                 </ListItemIcon>
-                                Update
+                                {t('Update')}
                             </MenuItem>
 
                             <Divider />
@@ -254,7 +256,7 @@ const ViewDepartment = () => {
                                 <ListItemIcon>
                                     <IconTrash size={18} />
                                 </ListItemIcon>
-                                Delete
+                                {t('Delete')}
                             </MenuItem>
                         </Box>
                     }
@@ -279,7 +281,7 @@ const ViewDepartment = () => {
                                         borderColor: theme.palette.secondary.light
                                     }}
                                     image={thumbnailApi + state.thumbnail}
-                                    title={state.name}
+                                    alt={state.name}
                                 />
                             </Box>
                         )}
@@ -290,7 +292,7 @@ const ViewDepartment = () => {
                                     {state.name}
                                 </Typography>
                             ) : (
-                                <Typography variant="h4">Department name</Typography>
+                                <Typography variant="h4">{t('Department name')}</Typography>
                             )}
                             {state.description && (
                                 <Typography
@@ -352,7 +354,7 @@ const ViewDepartment = () => {
                         isLoading={false}
                         image={coordinatordata.photo ? profileApi + coordinatordata.photo : null}
                         qualification={coordinatordata.education}
-                        title="Coordinator"
+                        title={t('Coordinator')}
                         name={coordinatordata.name}
                         address={coordinatordata.address}
                         gender={coordinatordata.gender}
@@ -392,7 +394,7 @@ const ViewDepartment = () => {
                         }}
                     >
                         <Button variant="text" color="primary" onClick={() => handleCoordGet()}>
-                            <IconPlus size={16} /> Assign Coordinator
+                            <IconPlus size={16} /> {t('Assign Coordinator')}
                         </Button>
                     </Box>
                 )}
@@ -416,7 +418,7 @@ const ViewDepartment = () => {
                     type="Delete"
                     open={deleteUser}
                     title="Deleting Department"
-                    description={`Are you sure you want to delete ` + state.name}
+                    description={t(`Are you sure you want to delete `) + state.name}
                     onNo={() => setDeleteUser(false)}
                     onYes={() => DeleteDepartment()}
                     deleting={deleting}

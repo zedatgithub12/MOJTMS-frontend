@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 // project imports
-import PropTypes from 'prop-types';
 import { Box } from '@mui/system';
-import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
 import { useQuery } from 'react-query';
-import Connections from 'api';
 import { RefreshToken } from 'utils/token-refresh';
 import { useNavigate } from 'react-router';
-import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 import { NoResult } from 'utils/components/noresult';
+import PropTypes from 'prop-types';
+import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
+import Connections from 'api';
+import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 
 // ==============================|| SESSION LISTING COMPONENT ||============================== //
 

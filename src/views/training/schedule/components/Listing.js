@@ -2,15 +2,17 @@ import { useState } from 'react';
 import { CircularProgress, Grid, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconArrowRight } from '@tabler/icons';
-import Connections from 'api';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
-import ActionButtons from 'ui-component/Buttons/ActionButtons';
 import { Delete } from 'ui-component/delete/Delete';
 import { convertDateTime } from 'utils/functions';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
+import PropTypes from 'prop-types';
+import ActionButtons from 'ui-component/Buttons/ActionButtons';
 
 const ScheduleListing = ({ isLoading, schedules, updateSchedules }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const scheduleLegth = schedules && schedules.length;
@@ -80,7 +82,7 @@ const ScheduleListing = ({ isLoading, schedules, updateSchedules }) => {
                     </Box>
                 ) : scheduleLegth == 0 ? (
                     <Box>
-                        <Typography variant="body1">Schedule not added yet!</Typography>
+                        <Typography variant="body1">{t('Schedule not added yet!')}</Typography>
                     </Box>
                 ) : (
                     schedules.map((item, index) => (
@@ -104,9 +106,8 @@ const ScheduleListing = ({ isLoading, schedules, updateSchedules }) => {
                                     </Box>
 
                                     <Box sx={{ padding: 2 }}>
-                                        <Typography variant="subtitle1">{item.scheduled_title}</Typography>
+                                        <Typography variant="subtitle1">{t(item.scheduled_title)}</Typography>
                                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                            {' '}
                                             <Typography variant="body2">{convertDateTime(item.start_datetime)}</Typography>
                                             <IconArrowRight size={14} style={{ margin: 3 }} />
                                             <Typography variant="body2">{convertDateTime(item.end_datetime)}</Typography>
@@ -137,7 +138,7 @@ const ScheduleListing = ({ isLoading, schedules, updateSchedules }) => {
                                     paddingBottom: 3
                                 }}
                             >
-                                {item.schedule_description}
+                                {t(item.schedule_description)}
                             </Typography>
                         </Box>
                     ))

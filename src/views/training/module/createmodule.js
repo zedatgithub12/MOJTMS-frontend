@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Box, Button, CircularProgress, FormControl, FormHelperText, Grid, TextField, Typography, useTheme } from '@mui/material';
 import { useFormik } from 'formik';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import Connections from 'api';
 import AnimateButton from 'ui-component/extended/AnimateButton';
@@ -15,6 +16,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const CreateModule = ({ training_id, sx, handleClosePanel }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     //submit the module to be create
@@ -93,7 +95,7 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                         }}
                     >
                         <Typography variant="h4" color="primary">
-                            Create module
+                            {t('Create module')}
                         </Typography>
 
                         <FormControl
@@ -103,7 +105,7 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                             <TextField
                                 id="module-name"
                                 name="name"
-                                label="Module name"
+                                label={t('Module name')}
                                 value={formik.values.name}
                                 onChange={formik.handleChange}
                                 inputProps={{}}
@@ -111,7 +113,7 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                             />
                             {formik.touched.name && formik.errors.name && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.name}
+                                    {t(formik.errors.name)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -123,7 +125,7 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                             <TextField
                                 id="module-description"
                                 name="description"
-                                label="Module description"
+                                label={t('Module description')}
                                 value={formik.values.description}
                                 onChange={formik.handleChange}
                                 fullWidth
@@ -132,7 +134,7 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                             />
                             {formik.touched.description && formik.errors.description && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.description}
+                                    {t(formik.errors.description)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -146,12 +148,12 @@ const CreateModule = ({ training_id, sx, handleClosePanel }) => {
                                     color="primary"
                                     sx={{ py: 1, px: 4, mt: 4 }}
                                 >
-                                    {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.grey[700] }} /> : 'Submit'}
+                                    {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.grey[700] }} /> : t('Submit')}
                                 </Button>
                             </AnimateButton>
 
                             <Button variant="text" color="primary" sx={{ py: 1, px: 4, mt: 4, mx: 2 }} onClick={handleClosePanel}>
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                         </Box>
                     </Grid>

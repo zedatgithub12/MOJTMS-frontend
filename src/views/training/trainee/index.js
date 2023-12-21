@@ -1,16 +1,18 @@
 import { CircularProgress, Divider, IconButton, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import Connections from 'api';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
-import TraineeListing from './components/TraineeListing';
-import AssignedListing from './components/AssignedListing';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconThumbDown, IconX } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
+import PropTypes from 'prop-types';
+import TraineeListing from './components/TraineeListing';
+import AssignedListing from './components/AssignedListing';
 
 const TraineeEnrollment = ({ session_id }) => {
+    const { t } = useTranslation();
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
 
@@ -191,8 +193,8 @@ const TraineeEnrollment = ({ session_id }) => {
                 </Box>
             ) : assigned.length == 0 ? (
                 <Box paddingY={3} paddingX={1}>
-                    <Typography variant="subtitle1">No trainee assigned to this training yet!</Typography>
-                    <Typography variant="subtitle2">After the trainees assignment, they will be listed here</Typography>
+                    <Typography variant="subtitle1">{t('No trainee assigned to this training yet!')}</Typography>
+                    <Typography variant="subtitle2">{t('After the trainees assignment, they will be listed here')}</Typography>
                 </Box>
             ) : (
                 assigned.map((trainee) => (
@@ -204,7 +206,11 @@ const TraineeEnrollment = ({ session_id }) => {
                         status={trainee.enrollment_status}
                         onAccept={() => handleChangeInit(trainee.id, 'accepted')}
                         isAccepting={
-                            trainee.id === selectedTrainee && isChanging ? <CircularProgress size={18} sx={{ color: 'white' }} /> : 'Accept'
+                            trainee.id === selectedTrainee && isChanging ? (
+                                <CircularProgress size={18} sx={{ color: 'white' }} />
+                            ) : (
+                                t('Accept')
+                            )
                         }
                         isRemoving={
                             <Box>
@@ -230,8 +236,10 @@ const TraineeEnrollment = ({ session_id }) => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
                     ) : allTrainee.length == 0 ? (
                         <Box paddingY={1.4} paddingX={1}>
-                            <Typography variant="subtitle1">No trainee to be assigned found!</Typography>
-                            <Typography variant="subtitle2">Make sure you have trainee in the database and they are active</Typography>
+                            <Typography variant="subtitle1">{t('No trainee to be assigned found!')}</Typography>
+                            <Typography variant="subtitle2">
+                                {t('Make sure you have trainee in the database and they are active')}
+                            </Typography>
                         </Box>
                     ) : (
                         allTrainee.map((trainee) => (
@@ -246,7 +254,7 @@ const TraineeEnrollment = ({ session_id }) => {
                                     trainee.id === selectedTrainee && assigning ? (
                                         <CircularProgress size={18} sx={{ color: 'white' }} />
                                     ) : (
-                                        'Invite'
+                                        t('Invite')
                                     )
                                 }
                             />
@@ -260,8 +268,10 @@ const TraineeEnrollment = ({ session_id }) => {
                         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}></Box>
                     ) : allTrainee.length == 0 ? (
                         <Box paddingY={1.4} paddingX={1}>
-                            <Typography variant="subtitle1">No trainee to be assigned found!</Typography>
-                            <Typography variant="subtitle2">Make sure you have trainee in the database and they are active</Typography>
+                            <Typography variant="subtitle1">{t('No trainee to be assigned found!')}</Typography>
+                            <Typography variant="subtitle2">
+                                {t('Make sure you have trainee in the database and they are active')}
+                            </Typography>
                         </Box>
                     ) : (
                         allTrainee.map((trainee) => (
@@ -276,7 +286,7 @@ const TraineeEnrollment = ({ session_id }) => {
                                     trainee.id === selectedTrainee && assigning ? (
                                         <CircularProgress size={18} sx={{ color: 'white' }} />
                                     ) : (
-                                        'Invite'
+                                        t('Invite')
                                     )
                                 }
                             />

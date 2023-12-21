@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { forwardRef } from 'react';
+import { Box, Divider, Stack, useTheme } from '@mui/material';
+import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
+import { FormatStatus, ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
+import SessionDetailSkel from './Skeleton/SessionDetailsSkel';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Box, Divider, Stack, useTheme } from '@mui/material';
-import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
-import { FormatStatus, ReadMore } from 'utils/functions';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import SessionDetailSkel from './Skeleton/SessionDetailsSkel';
 
 const letterConfig = {
     startfrom: 0,
@@ -19,6 +20,7 @@ const letterConfig = {
 
 const SessionDetailCard = forwardRef(
     ({ sx = {}, isLoading, status, title, startdate, enddate, address, capacity, description, resources, children, ...others }, ref) => {
+        const { t } = useTranslation();
         const theme = useTheme();
 
         const [collapse, setCollapse] = React.useState(true);
@@ -49,13 +51,13 @@ const SessionDetailCard = forwardRef(
                             {status && (
                                 <Stack>
                                     <Typography variant="subtitle1" color={FormatStatus(status)} sx={{ textTransform: 'capitalize' }}>
-                                        {status}
+                                        {t(status)}
                                     </Typography>
                                 </Stack>
                             )}
 
                             <Typography gutterBottom variant="h3" component="div" paddingY={1}>
-                                {title}
+                                {t(title)}
                             </Typography>
                             <Divider />
 
@@ -64,7 +66,7 @@ const SessionDetailCard = forwardRef(
                                     <IconClockPlay size={20} />
                                     <Box sx={{ paddingX: 2 }}>
                                         <Typography variant="subtitle1">{startdate}</Typography>
-                                        <Typography variant="subtitle2">Start date & time </Typography>
+                                        <Typography variant="subtitle2">{t('Start date & time')} </Typography>
                                     </Box>
                                 </Box>
                             )}
@@ -74,7 +76,7 @@ const SessionDetailCard = forwardRef(
                                     <IconClockStop size={20} />
                                     <Box sx={{ paddingX: 2 }}>
                                         <Typography variant="subtitle1">{enddate}</Typography>
-                                        <Typography variant="subtitle2">End date & time </Typography>
+                                        <Typography variant="subtitle2">{t('End date & time')} </Typography>
                                     </Box>
                                 </Box>
                             )}
@@ -82,8 +84,10 @@ const SessionDetailCard = forwardRef(
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2.6 }}>
                                     <IconUsers size={20} />
                                     <Box sx={{ paddingX: 2 }}>
-                                        <Typography variant="subtitle1">{capacity} Trainee </Typography>
-                                        <Typography variant="subtitle2">Maximum Capacity </Typography>
+                                        <Typography variant="subtitle1">
+                                            {capacity} {t('Trainee')}{' '}
+                                        </Typography>
+                                        <Typography variant="subtitle2">{t('Maximum Capacity')} </Typography>
                                     </Box>
                                 </Box>
                             )}
@@ -93,7 +97,7 @@ const SessionDetailCard = forwardRef(
                                     <IconMapPin size={20} />
                                     <Box sx={{ paddingX: 2 }}>
                                         <Typography variant="subtitle1">{address} </Typography>
-                                        <Typography variant="subtitle2">Training address </Typography>
+                                        <Typography variant="subtitle2">{t('Training address')} </Typography>
                                     </Box>
                                 </Box>
                             )}
@@ -101,10 +105,10 @@ const SessionDetailCard = forwardRef(
                             {description && (
                                 <Box sx={{ display: 'flex', flexDirection: 'row', marginY: 2.6 }}>
                                     <Box>
-                                        <Typography variant="subtitle1">About</Typography>
+                                        <Typography variant="subtitle1">{t('About session')}</Typography>
                                         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                             <Typography variant="body2">
-                                                {ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse)}
+                                                {t(ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse))}
                                             </Typography>
 
                                             {description.length > letterConfig.endat && (
@@ -113,29 +117,11 @@ const SessionDetailCard = forwardRef(
                                                     onClick={() => ExpndText()}
                                                     sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                                                 >
-                                                    {collapse ? 'Read More' : 'Read Less'}
+                                                    {collapse ? t('Read More') : t('Read Less')}
                                                 </Typography>
                                             )}
                                         </Box>
                                     </Box>
-                                </Box>
-                            )}
-                            {resources && (
-                                <Box>
-                                    <Divider />
-                                    <Button
-                                        variant="text"
-                                        color="primary"
-                                        sx={{ marginTop: 1, cursor: 'pointer' }}
-                                        onClick={() => setShowResources(!showResources)}
-                                    >
-                                        Resources provided{' '}
-                                        {showResources ? (
-                                            <KeyboardArrowUpOutlinedIcon size={20} />
-                                        ) : (
-                                            <KeyboardArrowDownOutlinedIcon size={20} />
-                                        )}
-                                    </Button>
                                 </Box>
                             )}
 

@@ -30,6 +30,7 @@ import { useSelector } from 'react-redux';
 import { IconDotsVertical, IconX } from '@tabler/icons';
 import { saveAs } from 'file-saver';
 import { CSVLink } from 'react-csv';
+import { useTranslation } from 'react-i18next';
 import * as XLSX from 'xlsx';
 import Connections from 'api';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
@@ -39,6 +40,7 @@ import AddCoordinator from './components/AddCoordinator';
 // ==============================|| COORDINATOR LISTING PAGE ||============================== //
 
 const Coordinators = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [loading, setLoading] = useState(false);
@@ -222,7 +224,7 @@ const Coordinators = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -281,11 +283,11 @@ const Coordinators = () => {
                             }}
                         >
                             <MenuItem onClick={handleDownloadExcel}>
-                                <Typography variant="body1">Excel Export</Typography>
+                                <Typography variant="body1">{t('Excel Export')}</Typography>
                             </MenuItem>
                             <MenuItem>
                                 <CSVLink data={csvData} filename={'coordinators.csv'} style={{ textDecoration: 'none' }}>
-                                    <Typography variant="body1">CSV Export</Typography>
+                                    <Typography variant="body1">{t('CSV Export')}</Typography>
                                 </CSVLink>
                             </MenuItem>
                         </Menu>
@@ -303,13 +305,13 @@ const Coordinators = () => {
                             onClick={handleMenuClick}
                             sx={{ paddingY: 1, paddingX: 2 }}
                         >
-                            Filter
+                            {t('Filter')}
                         </Button>
                     }
                 >
                     <Box sx={{ minWidth: 340, paddingX: 3 }}>
                         <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <Typography variant="h4">Filter Data</Typography>
+                            <Typography variant="h4">{t('Filter Data')}</Typography>
                             <IconButton onClick={() => handleClose()}>
                                 <IconX size={20} />
                             </IconButton>
@@ -319,7 +321,7 @@ const Coordinators = () => {
 
                         <Box sx={{ minHeight: 200, display: 'flex', flexDirection: 'column', marginTop: 1.6 }}>
                             <FormControl component="fieldset" sx={{ marginTop: 1, paddingLeft: 1 }}>
-                                <FormLabel component="legend">Gender</FormLabel>
+                                <FormLabel component="legend">{t('Gender')}</FormLabel>
                                 <RadioGroup
                                     aria-label="gender"
                                     name="gender"
@@ -331,14 +333,14 @@ const Coordinators = () => {
                                         alignItems: 'center'
                                     }}
                                 >
-                                    <FormControlLabel value="" control={<Radio />} label="All" />
-                                    <FormControlLabel value="male" control={<Radio />} label="Males" />
-                                    <FormControlLabel value="female" control={<Radio />} label="Females" />
+                                    <FormControlLabel value="" control={<Radio />} label={t('All')} />
+                                    <FormControlLabel value="male" control={<Radio />} label={t('Males')} />
+                                    <FormControlLabel value="female" control={<Radio />} label={t('Females')} />
                                 </RadioGroup>
                             </FormControl>
 
                             <FormLabel component="legend" id="address" htmlFor="address" sx={{ marginTop: 3 }}>
-                                Address
+                                {t('Address')}
                             </FormLabel>
                             <TextField
                                 name="address"
@@ -366,7 +368,7 @@ const Coordinators = () => {
                             }}
                         >
                             <Button variant="text" color="primary" sx={{ marginRight: 2 }} onClick={() => handleReset()}>
-                                Reset
+                                {t('Reset')}
                             </Button>
                             <Button
                                 variant="contained"
@@ -374,7 +376,7 @@ const Coordinators = () => {
                                 sx={{ minWidth: 120, paddingX: 1 }}
                                 onClick={() => handleApplyingFilter()}
                             >
-                                Apply
+                                {t('Apply')}
                             </Button>
                         </Box>
                     </Box>

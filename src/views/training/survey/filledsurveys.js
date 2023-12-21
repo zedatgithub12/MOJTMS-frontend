@@ -6,7 +6,7 @@ import { FilterPanel } from 'ui-component/FilterPanel';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { NoResult } from 'utils/components/noresult';
 import { IconX } from '@tabler/icons';
-import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import errorImage from 'assets/images/error.jpg';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 import Connections from 'api';
@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import FilledSurveyTable from './components/FilledListing';
 
 const FilledSurveys = ({ training_id }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [filledSurveys, setFilledSurveys] = useState([]);
 
@@ -138,13 +139,13 @@ const FilledSurveys = ({ training_id }) => {
                             handleClose={handleClose}
                             filterButton={
                                 <Button variant="outlined" startIcon={<SortOutlinedIcon />} onClick={handleMenuClick}>
-                                    Filter
+                                    {t('Filter')}
                                 </Button>
                             }
                         >
                             <Box sx={{ minWidth: 340, paddingX: 3 }}>
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                    <Typography variant="h4">Filter Data</Typography>
+                                    <Typography variant="h4">{t('Filter Data')}</Typography>
                                     <IconButton onClick={() => handleClose()}>
                                         <IconX size={20} />
                                     </IconButton>
@@ -157,7 +158,7 @@ const FilledSurveys = ({ training_id }) => {
                                         name="round"
                                         value={filters.round}
                                         onChange={handleFilterChange}
-                                        label="Round"
+                                        label={t('Round')}
                                         InputProps={{
                                             endAdornment: filters.round && (
                                                 <IconButton onClick={() => handleClear('round')}>
@@ -178,7 +179,7 @@ const FilledSurveys = ({ training_id }) => {
                                     }}
                                 >
                                     <Button variant="text" color="primary" sx={{ marginRight: 2 }} onClick={() => handleReset()}>
-                                        Reset
+                                        {t('Reset')}
                                     </Button>
                                     <Button
                                         variant="contained"
@@ -186,7 +187,7 @@ const FilledSurveys = ({ training_id }) => {
                                         sx={{ minWidth: 120, paddingX: 1 }}
                                         onClick={() => handleApplyingFilter()}
                                     >
-                                        Apply
+                                        {t('Apply')}
                                     </Button>
                                 </Box>
                             </Box>

@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Button, Grid } from '@mui/material';
+import { useNavigate } from 'react-router';
+import { RefreshToken } from 'utils/token-refresh';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import PropTypes from 'prop-types';
 import ScheduleListing from './components/Listing';
-import { useNavigate } from 'react-router';
-import { RefreshToken } from 'utils/token-refresh';
 
 const TrainingSchedule = ({ session_id }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
@@ -71,7 +73,7 @@ const TrainingSchedule = ({ session_id }) => {
                         sx={{ marginTop: 2 }}
                         onClick={() => navigate('/training/schedule/create', { state: session_id })}
                     >
-                        Add new schedule
+                        {t('Add new schedule')}
                     </Button>
                 ) : role === 'Coordinator' ? (
                     <Button
@@ -80,7 +82,7 @@ const TrainingSchedule = ({ session_id }) => {
                         sx={{ marginTop: 2 }}
                         onClick={() => navigate('/training/schedule/create', { state: session_id })}
                     >
-                        Add new schedule
+                        {t('Add new schedule')}
                     </Button>
                 ) : null}
 

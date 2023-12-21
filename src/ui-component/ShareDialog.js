@@ -14,10 +14,12 @@ import {
 } from 'react-share';
 import { useQuery } from 'react-query';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import PropTypes from 'prop-types';
 
 const ShareDialog = ({ open, onClose, session_id }) => {
+    const { t } = useTranslation();
     const [metadata, setMetadata] = useState([]);
 
     const handleSharing = async () => {
@@ -48,12 +50,12 @@ const ShareDialog = ({ open, onClose, session_id }) => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
         <Dialog open={open} onClose={onClose}>
-            <DialogTitle variant="h4">Share</DialogTitle>
+            <DialogTitle variant="h4">{t('Share')}</DialogTitle>
 
             <DialogContent>
                 <FacebookShareButton url={url}>
@@ -85,7 +87,7 @@ const ShareDialog = ({ open, onClose, session_id }) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="primary">
-                    Close
+                    {t('Close')}
                 </Button>
             </DialogActions>
             <SnackbarProvider maxSnack={3} />

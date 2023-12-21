@@ -1,11 +1,12 @@
-import { Button, Typography, useTheme } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box, Typography, useTheme } from '@mui/material';
 import { IconClock, IconLayoutList, IconTrophy } from '@tabler/icons';
+import { TimeFormatter } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { TimeFormatter } from 'utils/functions';
 
 const AssessmentListing = ({ name, question, duration, score, selected, type, onSelected, actionButton }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     return (
@@ -20,7 +21,7 @@ const AssessmentListing = ({ name, question, duration, score, selected, type, on
         >
             <Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Typography variant="subtitle1">{name} </Typography>
+                    <Typography variant="subtitle1">{t(name)} </Typography>
                     {type && (
                         <Typography
                             variant="body2"
@@ -32,7 +33,7 @@ const AssessmentListing = ({ name, question, duration, score, selected, type, on
                                 color: theme.palette.primary.main
                             }}
                         >
-                            {type}
+                            {t(type)}
                         </Typography>
                     )}
                 </Box>
@@ -40,7 +41,7 @@ const AssessmentListing = ({ name, question, duration, score, selected, type, on
                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: 3 }}>
                         <IconLayoutList size={18} />
                         <Typography variant="body2" marginLeft={1}>
-                            {question}
+                            {t(question)}
                         </Typography>
                     </Box>
 

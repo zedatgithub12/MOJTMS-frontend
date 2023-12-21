@@ -11,6 +11,7 @@ import SkeletonTotalTrainingCard from 'ui-component/cards/Skeleton/SkeletonTotal
 
 // assets
 import { IconUsers } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.light,
@@ -57,6 +58,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 // ==============================|| DASHBOARD - TOTAL TRAINEE CARD ||============================== //
 
 const TotalTraineeCard = ({ isLoading, total, male, female }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     return (
@@ -109,14 +111,14 @@ const TotalTraineeCard = ({ isLoading, total, male, female }) => {
                                         color: theme.palette.grey[600]
                                     }}
                                 >
-                                    Total Trainees
+                                    {t('Total')} {t('Trainees')}
                                 </Typography>
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                     <Typography variant="body2">
-                                        <b>{male}</b> Males
+                                        <b>{male}</b> {t('Males')}
                                     </Typography>
                                     <Typography variant="body2" marginLeft={2}>
-                                        <b>{female}</b> Females
+                                        <b>{female}</b> {t('Females')}
                                     </Typography>
                                 </Box>
                             </Grid>

@@ -10,6 +10,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalTrainingCard from 'ui-component/cards/Skeleton/SkeletonTotalTrainingCard';
 
 import { IconSchool } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
     backgroundColor: theme.palette.primary[200],
@@ -50,6 +51,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 // ===========================|| DASHBOARD DEFAULT - TRAINING CARD ||=========================== //
 
 const TotalTrainingCard = ({ isLoading, total, sessions }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     return (
@@ -101,12 +103,12 @@ const TotalTrainingCard = ({ isLoading, total, sessions }) => {
                                         color: theme.palette.grey[600]
                                     }}
                                 >
-                                    Total Trainings
+                                    {t('Total')} {t('Trainings')}
                                 </Typography>
 
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                     <Typography variant="body2">
-                                        <b>{sessions}</b> sessions
+                                        <b>{sessions}</b> {t('sessions')}
                                     </Typography>
                                 </Box>
                             </Grid>

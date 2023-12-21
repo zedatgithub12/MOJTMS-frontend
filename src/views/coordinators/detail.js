@@ -8,7 +8,6 @@ import {
     useTheme,
     MenuItem,
     ListItemIcon,
-    Divider,
     FormControl,
     TextField,
     FormHelperText,
@@ -25,6 +24,7 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { sizes } from 'constants';
 import { ProfileValidator } from 'utils/functions';
 import { ErrorPrompt } from 'utils/components/errorprompt';
+import { useTranslation } from 'react-i18next';
 
 import Connections from 'api';
 import DetailTabs from './components/DetailTabs';
@@ -37,6 +37,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const CoordinatorDetails = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -241,7 +242,11 @@ const CoordinatorDetails = () => {
                         borderRadius: 2
                     }}
                 >
-                    <ErrorPrompt image={errorImage} title="Server Error" message="Oooops... There is server error fetching coordinators" />
+                    <ErrorPrompt
+                        image={errorImage}
+                        title={t('Server Error')}
+                        message={t('Oooops... There is server error fetching coordinators')}
+                    />
                 </Grid>
             ) : (
                 <Grid
@@ -283,7 +288,7 @@ const CoordinatorDetails = () => {
                                 <IconArrowLeft color={theme.palette.grey[500]} />
                             </IconButton>
                             <Typography variant="subtitle1" marginLeft={2}>
-                                Coordinator
+                                {t('Coordinator')}
                             </Typography>
                         </Box>
 
@@ -292,7 +297,7 @@ const CoordinatorDetails = () => {
                                 <ListItemIcon>
                                     <IconEdit size={18} />
                                 </ListItemIcon>
-                                Update
+                                {t('Update')}
                             </MenuItem>
                         </ActionMenu>
                     </Box>
@@ -376,7 +381,7 @@ const CoordinatorDetails = () => {
                                                 />
                                                 {formik.touched.name && formik.errors.name && (
                                                     <FormHelperText error id="standard-weight-helper-text-name">
-                                                        {formik.errors.name}
+                                                        {t(formik.errors.name)}
                                                     </FormHelperText>
                                                 )}
                                             </FormControl>
@@ -408,7 +413,7 @@ const CoordinatorDetails = () => {
 
                             {!validImage.status && (
                                 <Typography variant="body2" sx={{ marginBottom: 2, color: theme.palette.error.dark }}>
-                                    {validImage.message}
+                                    {t(validImage.message)}
                                 </Typography>
                             )}
                         </Grid>

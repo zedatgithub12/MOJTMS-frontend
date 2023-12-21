@@ -14,6 +14,7 @@ import {
 import { useFormik } from 'formik';
 import { IconX } from '@tabler/icons';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import PropTypes from 'prop-types';
@@ -27,6 +28,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const UpdateModule = ({ module, sx, handleClosePanel }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     //submit the module to be create
@@ -108,7 +110,7 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                             }}
                         >
                             <Typography variant="h4" color="primary">
-                                Update module
+                                {t('Update module')}
                             </Typography>
                             <IconButton onClick={handleClosePanel}>
                                 <IconX size={20} />
@@ -122,7 +124,7 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                             <TextField
                                 id="module-name"
                                 name="name"
-                                label="Module name"
+                                label={t('Module name')}
                                 value={formik.values.name}
                                 onChange={formik.handleChange}
                                 inputProps={{}}
@@ -130,7 +132,7 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                             />
                             {formik.touched.name && formik.errors.name && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.name}
+                                    {t(formik.errors.name)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -142,7 +144,7 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                             <TextField
                                 id="module-description"
                                 name="description"
-                                label="Module description"
+                                label={t('Module description')}
                                 value={formik.values.description}
                                 onChange={formik.handleChange}
                                 fullWidth
@@ -151,7 +153,7 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                             />
                             {formik.touched.description && formik.errors.description && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.description}
+                                    {t(formik.errors.description)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -165,11 +167,11 @@ const UpdateModule = ({ module, sx, handleClosePanel }) => {
                                     color="primary"
                                     sx={{ py: 1, px: 4, mt: 4 }}
                                 >
-                                    {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.grey[700] }} /> : 'Update'}
+                                    {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.grey[700] }} /> : t('Update')}
                                 </Button>
                             </AnimateButton>
                             <Button variant="text" color="primary" sx={{ py: 1, px: 4, mt: 4, mx: 2 }} onClick={handleClosePanel}>
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                         </Box>
                     </Grid>

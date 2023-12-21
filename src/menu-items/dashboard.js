@@ -109,8 +109,8 @@ const dashboard = {
             breadcrumbs: false,
             children: [
                 {
-                    id: 'assassements',
-                    title: 'Assassements',
+                    id: 'assessements',
+                    title: 'Assessments',
                     url: '/assessments',
                     type: 'item',
                     breadcrumbs: false
