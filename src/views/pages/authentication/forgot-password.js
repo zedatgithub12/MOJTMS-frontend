@@ -4,9 +4,8 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
-    // Checkbox,
+    CircularProgress,
     FormControl,
-    // FormControlLabel,
     FormHelperText,
     Grid,
     InputLabel,
@@ -28,11 +27,9 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
 import { IconCircleCheck } from '@tabler/icons';
 import AuthWrapper1 from './AuthWrapper1';
-import AuthCardWrapper from './AuthCardWrapper';
+import MainCard from 'ui-component/cards/MainCard';
 
-// import Google from 'assets/images/icons/social-google.svg';
-
-// ============================|| FIREBASE - LOGIN ||============================ //
+// ============================|| AUTH - FORGOT PASSWORD ||============================ //
 
 const Forgot_Password = ({ ...others }) => {
     const theme = useTheme();
@@ -47,11 +44,15 @@ const Forgot_Password = ({ ...others }) => {
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 28px)' }}>
                         <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
-                            <AuthCardWrapper>
+                            <MainCard>
                                 {sent ? (
                                     <Box sx={{ textAlign: 'center' }}>
-                                        <IconCircleCheck size={66} variant="success" className="text-success mb-3 mx-auto" />
-                                        <Typography variant="body1" className="text-center">
+                                        <IconCircleCheck
+                                            size={66}
+                                            color={theme.palette.success.dark}
+                                            className="text-success mb-3 mx-auto"
+                                        />
+                                        <Typography variant="body2" className="text-center">
                                             A link to reset password is successfully sent to your email address, check your inbox.
                                         </Typography>
                                     </Box>
@@ -81,7 +82,7 @@ const Forgot_Password = ({ ...others }) => {
                                                 </Grid>
                                                 <Box sx={{ mb: 2 }}>
                                                     <Typography variant="subtitle1" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                                                        Enter Email address Associated with your account
+                                                        Enter email address associated with your account
                                                     </Typography>
                                                 </Box>
                                             </Grid>
@@ -109,21 +110,15 @@ const Forgot_Password = ({ ...others }) => {
                                                     }
                                                 }
                                                 setLogSpinner(true);
-                                                var Api = Connections.api + Connections.forgotpassword;
+                                                var Api = Connections.api + Connections.forgotpassword + values.email;
                                                 var headers = {
                                                     accept: 'application/json',
                                                     'Content-Type': 'application/json'
                                                 };
 
-                                                var data = {
-                                                    email: values.email
-                                                };
-
                                                 fetch(Api, {
                                                     method: 'POST',
-                                                    headers: headers,
-                                                    body: JSON.stringify(data),
-                                                    cache: 'no-cache'
+                                                    headers: headers
                                                 })
                                                     .then((response) => response.json())
                                                     .then((response) => {
@@ -139,15 +134,15 @@ const Forgot_Password = ({ ...others }) => {
                                                             setLogSpinner(false);
                                                         }
                                                     })
-                                                    .catch(() => {
+                                                    .catch((error) => {
                                                         setStatus({ success: false });
-                                                        setErrors({ submit: response.message });
+                                                        setErrors({ submit: error.message });
                                                         setSubmitting(false);
                                                         setLogSpinner(false);
                                                     });
                                             }}
                                         >
-                                            {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+                                            {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
                                                 <form noValidate onSubmit={handleSubmit} {...others}>
                                                     <FormControl
                                                         fullWidth
@@ -182,23 +177,14 @@ const Forgot_Password = ({ ...others }) => {
                                                         <AnimateButton>
                                                             <Button
                                                                 disableElevation
-                                                                disabled={isSubmitting}
+                                                                disabled={logSpinner}
                                                                 fullWidth
                                                                 size="large"
                                                                 type="submit"
                                                                 variant="contained"
                                                                 color="primary"
                                                             >
-                                                                {logSpinner ? (
-                                                                    <div
-                                                                        className="spinner-border spinner-border-sm text-light "
-                                                                        role="status"
-                                                                    >
-                                                                        <span className="visually-hidden">Loading...</span>
-                                                                    </div>
-                                                                ) : (
-                                                                    'Send'
-                                                                )}
+                                                                {logSpinner ? <CircularProgress size={20} color="primary" /> : 'Send'}
                                                             </Button>
                                                         </AnimateButton>
                                                     </Box>
@@ -207,7 +193,7 @@ const Forgot_Password = ({ ...others }) => {
                                         </Formik>
                                     </>
                                 )}
-                            </AuthCardWrapper>
+                            </MainCard>
                         </Grid>
                     </Grid>
                 </Grid>

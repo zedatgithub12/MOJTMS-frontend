@@ -8,22 +8,17 @@ import { useTheme } from '@mui/material/styles';
 import {
     Avatar,
     Box,
-    Card,
-    CardContent,
     Chip,
     ClickAwayListener,
     Divider,
     Grid,
-    InputAdornment,
     List,
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    OutlinedInput,
     Paper,
     Popper,
     Stack,
-    Switch,
     Typography
 } from '@mui/material';
 
@@ -33,20 +28,22 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
 
 // assets
-import { IconLogout, IconPassword, IconSearch, IconSettings, IconShield, IconShieldHalfFilled, IconUser } from '@tabler/icons';
+import { IconLogout, IconUser } from '@tabler/icons';
 import { AuthContext } from 'context/context';
+import { useTranslation } from 'react-i18next';
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
     const navigate = useNavigate();
     const { SignOut } = useContext(AuthContext);
-    const LogOut = (status) => {
+
+    const LogOut = async (status) => {
         SignOut(status);
         navigate('/');
     };
@@ -54,9 +51,6 @@ const ProfileSection = () => {
     const userString = sessionStorage.getItem('user');
     const { user } = JSON.parse(userString);
 
-    const [sdm, setSdm] = useState(true);
-    const [value, setValue] = useState('');
-    const [notification, setNotification] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(-1);
     const [open, setOpen] = useState(false);
     /**
@@ -120,8 +114,8 @@ const ProfileSection = () => {
                         sx={{
                             ...theme.typography.mediumAvatar,
                             cursor: 'pointer',
-                            color: theme.palette.primary.dark,
-                            background: theme.palette.background.default
+                            color: theme.palette.primary.main,
+                            background: theme.palette.secondary.light
                         }}
                         ref={anchorRef}
                         aria-controls={open ? 'menu-list-grow' : undefined}
@@ -192,26 +186,10 @@ const ProfileSection = () => {
                                                     onClick={(event) => handleListItemClick(event, 0, '/account-setting')}
                                                 >
                                                     <ListItemIcon>
-                                                        <IconSettings stroke={1.5} size="1.3rem" />
-                                                    </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
-                                                </ListItemButton>
-                                                <ListItemButton
-                                                    sx={{ borderRadius: `${customization.borderRadius}px` }}
-                                                    selected={selectedIndex === 1}
-                                                    onClick={(event) => handleListItemClick(event, 1, '/change-password')}
-                                                >
-                                                    <ListItemIcon>
-                                                        <IconPassword stroke={1.5} size="1.3rem" />
+                                                        <IconUser stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
                                                     <ListItemText
-                                                        primary={
-                                                            <Grid container spacing={1} justifyContent="space-between">
-                                                                <Grid item>
-                                                                    <Typography variant="body2">Change Password</Typography>
-                                                                </Grid>
-                                                            </Grid>
-                                                        }
+                                                        primary={<Typography variant="body2">{t('Account Settings')}</Typography>}
                                                     />
                                                 </ListItemButton>
                                                 <ListItemButton
@@ -222,7 +200,7 @@ const ProfileSection = () => {
                                                     <ListItemIcon>
                                                         <IconLogout stroke={1.5} size="1.3rem" />
                                                     </ListItemIcon>
-                                                    <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                                                    <ListItemText primary={<Typography variant="body2">{t('Logout')}</Typography>} />
                                                 </ListItemButton>
                                             </List>
                                         </Box>

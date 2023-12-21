@@ -11,18 +11,24 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-
 import { AuthContext } from 'context/context';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
+import Loadable from 'ui-component/Loadable';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { HelmetProvider } from 'react-helmet-async';
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
 
 // ==============================|| APP ||============================== //
-import Loadable from 'ui-component/Loadable';
+
 const AuthLogin = Loadable(lazy(() => import('views/pages/authentication/authentication3/Login')));
 const AuthRegister = Loadable(lazy(() => import('views/pages/authentication/authentication3/Register')));
 const Forgot_Password = Loadable(lazy(() => import('views/pages/authentication/forgot-password')));
 const Reset_Password = Loadable(lazy(() => import('views/pages/authentication/reset-password')));
 const NotFound = Loadable(lazy(() => import('views/notfound')));
+
+const queryClient = new QueryClient();
 
 const App = () => {
     const customization = useSelector((state) => state.customization);
@@ -43,7 +49,7 @@ const App = () => {
                     sessionStorage.setItem('user', JSON.stringify(users));
                     sessionStorage.setItem('token', users.token);
                     sessionStorage.setItem('tokenExpiration', expirationTime);
-
+                    window.location.reload();
                     setLoged(true);
                 } else {
                     setLoged(false);
@@ -53,7 +59,6 @@ const App = () => {
             SignOut: async (status) => {
                 if (status === 'Signout') {
                     sessionStorage.clear();
-
                     setLoged(false);
                 }
                 {
@@ -71,6 +76,12 @@ const App = () => {
                 const userString = sessionStorage.getItem('user');
                 const userDetails = JSON.parse(userString);
                 return userDetails;
+            },
+
+            getRole: () => {
+                const userData = sessionStorage.getItem('user');
+                const user = JSON.parse(userData);
+                return user.user.role;
             }
         }),
         []
@@ -85,30 +96,36 @@ const App = () => {
     }, [loged]);
 
     return (
-        <StyledEngineProvider injectFirst>
-            <AuthContext.Provider value={authContext}>
-                <ThemeProvider theme={themes(customization)}>
-                    <CssBaseline />
-                    <NavigationScroll>
-                        {loged ? (
-                            <Routes />
-                        ) : location.pathname === '/pages/register/register' ? (
-                            <AuthRegister />
-                        ) : location.pathname === '/forgot-password' ? (
-                            <Forgot_Password />
-                        ) : location.pathname === `/reset-password/${token}` ? (
-                            <Reset_Password />
-                        ) : location.pathname === '/pages/login/login' ? (
-                            <AuthLogin />
-                        ) : location.pathname === '/' ? (
-                            <AuthLogin />
-                        ) : (
-                            <NotFound />
-                        )}
-                    </NavigationScroll>
-                </ThemeProvider>
-            </AuthContext.Provider>
-        </StyledEngineProvider>
+        <I18nextProvider i18n={i18n}>
+            <StyledEngineProvider injectFirst>
+                <AuthContext.Provider value={authContext}>
+                    <QueryClientProvider client={queryClient}>
+                        <ThemeProvider theme={themes(customization)}>
+                            <HelmetProvider>
+                                <CssBaseline />
+                                <NavigationScroll>
+                                    {loged ? (
+                                        <Routes />
+                                    ) : location.pathname === '/pages/register/register' ? (
+                                        <AuthRegister />
+                                    ) : location.pathname === '/forgot-password' ? (
+                                        <Forgot_Password />
+                                    ) : location.pathname === `/reset-password/${token}` ? (
+                                        <Reset_Password />
+                                    ) : location.pathname === '/pages/login/login' ? (
+                                        <AuthLogin />
+                                    ) : location.pathname === '/' ? (
+                                        <AuthLogin />
+                                    ) : (
+                                        <NotFound />
+                                    )}
+                                </NavigationScroll>
+                            </HelmetProvider>
+                        </ThemeProvider>
+                    </QueryClientProvider>
+                </AuthContext.Provider>
+            </StyledEngineProvider>
+        </I18nextProvider>
     );
 };
 

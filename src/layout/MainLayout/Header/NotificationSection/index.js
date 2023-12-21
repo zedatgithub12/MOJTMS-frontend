@@ -154,18 +154,13 @@ const NotificationSection = () => {
                                                         <Typography variant="subtitle1">All Notification</Typography>
                                                         <Chip
                                                             size="small"
-                                                            label="01"
+                                                            label="1"
                                                             sx={{
-                                                                color: theme.palette.background.default,
-                                                                bgcolor: theme.palette.warning.dark
+                                                                bgcolor: theme.palette.error.main,
+                                                                color: theme.palette.background.default
                                                             }}
                                                         />
                                                     </Stack>
-                                                </Grid>
-                                                <Grid item>
-                                                    <Typography component={Link} to="#" variant="subtitle2" color="primary">
-                                                        Mark as all read
-                                                    </Typography>
                                                 </Grid>
                                             </Grid>
                                         </Grid>
@@ -173,7 +168,7 @@ const NotificationSection = () => {
                                             <PerfectScrollbar
                                                 style={{ height: '100%', maxHeight: 'calc(100vh - 205px)', overflowX: 'hidden' }}
                                             >
-                                                <Grid container direction="column" spacing={2}>
+                                                {/* <Grid container direction="column" spacing={2}>
                                                     <Grid item xs={12}>
                                                         <Box sx={{ px: 2, pt: 0.25 }}>
                                                             <TextField
@@ -197,7 +192,7 @@ const NotificationSection = () => {
                                                     <Grid item xs={12} p={0}>
                                                         <Divider sx={{ my: 0 }} />
                                                     </Grid>
-                                                </Grid>
+                                                </Grid> */}
                                                 <NotificationList />
                                             </PerfectScrollbar>
                                         </Grid>

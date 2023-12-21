@@ -9,7 +9,10 @@ export const initialState = {
     defaultId: 'default',
     fontFamily: config.fontFamily,
     borderRadius: config.borderRadius,
-    opened: true
+    opened: true,
+    basicinfos: [], //an state that store the basic information needed while filtering or other purposed it contains job_title and department name list arrays
+    assessmentAnswers: [],
+    surveyresponse: []
 };
 
 // ==============================|| CUSTOMIZATION REDUCER ||============================== //
@@ -38,6 +41,23 @@ const customizationReducer = (state = initialState, action) => {
                 ...state,
                 borderRadius: action.borderRadius
             };
+        case actionTypes.SET_ASSESSMENT_ANSWERS:
+            return {
+                ...state,
+                assessmentAnswers: action.payload
+            };
+        case actionTypes.SET_SURVEY_RESPONSE:
+            return {
+                ...state,
+                surveyresponse: action.payload
+            };
+
+        case actionTypes.SET_BASIC_INFOS:
+            return {
+                ...state,
+                basicinfos: action.payload
+            };
+
         default:
             return state;
     }

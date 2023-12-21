@@ -1,8 +1,32 @@
 // assets
-import { IconDashboard, IconBuildingStore, IconUsers, IconHome, IconClipboardList } from '@tabler/icons';
+import {
+    IconDashboard,
+    IconHome,
+    IconBuildingStore,
+    IconUsers,
+    IconClipboardList,
+    IconBuilding,
+    IconSchool,
+    IconUser,
+    IconUserSearch,
+    IconTestPipe,
+    IconAffiliate
+} from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard, IconBuildingStore, IconUsers, IconHome, IconClipboardList };
+const icons = {
+    IconDashboard,
+    IconBuildingStore,
+    IconUsers,
+    IconHome,
+    IconClipboardList,
+    IconBuilding,
+    IconSchool,
+    IconUser,
+    IconUserSearch,
+    IconTestPipe,
+    IconAffiliate
+};
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
@@ -16,48 +40,98 @@ const dashboard = {
             title: 'Home',
             type: 'item',
             url: '/',
-            icon: icons.IconDashboard,
-            breadcrumbs: false
-        },
-        {
-            id: 'items',
-            title: 'Products',
-            type: 'item',
-            url: '/products',
-            icon: icons.IconClipboardList,
+            icon: icons.IconHome,
             breadcrumbs: false
         },
 
         {
-            id: 'users',
-            title: 'Users',
+            id: 'departments',
+            title: 'Departments',
+            type: 'item',
+            url: '/departments',
+            icon: icons.IconBuilding,
+            breadcrumbs: false
+        },
+        {
+            id: 'coordinators',
+            title: 'Coordinators',
+            type: 'item',
+            url: '/coordinators',
+            icon: icons.IconAffiliate,
+            breadcrumbs: false
+        },
+        {
+            id: 'trainings',
+            title: 'Trainings',
             type: 'collapse',
             url: '/sample-page',
-            icon: icons.IconUsers,
+            icon: icons.IconSchool,
             breadcrumbs: false,
             children: [
                 {
-                    id: 'admins',
-                    title: 'Admin',
+                    id: 'trainings',
+                    title: 'Trainings',
+                    url: '/trainings',
                     type: 'item',
-                    url: '/icons/tabler-icons',
                     breadcrumbs: false
                 },
                 {
-                    id: 'editor',
-                    title: 'Editors',
+                    id: 'trainers',
+                    title: 'Trainers',
+                    url: '/trainers',
                     type: 'item',
-                    url: '/icons/material-icons',
                     breadcrumbs: false
                 },
                 {
-                    id: 'customer',
-                    title: 'Customers',
+                    id: 'categories',
+                    title: 'Categories',
+                    url: '/categories',
                     type: 'item',
-                    url: '/icons/material-icons',
                     breadcrumbs: false
                 }
             ]
+        },
+        {
+            id: 'trainees',
+            title: 'Trainees',
+            type: 'item',
+            url: '/trainees',
+            icon: icons.IconUsers,
+            breadcrumbs: false
+        },
+
+        {
+            id: 'evaluations',
+            title: 'Evaluations',
+            type: 'collapse',
+            url: '/sample-page',
+            icon: icons.IconTestPipe,
+            breadcrumbs: false,
+            children: [
+                {
+                    id: 'assessements',
+                    title: 'Assessments',
+                    url: '/assessments',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'surveys',
+                    title: 'Surveys',
+                    url: '/survey',
+                    type: 'item',
+                    breadcrumbs: false
+                }
+            ]
+        },
+
+        {
+            id: 'users',
+            title: 'User Management',
+            type: 'item',
+            url: '/users',
+            icon: icons.IconUserSearch,
+            breadcrumbs: false
         }
     ]
 };

@@ -1,0 +1,24 @@
+const SQTypes = [
+    {
+        id: 1,
+        label: 'True or False',
+        name: 'true/false'
+    },
+    {
+        id: 2,
+        label: 'Choice',
+        name: 'choice'
+    },
+    {
+        id: 3,
+        label: 'Multiple Choice',
+        name: 'multiple-choice'
+    },
+    {
+        id: 4,
+        label: 'Fill in blank space',
+        name: 'fill'
+    }
+];
+
+export default SQTypes;

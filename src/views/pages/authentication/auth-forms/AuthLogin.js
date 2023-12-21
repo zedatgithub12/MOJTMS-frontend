@@ -6,10 +6,8 @@ import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
-    Checkbox,
     CircularProgress,
     FormControl,
-    FormControlLabel,
     FormHelperText,
     Grid,
     IconButton,
@@ -49,7 +47,7 @@ const FirebaseLogin = ({ ...others }) => {
     const scriptedRef = useScriptRef();
     // const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     // const customization = useSelector((state) => state.customization);
-    const [checked, setChecked] = useState(true);
+    // const [checked, setChecked] = useState(true);
     const [logSpinner, setLogSpinner] = useState(false);
     // const googleHandler = async () => {
     //     console.error('Login');
@@ -142,7 +140,6 @@ const FirebaseLogin = ({ ...others }) => {
                             setSubmitting(false);
                         }
                     } catch (err) {
-                        console.error(err);
                         if (scriptedRef.current) {
                             setStatus({ success: false });
                             setErrors({ submit: err.message });
@@ -245,17 +242,17 @@ const FirebaseLogin = ({ ...others }) => {
                             )}
                         </FormControl>
                         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
-                            <FormControlLabel
+                            {/* <FormControlLabel
                                 control={
                                     <Checkbox
                                         checked={checked}
                                         onChange={(event) => setChecked(event.target.checked)}
                                         name="checked"
-                                        color="success"
+                                        color="secondary"
                                     />
                                 }
                                 label="Remember me"
-                            />
+                            /> */}
                             <Typography
                                 variant="subtitle1"
                                 color="dark"
@@ -280,7 +277,7 @@ const FirebaseLogin = ({ ...others }) => {
                                     size="large"
                                     type="submit"
                                     variant="contained"
-                                    color="success"
+                                    color="primary"
                                 >
                                     {logSpinner ? (
                                         <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
