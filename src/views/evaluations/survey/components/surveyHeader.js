@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { IconButton, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconArrowLeft } from '@tabler/icons';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 //============================= SURVEY HEADER COMPONENT =========================//
 
@@ -14,6 +15,7 @@ const letterConfig = {
 };
 
 const SurveyHeader = ({ back, name, description }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const [collapse, setCollapse] = useState(true);
@@ -57,18 +59,20 @@ const SurveyHeader = ({ back, name, description }) => {
 
                     {name && (
                         <Typography variant="h4" sx={{ marginLeft: 1, cursor: 'pointer' }}>
-                            {name}
+                            {t(name)}
                         </Typography>
                     )}
                 </Box>
             </Box>
             {description && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 1 }}>
-                    <Typography variant="body2">{ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse)}</Typography>
+                    <Typography variant="body2">
+                        {t(ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse))}
+                    </Typography>
 
                     {description.length > letterConfig.endat && (
                         <Typography onClick={() => ExpndText()} sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}>
-                            {collapse ? 'Read More' : 'Read Less'}
+                            {collapse ? t('Read More') : t('Read Less')}
                         </Typography>
                     )}
                 </Box>

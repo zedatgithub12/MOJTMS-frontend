@@ -1,8 +1,10 @@
 import { Typography, Box, useTheme } from '@mui/material';
 import { FormattedRound } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 const UpcomingTrainings = ({ name, round, start_date, end_date, onPress }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     return (
         <Box
@@ -18,11 +20,11 @@ const UpcomingTrainings = ({ name, round, start_date, end_date, onPress }) => {
             onClick={onPress}
         >
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 0.5 }}>
-                {name && <Typography variant="subtitle1">{name}</Typography>}
+                {name && <Typography variant="subtitle1">{t(name)}</Typography>}
 
                 {round && (
                     <Typography variant="body2" color="primary" marginLeft={1}>
-                        {round} <sup>{FormattedRound(round)} </sup> Round
+                        {round} <sup>{t(FormattedRound(round))} </sup> {t('Round')}
                     </Typography>
                 )}
             </Box>

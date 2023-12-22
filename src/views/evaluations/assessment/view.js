@@ -15,16 +15,18 @@ import {
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { TimeFormatter } from 'utils/functions';
-import ViewHeader from './components/viewHeader';
 import { IconArchive, IconArchiveOff, IconEdit, IconPlus, IconTrash } from '@tabler/icons';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import CreateQuestion from './components/createQuestion';
-import CreateOptions from './components/createOptions';
 import { useQuery } from 'react-query';
 import { Delete } from 'ui-component/delete/Delete';
+import { useTranslation } from 'react-i18next';
+import ViewHeader from './components/viewHeader';
+import Connections from 'api';
+import CreateQuestion from './components/createQuestion';
+import CreateOptions from './components/createOptions';
 
 const ViewAssessement = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -214,7 +216,7 @@ const ViewAssessement = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -256,14 +258,14 @@ const ViewAssessement = () => {
                                 <ListItemIcon>
                                     <IconPlus size={18} />
                                 </ListItemIcon>
-                                Create Question
+                                {t('Create Question')}
                             </MenuItem>
                             <Divider />
                             <MenuItem onClick={() => navigate('/assessment/update', { state: state })}>
                                 <ListItemIcon>
                                     <IconEdit size={18} />
                                 </ListItemIcon>
-                                Update
+                                {t('Update')}
                             </MenuItem>
                             <Divider />
                             {state.status === 'active' && (
@@ -271,7 +273,7 @@ const ViewAssessement = () => {
                                     <ListItemIcon>
                                         <IconArchive size={18} />
                                     </ListItemIcon>
-                                    Archive
+                                    {t('Archive')}
                                 </MenuItem>
                             )}
 
@@ -280,7 +282,7 @@ const ViewAssessement = () => {
                                     <ListItemIcon>
                                         <IconArchiveOff size={18} />
                                     </ListItemIcon>
-                                    Un archive
+                                    {t('Un archive')}
                                 </MenuItem>
                             )}
                         </Box>
@@ -329,7 +331,7 @@ const ViewAssessement = () => {
                             >
                                 <Typography variant="subtitle1">{(index += 1)}.</Typography>
                                 <Typography variant="subtitle1" marginLeft={1.6}>
-                                    {question.question_text}
+                                    {t(question.question_text)}
                                 </Typography>
                             </Box>
 
@@ -351,7 +353,7 @@ const ViewAssessement = () => {
                                           <FormControlLabel
                                               key={option.id}
                                               control={<Checkbox checked={option.is_correct} color="primary" />}
-                                              label={option.option_text}
+                                              label={t(option.option_text)}
                                           />
                                       </Box>
                                   ))
@@ -369,8 +371,8 @@ const ViewAssessement = () => {
                                                   <FormControlLabel
                                                       value={option.option_text}
                                                       control={<Radio />}
-                                                      checked={option.is_correct}
-                                                      label={option.option_text}
+                                                      checked={parseInt(option.is_correct)}
+                                                      label={t(option.option_text)}
                                                   />
                                               ))}
                                           </RadioGroup>

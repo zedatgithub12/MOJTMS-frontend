@@ -9,6 +9,7 @@ import { RefreshToken } from 'utils/token-refresh';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { formatDate } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
@@ -19,6 +20,7 @@ import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
 // ==============================|| SESSION PAGE | TRAINEE USER ROLE HOMEPAGE ||============================== //
 
 const TrainingSession = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
@@ -86,7 +88,7 @@ const TrainingSession = () => {
                 <Grid container>
                     <Grid item xs={12} sx={{ minHeight: 200, padding: 3 }}>
                         <Typography variant="h4" color="dark" marginBottom={2} marginLeft={1.4}>
-                            Upcoming Training
+                            {t('Upcoming Trainings')}
                         </Typography>
                         {loading ? (
                             <Grid container>
@@ -123,7 +125,7 @@ const TrainingSession = () => {
                 <Grid container sx={{ padding: 3 }}>
                     <Grid item xs={12} sx={{ minHeight: 200, marginTop: 2 }}>
                         <Typography variant="h4" marginY={1} marginLeft={1.4}>
-                            Other Trainings
+                            {t('Other Trainings')}
                         </Typography>
                         {loading ? (
                             <Grid container>

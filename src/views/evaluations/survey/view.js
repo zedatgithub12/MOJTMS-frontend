@@ -15,15 +15,19 @@ import {
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { IconArchive, IconArchiveOff, IconEdit, IconPlus, IconTrash } from '@tabler/icons';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import CreateQuestion from './components/createQuestion';
-import CreateOptions from './components/createOptions';
 import { useQuery } from 'react-query';
 import { Delete } from 'ui-component/delete/Delete';
+import { useTranslation } from 'react-i18next';
+import CreateQuestion from './components/createQuestion';
+import CreateOptions from './components/createOptions';
+import Connections from 'api';
 import SurveyViewHeader from './components/viewHeader';
 
+// ==============================|| VIEW SURVEY PAGE ||============================== //
+
 const ViewSurvey = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -74,7 +78,7 @@ const ViewSurvey = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => handleDataFetching(), {
+    useQuery(['data'], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -214,7 +218,7 @@ const ViewSurvey = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -253,14 +257,14 @@ const ViewSurvey = () => {
                                 <ListItemIcon>
                                     <IconPlus size={18} />
                                 </ListItemIcon>
-                                Create Question
+                                {t('Create Question')}
                             </MenuItem>
                             <Divider />
                             <MenuItem onClick={() => navigate('/survey/update', { state: state })}>
                                 <ListItemIcon>
                                     <IconEdit size={18} />
                                 </ListItemIcon>
-                                Update
+                                {t('Update')}
                             </MenuItem>
                             <Divider />
                             {state.status === 'active' && (
@@ -268,7 +272,7 @@ const ViewSurvey = () => {
                                     <ListItemIcon>
                                         <IconArchive size={18} />
                                     </ListItemIcon>
-                                    Archive
+                                    {t('Archive')}
                                 </MenuItem>
                             )}
 
@@ -277,7 +281,7 @@ const ViewSurvey = () => {
                                     <ListItemIcon>
                                         <IconArchiveOff size={18} />
                                     </ListItemIcon>
-                                    Un archive
+                                    {t('Un archive')}
                                 </MenuItem>
                             )}
                         </Box>

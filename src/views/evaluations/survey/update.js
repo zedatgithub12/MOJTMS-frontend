@@ -4,21 +4,23 @@ import { Grid, Button, useTheme, CircularProgress, FormControl, InputLabel, Outl
 
 // project imports
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import { useLocation, useNavigate } from 'react-router';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 // ==============================|| UPDATE SURVEY PAGE ||============================== //
 
 const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Survey title is required').max(80),
-    description: Yup.string().required('Survey description is required').min(15)
+    title: Yup.string().required('Survey title is required'),
+    description: Yup.string().required('Survey description is required')
 });
 
 const UpdateSurvey = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -65,7 +67,7 @@ const UpdateSurvey = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -104,19 +106,18 @@ const UpdateSurvey = () => {
                                             error={formik.touched.title && Boolean(formik.errors.title)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="survey-title">Title</InputLabel>
+                                            <InputLabel htmlFor="survey-title">{t('Survey Title')}</InputLabel>
                                             <OutlinedInput
                                                 id="survey-title"
                                                 name="title"
-                                                label="Survey Title"
+                                                label={t('Survey Title')}
                                                 value={formik.values.title}
                                                 onChange={formik.handleChange}
                                                 fullWidth
-                                                inputProps={{}}
                                             />
                                             {formik.touched.title && formik.errors.title && (
                                                 <FormHelperText error id="standard-weight-helper-text-title">
-                                                    {formik.errors.title}
+                                                    {t(formik.errors.title)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -128,11 +129,11 @@ const UpdateSurvey = () => {
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="survey-description">Description </InputLabel>
+                                            <InputLabel htmlFor="survey-description">{t('Description')} </InputLabel>
                                             <OutlinedInput
                                                 id="survey-description"
                                                 name="description"
-                                                label="Description"
+                                                label={t('Description')}
                                                 value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -142,7 +143,7 @@ const UpdateSurvey = () => {
                                             />
                                             {formik.touched.description && formik.errors.description && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.description}
+                                                    {t(formik.errors.description)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -155,7 +156,7 @@ const UpdateSurvey = () => {
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
 
                                         <AnimateButton>
@@ -169,7 +170,7 @@ const UpdateSurvey = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Update'
+                                                    t('Update')
                                                 )}
                                             </Button>
                                         </AnimateButton>

@@ -14,12 +14,14 @@ import { DateFormatter, calculateAge } from 'utils/functions';
 import { useNavigate } from 'react-router';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
+import { useTranslation } from 'react-i18next';
 import errorImage from 'assets/images/error.jpg';
 import PropTypes from 'prop-types';
 
-const columns = ['No', 'Name', 'Email', 'Gender', 'Age', 'Address', 'Phone', 'Department', 'Joined on', 'Status'];
+const columns = ['Roll', 'Name', 'Email', 'Gender', 'Age', 'Address', 'Phone', 'Department', 'Joined on', 'Status'];
 
 function TraineesTable({ rows, isLoading, error }) {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -47,7 +49,7 @@ function TraineesTable({ rows, isLoading, error }) {
                 <TableHead sx={{ backgroundColor: theme.palette.primary[200] }}>
                     <TableRow>
                         {columns.map((item) => (
-                            <TableCell sx={{ minWidth: 100 }}>{item}</TableCell>
+                            <TableCell sx={{ minWidth: 100 }}>{t(item)}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>
@@ -104,7 +106,7 @@ function TraineesTable({ rows, isLoading, error }) {
                                     {row.user ? userStatusIndicator(row.user.status).text : 'N/A'}
                                 </TableCell>
                             </TableRow>
-                        ))}{' '}
+                        ))}
                     </TableBody>
                 )}
             </Table>

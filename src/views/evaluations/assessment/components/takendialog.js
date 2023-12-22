@@ -1,9 +1,11 @@
 import { Button, Dialog, Grid, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
+import { useTranslation } from 'react-i18next';
 import { IconCircleCheck } from '@tabler/icons';
 import PropTypes from 'prop-types';
 
 export default function TakenDialog({ open, handleClose, score, onDone }) {
+    const { t } = useTranslation();
     const theme = useTheme();
     return (
         <Dialog open={open} onClose={handleClose} aria-describedby="alert-dialog-slide-description">
@@ -31,7 +33,7 @@ export default function TakenDialog({ open, handleClose, score, onDone }) {
                         }}
                     >
                         <Typography variant="h2" color="success">
-                            Successfully Assessed
+                            {t('Successfully Assessed')}
                         </Typography>
 
                         <Box
@@ -43,14 +45,14 @@ export default function TakenDialog({ open, handleClose, score, onDone }) {
                                 marginTop: 1
                             }}
                         >
-                            <Typography variant="subtitle1">Scored</Typography>
+                            <Typography variant="subtitle1">{t('Scored')}</Typography>
                             <Typography variant="h4" color="primary" marginLeft={1}>
-                                {score ? `${score}%` : 'Not ready'}
+                                {score ? `${score}%` : t('Not ready')}
                             </Typography>
                         </Box>
 
                         <Button variant="outlined" color="primary" onClick={onDone} sx={{ marginTop: 5, paddingX: 8, paddingY: 1 }}>
-                            Done
+                            {t('Done')}
                         </Button>
                     </Box>
                 </Grid>

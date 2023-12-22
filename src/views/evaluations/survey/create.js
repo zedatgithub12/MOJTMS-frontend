@@ -1,37 +1,26 @@
 import { useState } from 'react';
 // material-ui
-import {
-    Grid,
-    Box,
-    Typography,
-    Button,
-    useTheme,
-    IconButton,
-    useMediaQuery,
-    CircularProgress,
-    FormControl,
-    InputLabel,
-    OutlinedInput,
-    FormHelperText
-} from '@mui/material';
+import { Grid, Button, useTheme, CircularProgress, FormControl, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
 
 // project imports
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import { useNavigate } from 'react-router';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import * as Yup from 'yup';
 
 // ==============================|| CREATE SURVEY PAGE ||============================== //
 
 const validationSchema = Yup.object().shape({
     title: Yup.string().required('Survey title is required'),
-    description: Yup.string().required('Survey description is required').min(15)
+    description: Yup.string().required('Survey description is required')
 });
 
 const CreateSurvey = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -78,7 +67,7 @@ const CreateSurvey = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -117,19 +106,18 @@ const CreateSurvey = () => {
                                             error={formik.touched.title && Boolean(formik.errors.title)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="survey-title">Title</InputLabel>
+                                            <InputLabel htmlFor="survey-title">{t('Survey Title')}</InputLabel>
                                             <OutlinedInput
                                                 id="survey-title"
                                                 name="title"
-                                                label="Survey Title"
+                                                label={t('Survey Title')}
                                                 value={formik.values.title}
                                                 onChange={formik.handleChange}
                                                 fullWidth
-                                                inputProps={{}}
                                             />
                                             {formik.touched.title && formik.errors.title && (
                                                 <FormHelperText error id="standard-weight-helper-text-title">
-                                                    {formik.errors.title}
+                                                    {t(formik.errors.title)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -141,11 +129,11 @@ const CreateSurvey = () => {
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="survey-description">Description </InputLabel>
+                                            <InputLabel htmlFor="survey-description">{t('Description')} </InputLabel>
                                             <OutlinedInput
                                                 id="survey-description"
                                                 name="description"
-                                                label="Description"
+                                                label={t('Description')}
                                                 value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -155,7 +143,7 @@ const CreateSurvey = () => {
                                             />
                                             {formik.touched.description && formik.errors.description && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.description}
+                                                    {t(formik.errors.description)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -168,7 +156,7 @@ const CreateSurvey = () => {
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
 
                                         <AnimateButton>
@@ -182,7 +170,7 @@ const CreateSurvey = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Save'
+                                                    t('Save')
                                                 )}
                                             </Button>
                                         </AnimateButton>

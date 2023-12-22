@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
     Grid,
     Dialog,
@@ -13,29 +14,30 @@ import {
     MenuItem,
     Button
 } from '@mui/material';
+import { useFormik } from 'formik';
 import { Box } from '@mui/system';
 import { IconPlus, IconX } from '@tabler/icons';
+import { convertToMB } from 'utils/functions';
+import { validateFile } from 'utils/functions/validation';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import axios from 'axios';
 import FileTypes from 'data/static/fileTypes';
 import TrainingLanguages from 'data/static/languages';
-import { useFormik } from 'formik';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import LinearProgressWithLabel from 'utils/components/LinearProgressWithValue';
-import { convertToMB } from 'utils/functions';
-import { validateFile } from 'utils/functions/validation';
 import * as Yup from 'yup';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Material name is required').max(80),
+    name: Yup.string().required('Material name is required'),
     language: Yup.string().required('Material language is required'),
     description: Yup.string()
 });
 
 export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const [material, setMaterial] = useState(null);
     const [type, setType] = useState('upload');
@@ -61,17 +63,32 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
         setSize(filesize);
 
         // File name length validation
-        if (file.name.length > 90) {
+        if (file.name.length > 254) {
             setFileValidation({
                 status: false,
-                message: 'File name exceeds the maximum length of 90 characters'
+                message: 'File name exceeds the maximum length of 254 characters'
             });
 
             return;
         }
 
         // File name format validation
-        const validExtensions = ['.png', '.jpeg', '.jpg', '.doc', '.pdf', '.xls', '.xlsl', '.csv', '.ppt', '.mp4', '.mp3', '.opus'];
+        const validExtensions = [
+            '.png',
+            '.jpeg',
+            '.jpg',
+            '.doc',
+            '.pdf',
+            '.xls',
+            '.xlsl',
+            '.csv',
+            '.ppt',
+            '.mp4',
+            'webm',
+            '.mp3',
+            '.opus',
+            '.sheet'
+        ];
         const fileExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
         if (!validExtensions.includes(fileExtension)) {
             setFileValidation({
@@ -152,7 +169,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -169,7 +186,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                             background: `linear-gradient(to left, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})`
                         }}
                     >
-                        <Typography variant="h4">Add material</Typography>{' '}
+                        <Typography variant="h4">{t('Add material')}</Typography>
                         <IconButton onClick={handleClose} sx={{ position: 'absolute', top: 6, right: 10 }}>
                             <IconX size={22} />
                         </IconButton>
@@ -207,7 +224,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                     {MaterialType ? MaterialType.icon : <IconPlus size={24} />}
 
                                     {MaterialType && MaterialType.name !== 'upload' && (
-                                        <Typography variant="subtitle2">{type == 'application' ? 'Document' : type}</Typography>
+                                        <Typography variant="subtitle2">{type == 'application' ? t('Document') : t(type)}</Typography>
                                     )}
                                 </Box>
                             </label>
@@ -236,7 +253,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                 </Box>
 
                                 <FormHelperText error id="standard-weight-helper-text">
-                                    {fileValidation.message}
+                                    {t(fileValidation.message)}
                                 </FormHelperText>
                             </Box>
                         )}
@@ -250,19 +267,18 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                     error={formik.touched.name && Boolean(formik.errors.name)}
                                     sx={{ ...theme.typography.customInput }}
                                 >
-                                    <InputLabel htmlFor="material-name">Material name</InputLabel>
+                                    <InputLabel htmlFor="material-name">{t('Material name')}</InputLabel>
                                     <OutlinedInput
                                         id="material-name"
                                         name="name"
-                                        label="Material-name"
+                                        label={t('Material name')}
                                         value={formik.values.name}
                                         onChange={formik.handleChange}
                                         fullWidth
-                                        inputProps={{}}
                                     />
                                     {formik.touched.name && formik.errors.name && (
                                         <FormHelperText error id="standard-weight-helper-text-name">
-                                            {formik.errors.name}
+                                            {t(formik.errors.name)}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
@@ -275,7 +291,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                     sx={{ ...theme.typography.customInput }}
                                 >
                                     <InputLabel htmlFor="outlined-adornment-language">
-                                        {formik.values.language ? '' : 'Language'}
+                                        {formik.values.language ? '' : t('Language')}
                                     </InputLabel>
                                     <Select
                                         value={formik.values.language}
@@ -285,19 +301,19 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                     >
                                         {TrainingLanguages.length == 0 ? (
                                             <Typography variant="body2" sx={{ padding: 1 }}>
-                                                Language not found
+                                                {t('Language not found')}
                                             </Typography>
                                         ) : (
                                             TrainingLanguages.map((lang, index) => (
                                                 <MenuItem key={index} value={lang.name}>
-                                                    {lang.name}
+                                                    {t(lang.name)}
                                                 </MenuItem>
                                             ))
                                         )}
                                     </Select>
                                     {formik.touched.language && formik.errors.language && (
                                         <FormHelperText error id="standard-weight-helper-text-email-login">
-                                            {formik.errors.language}
+                                            {t(formik.errors.language)}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
@@ -309,11 +325,13 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                     error={formik.touched.description && Boolean(formik.errors.description)}
                                     sx={{ ...theme.typography.customInput }}
                                 >
-                                    <InputLabel htmlFor="material-description">Description (optional) </InputLabel>
+                                    <InputLabel htmlFor="material-description">
+                                        {t('Description')} {t('(optional)')}{' '}
+                                    </InputLabel>
                                     <OutlinedInput
                                         id="material-description"
                                         name="description"
-                                        label="Description"
+                                        label={t('Description')}
                                         value={formik.values.description}
                                         onChange={formik.handleChange}
                                         fullWidth
@@ -323,7 +341,7 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                                     />
                                     {formik.touched.description && formik.errors.description && (
                                         <FormHelperText error id="standard-weight-helper-text-name">
-                                            {formik.errors.description}
+                                            {t(formik.errors.description)}
                                         </FormHelperText>
                                     )}
                                 </FormControl>
@@ -335,26 +353,26 @@ export const AddMaterial = ({ module_id, open, handleClose, sx }) => {
                             >
                                 <Box sx={{ width: '100%' }}>
                                     {uploadProgress == 100 ? (
-                                        <Typography variant="subtitle2">Uploaded</Typography>
+                                        <Typography variant="subtitle2">{t('Uploaded')}</Typography>
                                     ) : (
-                                        uploadProgress > 0 && <Typography variant="subtitle2">Uploading...</Typography>
+                                        uploadProgress > 0 && <Typography variant="subtitle2">{t('Uploading...')}</Typography>
                                     )}
                                     {uploadProgress > 0 && uploadProgress <= 100 && <LinearProgressWithLabel value={uploadProgress} />}
                                 </Box>
 
                                 <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <Button variant="text" color="secondary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={handleClose}>
-                                        Cancel
+                                    <Button variant="text" color="primary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={handleClose}>
+                                        {t('Cancel')}
                                     </Button>
                                     <AnimateButton>
                                         <Button
                                             disabled={isSubmitting ? true : false}
                                             type="submit"
                                             variant="contained"
-                                            color="secondary"
+                                            color="primary"
                                             sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
                                         >
-                                            Add Material
+                                            {t('Add Material')}
                                         </Button>
                                     </AnimateButton>
                                 </Box>

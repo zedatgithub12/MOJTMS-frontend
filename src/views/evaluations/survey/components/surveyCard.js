@@ -1,8 +1,9 @@
 import { Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 //============================= SURVEY LISTING CARD =========================//
 
@@ -12,6 +13,7 @@ const letterConfig = {
 };
 
 const SurveyCard = ({ title, description, onClick, status, sx }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [collapse, setCollapse] = useState(true);
@@ -42,14 +44,16 @@ const SurveyCard = ({ title, description, onClick, status, sx }) => {
             >
                 {title && (
                     <Typography variant="h4" onClick={onClick} sx={{ cursor: 'pointer' }}>
-                        {title}
+                        {t(title)}
                     </Typography>
                 )}
             </Box>
 
             {description && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', marginY: 1 }}>
-                    <Typography variant="body2">{ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse)}</Typography>
+                    <Typography variant="body2">
+                        {t(ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse))}
+                    </Typography>
 
                     {description.length > letterConfig.endat && (
                         <Typography
@@ -57,7 +61,7 @@ const SurveyCard = ({ title, description, onClick, status, sx }) => {
                             onClick={() => ExpndText()}
                             sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                         >
-                            {collapse ? 'Read More' : 'Read Less'}
+                            {collapse ? t('Read More') : t('Read Less')}
                         </Typography>
                     )}
                 </Box>

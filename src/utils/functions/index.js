@@ -12,12 +12,114 @@ export const ReadMore = (content, initial, max, collapse) => {
     return text;
 };
 
+// export const DateFormatter = (dates) => {
+//     var year = dates.slice(0, 4);
+//     var month = dates.slice(5, 7);
+//     var day = dates.slice(8, 10);
+//     const date = day + '-' + month + '-' + year;
+//     return date;
+// };
+
+// export const DateFormatter = (dates) => {
+//     const language = navigator.language || navigator.userLanguage;
+//     const isAmharic = localStorage.getItem('lang');
+
+//     if (isAmharic === 'am') {
+//         const ethioDate = convertToEthiopianDate(dates);
+//         return ethioDate;
+//     } else {
+//         var year = dates.slice(0, 4);
+//         var month = dates.slice(5, 7);
+//         var day = dates.slice(8, 10);
+//         const formattedDate = day + '-' + month + '-' + year;
+//         return formattedDate;
+//     }
+// };
+
+// const convertToEthiopianDate = (gregorianDate) => {
+//     const gregorianYear = parseInt(gregorianDate.slice(0, 4));
+//     const gregorianMonth = parseInt(gregorianDate.slice(5, 7));
+//     const gregorianDay = parseInt(gregorianDate.slice(8, 10));
+
+//     const ethiopianYear = gregorianYear - 8;
+//     const ethiopianMonth = gregorianMonth - 2 <= 0 ? gregorianMonth + 10 : gregorianMonth - 2;
+//     const ethiopianDay = gregorianDay - 10;
+
+//     return `${ethiopianYear}-${ethiopianMonth < 10 ? '0' + ethiopianMonth : ethiopianMonth}-${
+//         ethiopianDay < 10 ? '0' + ethiopianDay : ethiopianDay
+//     }`;
+// };
+
 export const DateFormatter = (dates) => {
-    var year = dates.slice(0, 4);
-    var month = dates.slice(5, 7);
-    var day = dates.slice(8, 10);
-    const date = day + '-' + month + '-' + year;
-    return date;
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const ethioDate = convertToEthiopianDate(dates);
+        return ethioDate;
+    } else {
+        var year = dates.slice(0, 4);
+        var month = dates.slice(5, 7);
+        var day = dates.slice(8, 10);
+        const formattedDate = day + '-' + month + '-' + year;
+        return formattedDate;
+    }
+};
+
+const gregorianToEthiopianYear = (gregorianYear, gregorianMonth, gregorianDay) => {
+    const ethioYear = gregorianYear - 8;
+
+    if ((gregorianMonth === 9 && gregorianDay >= 11) || gregorianMonth > 9) {
+        return ethioYear + 1;
+    }
+
+    return ethioYear;
+};
+
+const gregorianToEthiopianMonth = (gregorianMonth, ethioYear) => {
+    const ethioYearChangeMonth = isLeapYear(ethioYear) ? 12 : 11;
+    const ethioMonth = (gregorianMonth + ethioYearChangeMonth) % 13;
+
+    return ethioMonth === 0 ? 13 : ethioMonth;
+};
+
+const gregorianToEthiopianDay = (gregorianDay, gregorianMonth, isLeapYear) => {
+    const dayMapping = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+    let ethioDay = gregorianDay - 10;
+    const monthDays = dayMapping[gregorianMonth];
+
+    if (gregorianMonth === 2 && isLeapYear) {
+        ethioDay++;
+    }
+
+    if (ethioDay <= 0) {
+        gregorianMonth--;
+        if (gregorianMonth === 0) {
+            gregorianMonth = 12;
+        }
+        ethioDay += dayMapping[gregorianMonth];
+    }
+
+    return ethioDay;
+};
+
+const isLeapYear = (year) => {
+    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+};
+
+const convertToEthiopianDate = (gregorianDate) => {
+    // const day = parseInt(gregorianDate.slice(0, 2));
+    // const month = parseInt(gregorianDate.slice(3, 5));
+    // const year = parseInt(gregorianDate.slice(6, 10));
+    var year = gregorianDate.slice(0, 4);
+    var month = gregorianDate.slice(5, 7);
+    var day = gregorianDate.slice(8, 10);
+
+    const ethioYear = gregorianToEthiopianYear(year, month, day);
+    const ethioMonth = gregorianToEthiopianMonth(month);
+    const ethioDay = gregorianToEthiopianDay(day, month, isLeapYear(year));
+
+    return `${ethioDay < 10 ? '0' + ethioDay : ethioDay}-${ethioMonth < 10 ? '0' + ethioMonth : ethioMonth}-${ethioYear}`;
 };
 
 export const convertToMB = (sizeInBytes) => {
@@ -119,6 +221,7 @@ export const formatDateOnly = (inputDate) => {
     const formattedDate = date.toLocaleDateString('en-US', options);
     return formattedDate;
 };
+
 //round count formatter
 export const FormattedRound = (number) => {
     var count;

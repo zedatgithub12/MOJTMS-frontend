@@ -4,6 +4,7 @@ import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
 import { useNavigate } from 'react-router';
 import { NoResult } from 'utils/components/noresult';
+import { useTranslation } from 'react-i18next';
 import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
 import Connections from 'api';
 import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
@@ -12,6 +13,7 @@ import PropTypes from 'prop-types';
 // ==============================|| TRAINING LISTING COMPONENT ||============================== //
 
 const TrainingList = ({ trainee_id }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(false);
@@ -96,7 +98,7 @@ const TrainingList = ({ trainee_id }) => {
                                                     borderTopRightRadius: 4
                                                 }}
                                             >
-                                                Enrollment | <b> {training.enrollment_status}</b>
+                                                {t('Enrollment')} | <b> {t(training.enrollment_status)}</b>
                                             </Typography>
                                         </Box>
 

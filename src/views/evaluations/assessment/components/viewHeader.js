@@ -1,11 +1,12 @@
 import { Button, CircularProgress, IconButton, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconArrowLeft, IconChevronDown, IconChevronRight } from '@tabler/icons';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ActionMenu } from 'ui-component/menu/action';
 import { ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 //============================= ASSESSMENT VIEW HEADER =========================//
 
@@ -29,6 +30,7 @@ const ViewHeader = ({
     publishing,
     sx
 }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -74,7 +76,7 @@ const ViewHeader = ({
 
                     {name && (
                         <Typography variant="h4" onClick={onClick} sx={{ marginLeft: 1, cursor: 'pointer' }}>
-                            {name}
+                            {t(name)}
                         </Typography>
                     )}
                 </Box>
@@ -125,7 +127,7 @@ const ViewHeader = ({
                             sx={{ marginLeft: 2, paddingX: 4 }}
                             disabled={publishing === 'processing' ? true : false}
                         >
-                            Publish
+                            {t('Publish')}
                         </Button>
                     )}
 
@@ -135,7 +137,9 @@ const ViewHeader = ({
 
             {description && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', marginY: 3 }}>
-                    <Typography variant="body2">{ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse)}</Typography>
+                    <Typography variant="body2">
+                        {t(ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse))}
+                    </Typography>
 
                     {description.length > letterConfig.endat && (
                         <Typography
@@ -143,7 +147,7 @@ const ViewHeader = ({
                             onClick={() => ExpndText()}
                             sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                         >
-                            {collapse ? 'Read More' : 'Read Less'}
+                            {collapse ? t('Read More') : t('Read Less')}
                         </Typography>
                     )}
                 </Box>
@@ -152,12 +156,12 @@ const ViewHeader = ({
             {instruction && (
                 <Box paddingTop={1}>
                     <Button variant="text" color="primary" onClick={() => setOpenInstruction(!openInstruction)}>
-                        Instructions {openInstruction ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+                        {t('Instruction')} {openInstruction ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
                     </Button>
 
                     {openInstruction && (
                         <Typography variant="body2" sx={{ padding: 1 }}>
-                            {instruction}
+                            {t(instruction)}
                         </Typography>
                     )}
                 </Box>
