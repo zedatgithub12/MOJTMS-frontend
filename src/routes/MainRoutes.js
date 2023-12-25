@@ -30,6 +30,7 @@ const UpdateTraining = Loadable(lazy(() => import('views/training/update')));
 const CreateSession = Loadable(lazy(() => import('views/training/session/create')));
 const UpdateSession = Loadable(lazy(() => import('views/training/session/update')));
 const SessionDetails = Loadable(lazy(() => import('views/training/session/details')));
+const TrainingTrainees = Loadable(lazy(() => import('views/t-trainees')));
 
 //session schedule
 const CreateSchedule = Loadable(lazy(() => import('views/training/schedule/create')));
@@ -304,6 +305,10 @@ const MainRoutes = {
         {
             path: 'training/session/detail',
             element: <SessionDetails />
+        },
+        {
+            path: 'training/trainees',
+            element: <TrainingTrainees />
         },
 
         //schedules

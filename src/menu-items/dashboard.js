@@ -62,7 +62,7 @@ const dashboard = {
         },
         {
             id: 'trainings',
-            title: 'Trainings',
+            title: 'Training',
             type: 'collapse',
             url: '/sample-page',
             icon: icons.IconSchool,
@@ -83,6 +83,13 @@ const dashboard = {
                     breadcrumbs: false
                 },
                 {
+                    id: 'training_trainees',
+                    title: 'Trainees',
+                    url: '/training/trainees',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
                     id: 'categories',
                     title: 'Categories',
                     url: '/categories',
@@ -93,7 +100,7 @@ const dashboard = {
         },
         {
             id: 'trainees',
-            title: 'Trainees',
+            title: 'Trainee Accounts',
             type: 'item',
             url: '/trainees',
             icon: icons.IconUsers,

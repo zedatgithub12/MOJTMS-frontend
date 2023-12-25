@@ -64,6 +64,7 @@ const Connections = {
 
     trainingtrainees: 'training/trainees/',
     filledsurveys: 'training/filled/surveys/',
+    alltrainees: 'alltrainees',
 
     schedules: 'session-schedules',
     roundschedule: 'round-schedules/',

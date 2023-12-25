@@ -1,3 +1,32 @@
+import EtDate from '../ethiopian-date';
+
+const etTime = {
+    0: 12,
+    1: 7,
+    2: 8,
+    3: 9,
+    4: 10,
+    5: 11,
+    6: 12,
+    7: 1,
+    8: 2,
+    9: 3,
+    10: 4,
+    11: 5,
+    12: 6,
+    13: 7,
+    14: 8,
+    15: 9,
+    16: 10,
+    17: 11,
+    18: 12,
+    19: 1,
+    20: 2,
+    21: 3,
+    22: 4,
+    23: 5
+};
+
 export const ReadMore = (content, initial, max, collapse) => {
     var text;
     let textLength = content.length;
@@ -12,49 +41,11 @@ export const ReadMore = (content, initial, max, collapse) => {
     return text;
 };
 
-// export const DateFormatter = (dates) => {
-//     var year = dates.slice(0, 4);
-//     var month = dates.slice(5, 7);
-//     var day = dates.slice(8, 10);
-//     const date = day + '-' + month + '-' + year;
-//     return date;
-// };
-
-// export const DateFormatter = (dates) => {
-//     const language = navigator.language || navigator.userLanguage;
-//     const isAmharic = localStorage.getItem('lang');
-
-//     if (isAmharic === 'am') {
-//         const ethioDate = convertToEthiopianDate(dates);
-//         return ethioDate;
-//     } else {
-//         var year = dates.slice(0, 4);
-//         var month = dates.slice(5, 7);
-//         var day = dates.slice(8, 10);
-//         const formattedDate = day + '-' + month + '-' + year;
-//         return formattedDate;
-//     }
-// };
-
-// const convertToEthiopianDate = (gregorianDate) => {
-//     const gregorianYear = parseInt(gregorianDate.slice(0, 4));
-//     const gregorianMonth = parseInt(gregorianDate.slice(5, 7));
-//     const gregorianDay = parseInt(gregorianDate.slice(8, 10));
-
-//     const ethiopianYear = gregorianYear - 8;
-//     const ethiopianMonth = gregorianMonth - 2 <= 0 ? gregorianMonth + 10 : gregorianMonth - 2;
-//     const ethiopianDay = gregorianDay - 10;
-
-//     return `${ethiopianYear}-${ethiopianMonth < 10 ? '0' + ethiopianMonth : ethiopianMonth}-${
-//         ethiopianDay < 10 ? '0' + ethiopianDay : ethiopianDay
-//     }`;
-// };
-
 export const DateFormatter = (dates) => {
     const isAmharic = localStorage.getItem('lang');
 
     if (isAmharic === 'am') {
-        const ethioDate = convertToEthiopianDate(dates);
+        const ethioDate = EtDate(dates);
         return ethioDate;
     } else {
         var year = dates.slice(0, 4);
@@ -63,63 +54,6 @@ export const DateFormatter = (dates) => {
         const formattedDate = day + '-' + month + '-' + year;
         return formattedDate;
     }
-};
-
-const gregorianToEthiopianYear = (gregorianYear, gregorianMonth, gregorianDay) => {
-    const ethioYear = gregorianYear - 8;
-
-    if ((gregorianMonth === 9 && gregorianDay >= 11) || gregorianMonth > 9) {
-        return ethioYear + 1;
-    }
-
-    return ethioYear;
-};
-
-const gregorianToEthiopianMonth = (gregorianMonth, ethioYear) => {
-    const ethioYearChangeMonth = isLeapYear(ethioYear) ? 12 : 11;
-    const ethioMonth = (gregorianMonth + ethioYearChangeMonth) % 13;
-
-    return ethioMonth === 0 ? 13 : ethioMonth;
-};
-
-const gregorianToEthiopianDay = (gregorianDay, gregorianMonth, isLeapYear) => {
-    const dayMapping = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-    let ethioDay = gregorianDay - 10;
-    const monthDays = dayMapping[gregorianMonth];
-
-    if (gregorianMonth === 2 && isLeapYear) {
-        ethioDay++;
-    }
-
-    if (ethioDay <= 0) {
-        gregorianMonth--;
-        if (gregorianMonth === 0) {
-            gregorianMonth = 12;
-        }
-        ethioDay += dayMapping[gregorianMonth];
-    }
-
-    return ethioDay;
-};
-
-const isLeapYear = (year) => {
-    return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-};
-
-const convertToEthiopianDate = (gregorianDate) => {
-    // const day = parseInt(gregorianDate.slice(0, 2));
-    // const month = parseInt(gregorianDate.slice(3, 5));
-    // const year = parseInt(gregorianDate.slice(6, 10));
-    var year = gregorianDate.slice(0, 4);
-    var month = gregorianDate.slice(5, 7);
-    var day = gregorianDate.slice(8, 10);
-
-    const ethioYear = gregorianToEthiopianYear(year, month, day);
-    const ethioMonth = gregorianToEthiopianMonth(month);
-    const ethioDay = gregorianToEthiopianDay(day, month, isLeapYear(year));
-
-    return `${ethioDay < 10 ? '0' + ethioDay : ethioDay}-${ethioMonth < 10 ? '0' + ethioMonth : ethioMonth}-${ethioYear}`;
 };
 
 export const convertToMB = (sizeInBytes) => {
@@ -206,20 +140,43 @@ export const TimeFormatter = (number) => {
 
 //format date and time then return it in the nov,30,2023 | 10:00am
 export const formatDate = (inputDate) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const date = new Date(inputDate);
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    const isAmharic = localStorage.getItem('lang');
 
-    return `${formattedDate} | ${formattedTime}`;
+    if (isAmharic === 'am') {
+        const ethioDate = EtDate(inputDate);
+
+        const date = new Date(inputDate);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = 'ሰዓት';
+
+        if (hours >= 7 && hours <= 18) {
+            const convertedTime = `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+            return `${ethioDate} | ${convertedTime}`;
+        }
+    } else {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const date = new Date(inputDate);
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+        return `${formattedDate} | ${formattedTime}`;
+    }
 };
 
 //format date only and return it in the nov,30,2023
 export const formatDateOnly = (inputDate) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const date = new Date(inputDate);
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate;
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const ethioDate = EtDate(inputDate);
+        return ethioDate;
+    } else {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const date = new Date(inputDate);
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        return formattedDate;
+    }
 };
 
 //round count formatter
@@ -270,13 +227,26 @@ export const FormatStatus = (statusInput) => {
 };
 
 export const convertDateTime = (datetime) => {
-    const date = new Date(datetime);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const period = hours >= 12 ? 'pm' : 'am';
+    const isAmharic = localStorage.getItem('lang');
 
-    const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
-    return convertedTime;
+    if (isAmharic === 'am') {
+        const date = new Date(datetime);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = 'ሰዓት';
+
+        if (hours >= 7 && hours <= 18) {
+            return `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+        }
+    } else {
+        const date = new Date(datetime);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? 'pm' : 'am';
+
+        const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+        return convertedTime;
+    }
 };
 
 export function calculateAge(dateString) {
