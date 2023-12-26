@@ -11,7 +11,6 @@ import {
     Chip,
     ClickAwayListener,
     Divider,
-    Grid,
     List,
     ListItemButton,
     ListItemIcon,
@@ -154,11 +153,20 @@ const ProfileSection = () => {
                                     <Box sx={{ p: 2 }}>
                                         <Stack>
                                             <Stack direction="row" spacing={0.5} alignItems="center">
-                                                <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
+                                                <Typography
+                                                    component="span"
+                                                    variant="h4"
+                                                    sx={{
+                                                        fontWeight: 400,
+                                                        cursor: 'pointer',
+                                                        ':hover': { color: theme.palette.primary.main }
+                                                    }}
+                                                    onClick={(event) => handleListItemClick(event, 0, '/account-setting')}
+                                                >
                                                     {user.name}
                                                 </Typography>
                                             </Stack>
-                                            <Typography variant="subtitle2">{user.email}</Typography>
+                                            <Typography variant="subtitle2">{user.role}</Typography>
                                         </Stack>
                                     </Box>
                                     <Divider />

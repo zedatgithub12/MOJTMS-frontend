@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination, CircularProgress } from '@mui/material';
 // project imports
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
@@ -15,6 +15,7 @@ import Connections from 'api';
 import AssessmentCard from './components/assessmentCard';
 import SplitButton from 'ui-component/Buttons/SplitButton';
 import noresult from 'assets/images/no_result.png';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| ASSESSEMENT PAGE ||============================== //
 
@@ -24,6 +25,16 @@ const Assessment = () => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);

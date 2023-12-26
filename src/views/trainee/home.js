@@ -1,10 +1,24 @@
+import { useEffect } from 'react';
 import { Grid, useTheme } from '@mui/material';
+import { useLocation, useNavigate } from 'react-router';
 import HomeTabs from './components/Hometabs';
 import TrainingSession from 'views/training/session';
 import YourTrainings from './components/YourTrainings';
+import CheckPathPermission from 'utils/path-checker';
 
 const TraineeHome = () => {
     const theme = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const getTraineeId = () => {
         const userString = sessionStorage.getItem('user');

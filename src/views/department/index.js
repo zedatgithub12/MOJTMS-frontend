@@ -1,18 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination, CircularProgress } from '@mui/material';
 // project imports
-import Connections from 'api';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
-import DepartmentCard from 'ui-component/cards/DepartmentCard';
 import { RefreshToken } from 'utils/token-refresh';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
-import noresult from 'assets/images/no_result.png';
 import { useTranslation } from 'react-i18next';
+import Connections from 'api';
+import DepartmentCard from 'ui-component/cards/DepartmentCard';
+import noresult from 'assets/images/no_result.png';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| DEPARTMENT PAGE ||============================== //
 
@@ -20,6 +21,18 @@ const Department = () => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        //in this useffect hook we check if the active user is allowed to view this page
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
+
     const ImageApi = Connections.thumbnails;
 
     const [loading, setLoading] = useState(false);

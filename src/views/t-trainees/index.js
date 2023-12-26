@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -29,14 +29,32 @@ import { saveAs } from 'file-saver';
 import { CSVLink } from 'react-csv';
 import { DateFormatter, calculateAge } from 'utils/functions';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router';
 import TraineesTable from './components/TraineesTable';
 import errorImage from 'assets/images/error.jpg';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 import Connections from 'api';
 import * as XLSX from 'xlsx';
+import CheckPathPermission from 'utils/path-checker';
 
 const TrainingTrainees = () => {
     const { t } = useTranslation();
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
+
+    const userstring = sessionStorage.getItem('user');
+    const user = JSON.parse(userstring);
+    const role = user.user.role;
 
     const [loading, setLoading] = useState(false);
     const [trainees, setTrainees] = useState([]);
@@ -288,31 +306,33 @@ const TrainingTrainees = () => {
                                         </RadioGroup>
                                     </FormControl>
 
-                                    <FormControl sx={{ marginTop: 3 }}>
-                                        <FormLabel component="legend">{t('Department')}</FormLabel>
-                                        <Select
-                                            value={filters.department}
-                                            onChange={handleFilterChange}
-                                            id="outlined-adornment-job-title"
-                                            name="department"
-                                            sx={{ marginTop: 1 }}
-                                        >
-                                            <MenuItem value={''}>{t('All')}</MenuItem>
+                                    {role === 'Admin' && (
+                                        <FormControl sx={{ marginTop: 3 }}>
+                                            <FormLabel component="legend">{t('Department')}</FormLabel>
+                                            <Select
+                                                value={filters.department}
+                                                onChange={handleFilterChange}
+                                                id="outlined-adornment-job-title"
+                                                name="department"
+                                                sx={{ marginTop: 1 }}
+                                            >
+                                                <MenuItem value={''}>{t('All')}</MenuItem>
 
-                                            {filterData.departments && filterData.departments.length == 0 ? (
-                                                <Typography variant="body2" sx={{ padding: 1 }}>
-                                                    {t('Job titles not found')}
-                                                </Typography>
-                                            ) : (
-                                                filterData.departments &&
-                                                filterData.departments.map((position, index) => (
-                                                    <MenuItem key={index} value={position}>
-                                                        {t(position)}
-                                                    </MenuItem>
-                                                ))
-                                            )}
-                                        </Select>
-                                    </FormControl>
+                                                {filterData.departments && filterData.departments.length == 0 ? (
+                                                    <Typography variant="body2" sx={{ padding: 1 }}>
+                                                        {t('Department not found')}
+                                                    </Typography>
+                                                ) : (
+                                                    filterData.departments &&
+                                                    filterData.departments.map((position, index) => (
+                                                        <MenuItem key={index} value={position}>
+                                                            {t(position)}
+                                                        </MenuItem>
+                                                    ))
+                                                )}
+                                            </Select>
+                                        </FormControl>
+                                    )}
 
                                     <FormControl sx={{ marginY: 3 }}>
                                         <FormLabel component="legend" htmlFor="outlined-adornment-job-title">
@@ -349,7 +369,8 @@ const TrainingTrainees = () => {
                                         flexDirection: 'row',
                                         alignItems: 'center',
                                         justifyContent: 'flex-end',
-                                        marginTop: 1
+                                        marginTop: 1,
+                                        paddingBottom: 1
                                     }}
                                 >
                                     <Button variant="text" color="primary" sx={{ marginRight: 2 }} onClick={() => handleReset()}>

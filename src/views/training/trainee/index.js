@@ -1,10 +1,10 @@
-import { CircularProgress, Divider, IconButton, Typography } from '@mui/material';
+import { CircularProgress, Divider, Grid, IconButton, Pagination, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { RefreshToken } from 'utils/token-refresh';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import { IconThumbDown, IconX } from '@tabler/icons';
+import { IconChevronDown, IconChevronUp, IconThumbDown, IconX } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import PropTypes from 'prop-types';
@@ -12,18 +12,30 @@ import TraineeListing from './components/TraineeListing';
 import AssignedListing from './components/AssignedListing';
 
 const TraineeEnrollment = ({ session_id }) => {
+    const theme = useTheme();
     const { t } = useTranslation();
-    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
-    const role = ActiveUser.user.role;
+    const userstring = sessionStorage.getItem('user');
+    const user = JSON.parse(userstring);
+    const uid = user?.user.id;
+    const role = user?.user.role;
 
     const [assigned, setAssigned] = useState([]);
     const [allTrainee, setAllTrainee] = useState([]);
     const [selectedTrainee, setSelectedTrainee] = useState();
     const [loading, setLoading] = useState(false);
 
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 20,
+        page: 1,
+        total: 0,
+        lastPage: 1
+    });
+
     const [assigning, setAssigning] = useState(false);
     const [isChanging, setIsChanging] = useState(false);
     const [deleting, setDeleting] = useState(false);
+
+    const [showEnrolled, setShowEnrolled] = useState(false);
 
     const handleFetching = async () => {
         const tokenExpiration = sessionStorage.getItem('tokenExpiration');
@@ -39,7 +51,11 @@ const TraineeEnrollment = ({ session_id }) => {
 
     const FetchTrainees = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.sessionenrollments + session_id + `?role=${role}`;
+        var Api =
+            Connections.api +
+            Connections.sessionenrollments +
+            session_id +
+            `?uid=${uid}&role=${role}&page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -51,14 +67,14 @@ const TraineeEnrollment = ({ session_id }) => {
         const parsed = await response.json();
         if (parsed.success) {
             const data = parsed.data;
-            const allTrainee = parsed.trainees;
+            const allTrainee = parsed.trainees.data;
             setAssigned(data);
             setAllTrainee(allTrainee);
             setLoading(false);
         }
     };
 
-    useQuery(['data'], () => handleFetching(), {
+    useQuery(['data', paginationModel.page], () => handleFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -180,6 +196,13 @@ const TraineeEnrollment = ({ session_id }) => {
             });
     };
 
+    const handleChange = (event, value) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: value
+        });
+    };
+
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
         enqueueSnackbar(message, { variant });
@@ -197,36 +220,72 @@ const TraineeEnrollment = ({ session_id }) => {
                     <Typography variant="subtitle2">{t('After the trainees assignment, they will be listed here')}</Typography>
                 </Box>
             ) : (
-                assigned.map((trainee) => (
-                    <AssignedListing
-                        key={trainee.id}
-                        name={trainee.name}
-                        education_level={trainee.dept_name}
-                        job_title={trainee.job_title}
-                        status={trainee.enrollment_status}
-                        onAccept={() => handleChangeInit(trainee.id, 'accepted')}
-                        isAccepting={
-                            trainee.id === selectedTrainee && isChanging ? (
-                                <CircularProgress size={18} sx={{ color: 'white' }} />
-                            ) : (
-                                t('Accept')
-                            )
-                        }
-                        isRemoving={
-                            <Box>
-                                {trainee.enrollment_status === 'pending' ? (
-                                    <IconButton onClick={() => handleChangeInit(trainee.id, 'rejected')} disabled={isChanging}>
-                                        <IconThumbDown size={20} />
-                                    </IconButton>
-                                ) : (
-                                    <IconButton onClick={() => handleDeleteInit(trainee.id)}>
-                                        {trainee.id === selectedTrainee && deleting ? <CircularProgress size={18} /> : <IconX size={20} />}
-                                    </IconButton>
-                                )}
-                            </Box>
-                        }
-                    />
-                ))
+                <Grid container>
+                    <Box
+                        sx={{
+                            backgroundColor: theme.palette.secondary.light,
+                            borderRadius: 2,
+                            width: '100%',
+                            marginY: 1,
+                            padding: 1,
+                            paddingX: 2,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <Typography variant="subtitle1">{assigned.length} Trainee Enrolled</Typography>
+                        <IconButton onClick={() => setShowEnrolled(!showEnrolled)}>
+                            {showEnrolled ? <IconChevronUp size={18} /> : <IconChevronDown size={18} />}
+                        </IconButton>
+                    </Box>
+                    {showEnrolled && (
+                        <Grid item xs={12}>
+                            {assigned.map((trainee) => (
+                                <AssignedListing
+                                    key={trainee.id}
+                                    name={trainee.name}
+                                    education_level={trainee.dept_name}
+                                    job_title={trainee.job_title}
+                                    status={trainee.enrollment_status}
+                                    onAccept={() => handleChangeInit(trainee.id, 'accepted')}
+                                    isAccepting={
+                                        trainee.id === selectedTrainee && isChanging ? (
+                                            <CircularProgress size={18} sx={{ color: 'white' }} />
+                                        ) : (
+                                            t('Accept')
+                                        )
+                                    }
+                                    isRemoving={
+                                        <Box>
+                                            {trainee.enrollment_status === 'pending' ? (
+                                                <IconButton onClick={() => handleChangeInit(trainee.id, 'rejected')} disabled={isChanging}>
+                                                    <IconThumbDown size={20} />
+                                                </IconButton>
+                                            ) : role === 'Coordinator' && trainee.enrollment_status !== 'accepted' ? (
+                                                <IconButton onClick={() => handleDeleteInit(trainee.id)}>
+                                                    {trainee.id === selectedTrainee && deleting ? (
+                                                        <CircularProgress size={18} />
+                                                    ) : (
+                                                        <IconX size={20} />
+                                                    )}
+                                                </IconButton>
+                                            ) : role === 'Admin' ? (
+                                                <IconButton onClick={() => handleDeleteInit(trainee.id)}>
+                                                    {trainee.id === selectedTrainee && deleting ? (
+                                                        <CircularProgress size={18} />
+                                                    ) : (
+                                                        <IconX size={18} style={{ color: 'grey' }} />
+                                                    )}
+                                                </IconButton>
+                                            ) : null}
+                                        </Box>
+                                    }
+                                />
+                            ))}
+                        </Grid>
+                    )}
+                </Grid>
             )}
 
             {role === 'Admin' && allTrainee ? (
@@ -252,7 +311,7 @@ const TraineeEnrollment = ({ session_id }) => {
                                 onAssign={() => handleAssignInit(trainee.id)}
                                 isAssigning={
                                     trainee.id === selectedTrainee && assigning ? (
-                                        <CircularProgress size={18} sx={{ color: 'white' }} />
+                                        <CircularProgress size={18} sx={{ color: 'primary' }} />
                                     ) : (
                                         t('Invite')
                                     )
@@ -261,7 +320,7 @@ const TraineeEnrollment = ({ session_id }) => {
                         ))
                     )}
                 </Box>
-            ) : role === 'Coordinator' ? (
+            ) : role === 'Coordinator' && allTrainee ? (
                 <Box>
                     <Divider />
                     {loading ? (
@@ -284,7 +343,7 @@ const TraineeEnrollment = ({ session_id }) => {
                                 onAssign={() => handleAssignInit(trainee.id)}
                                 isAssigning={
                                     trainee.id === selectedTrainee && assigning ? (
-                                        <CircularProgress size={18} sx={{ color: 'white' }} />
+                                        <CircularProgress size={18} sx={{ color: 'primary' }} />
                                     ) : (
                                         t('Invite')
                                     )
@@ -294,6 +353,12 @@ const TraineeEnrollment = ({ session_id }) => {
                     )}
                 </Box>
             ) : null}
+
+            {paginationModel.lastPage > 1 && (
+                <Box sx={{ paddingY: 4 }}>
+                    <Pagination count={paginationModel.lastPage} page={paginationModel.page} onChange={handleChange} />
+                </Box>
+            )}
 
             <SnackbarProvider maxSnack={3} />
         </Box>

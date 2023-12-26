@@ -34,10 +34,18 @@ const App = () => {
     const customization = useSelector((state) => state.customization);
     const location = useLocation();
     const path = location.pathname;
-    const tokenIndex = path.lastIndexOf('/') + 1;
-    const token = path.substring(tokenIndex);
+    const pathIndex = path.lastIndexOf('/') + 1;
+    const id = path.substring(pathIndex);
+    const token = path.substring(pathIndex);
 
     const [loged, setLoged] = useState(false);
+
+    useEffect(() => {
+        if (path === `/training/shared/${id}` && !loged) {
+            sessionStorage.setItem('t_id', id);
+        }
+        return () => {};
+    }, []);
 
     const authContext = useMemo(
         () => ({
@@ -113,6 +121,8 @@ const App = () => {
                                     ) : location.pathname === `/reset-password/${token}` ? (
                                         <Reset_Password />
                                     ) : location.pathname === '/pages/login/login' ? (
+                                        <AuthLogin />
+                                    ) : location.pathname === `/training/shared/${id}` ? (
                                         <AuthLogin />
                                     ) : location.pathname === '/' ? (
                                         <AuthLogin />

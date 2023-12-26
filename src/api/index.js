@@ -1,5 +1,6 @@
 const Connections = {
     //local endpoints
+    home: 'http://localhost:3000/',
     api: 'http://localhost:8000/api/',
     images: 'http://localhost:8000/api/images/',
     thumbnails: 'http://localhost:8000/api/thumbnails/',

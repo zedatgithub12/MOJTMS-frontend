@@ -45,7 +45,10 @@ const TraineeDetails = () => {
     const { state } = useLocation();
     const fileInputRef = useRef(null);
 
-    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const userstring = sessionStorage.getItem('user');
+    const user = JSON.parse(userstring);
+    const role = user.user.role;
+
     const ImageApi = Connections.profiles;
 
     const [loading, setLoading] = useState(false);
@@ -334,8 +337,8 @@ const TraineeDetails = () => {
                                     </ListItemIcon>
                                     {t('Update')}
                                 </MenuItem>
-                                <Divider />
 
+                                <Divider />
                                 <MenuItem onClick={() => setDeleteTrainee(true)} sx={{ color: theme.palette.error.main }}>
                                     <ListItemIcon sx={{ color: theme.palette.error.main }}>
                                         <IconTrash size={18} />
@@ -364,7 +367,7 @@ const TraineeDetails = () => {
                                 overlap="circular"
                                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                                 badgeContent={
-                                    ActiveUser.user.role === 'Trainee' && (
+                                    role === 'Trainee' && (
                                         <IconButton
                                             onClick={() => PickProfile()}
                                             sx={{ backgroundColor: theme.palette.background.default }}
@@ -449,7 +452,7 @@ const TraineeDetails = () => {
                                     <Typography variant="h3" sx={{ marginY: 0.5 }}>
                                         {t(formik.values.name)}
                                     </Typography>
-                                    {ActiveUser.user.role === 'Trainee' && (
+                                    {role === 'Trainee' && (
                                         <IconButton onClick={() => setUpdateName(true)}>
                                             <IconEdit size={20} />
                                         </IconButton>

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Grid, Box, useTheme, Pagination } from '@mui/material';
 // project imports
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { NoResult } from 'utils/components/noresult';
@@ -16,17 +16,27 @@ import Connections from 'api';
 import errorImage from 'assets/images/error.jpg';
 import TrainingCard from 'ui-component/cards/TrainingCard';
 import TrainingCardSkel from 'ui-component/cards/Skeleton/TrainingCardSkel';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| TRAINING PAGE ||============================== //
 
 const Training = () => {
     const { t } = useTranslation();
-
     const theme = useTheme();
-    const ImageApi = Connections.thumbnails;
-
-    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
+
+    const ImageApi = Connections.thumbnails;
 
     const [trainings, setTrainings] = useState([]);
     const [loading, setLoading] = useState(false);

@@ -35,13 +35,16 @@ const TraineeScheme = Yup.object().shape({
 export default function AddTrainee({ open, handleDialogClose }) {
     const { t } = useTranslation();
     const theme = useTheme();
+    const userstring = sessionStorage.getItem('user');
+    const user = JSON.parse(userstring);
+    const uid = user.user.id;
 
     const [department, setDepartment] = useState([]);
     const role = 'Trainee';
     const password = 'trainee12345';
 
     const FetchDepartments = async () => {
-        var Api = Connections.api + Connections.departments;
+        var Api = Connections.api + Connections.departments + `?uid=${uid}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,

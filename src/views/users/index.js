@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, Box, Typography, useTheme, Divider, MenuItem, IconButton, Menu, CircularProgress } from '@mui/material';
 import { SearchFilterAdd } from './components/SearchFilterAdd';
@@ -15,14 +15,27 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router';
 import AddUser from './components/AddUser';
 import Connections from 'api';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| USERS PAGE ||============================== //
 
 const Users = () => {
     const { t } = useTranslation();
     const theme = useTheme();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');

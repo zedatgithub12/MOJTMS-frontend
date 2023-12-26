@@ -246,13 +246,18 @@ const SessionDetails = () => {
                                             </ListItemIcon>
                                             {t('Update')}
                                         </MenuItem>
-                                        <Divider />
-                                        <MenuItem onClick={() => setDeleteSession(true)}>
-                                            <ListItemIcon>
-                                                <IconTrash size={18} />
-                                            </ListItemIcon>
-                                            {t('Delete')}
-                                        </MenuItem>
+
+                                        {role === 'Admin' && (
+                                            <div>
+                                                <Divider />
+                                                <MenuItem onClick={() => setDeleteSession(true)}>
+                                                    <ListItemIcon>
+                                                        <IconTrash size={18} />
+                                                    </ListItemIcon>
+                                                    {t('Delete')}
+                                                </MenuItem>
+                                            </div>
+                                        )}
                                     </Box>
                                 }
                             >

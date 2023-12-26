@@ -20,12 +20,15 @@ import errorImage from 'assets/images/error.jpg';
 
 const ViewTrainer = () => {
     const { t } = useTranslation();
+    const { state } = useLocation();
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const ImageApi = Connections.profiles;
+    const userString = sessionStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const role = user.user.role;
 
-    const { state } = useLocation();
+    const ImageApi = Connections.profiles;
 
     const [loading, setLoading] = useState(false);
     const [trainerInfo, setTrainerInfo] = useState([]);
@@ -144,13 +147,17 @@ const ViewTrainer = () => {
                             {t('Update')}
                         </MenuItem>
 
-                        <Divider />
-                        <MenuItem onClick={() => setDeleteUser(true)}>
-                            <ListItemIcon>
-                                <IconTrash size={18} />
-                            </ListItemIcon>
-                            {t('Delete')}
-                        </MenuItem>
+                        {role === 'Admin' && (
+                            <div>
+                                <Divider />
+                                <MenuItem onClick={() => setDeleteUser(true)}>
+                                    <ListItemIcon>
+                                        <IconTrash size={18} />
+                                    </ListItemIcon>
+                                    {t('Delete')}
+                                </MenuItem>
+                            </div>
+                        )}
                     </Box>
                 }
                 sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}

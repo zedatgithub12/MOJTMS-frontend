@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, useTheme, Pagination, CircularProgress } from '@mui/material';
 import { Box } from '@mui/system';
 // project imports
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { useQuery } from 'react-query';
 import { SearchFilterAdd } from 'ui-component/search-add';
@@ -15,6 +15,7 @@ import SplitButton from 'ui-component/Buttons/SplitButton';
 import Connections from 'api';
 import noresult from 'assets/images/no_result.png';
 import SurveyCard from './components/surveyCard';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| SURVEY PAGE ||============================== //
 
@@ -24,6 +25,16 @@ const Survey = () => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);

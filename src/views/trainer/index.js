@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination } from '@mui/material';
 // project imports
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
@@ -14,6 +14,7 @@ import TrainerCard from 'ui-component/cards/TrainerCard';
 import errorImage from 'assets/images/error.jpg';
 import TrainerCardSkel from 'ui-component/cards/Skeleton/TrainerCardSkel';
 import Connections from 'api';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| TRAINERS PAGE ||============================== //
 
@@ -21,6 +22,17 @@ const Trainers = () => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
+
     const ImageApi = Connections.profiles;
 
     const [trainers, setTrainers] = useState([]);

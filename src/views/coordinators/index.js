@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import {
     Box,
@@ -31,17 +31,29 @@ import { IconDotsVertical, IconX } from '@tabler/icons';
 import { saveAs } from 'file-saver';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router';
 import * as XLSX from 'xlsx';
 import Connections from 'api';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 import CoordinatorTable from './components/CoordinatorTable.js';
 import AddCoordinator from './components/AddCoordinator';
-
+import CheckPathPermission from 'utils/path-checker';
 // ==============================|| COORDINATOR LISTING PAGE ||============================== //
 
 const Coordinators = () => {
     const { t } = useTranslation();
     const theme = useTheme();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [loading, setLoading] = useState(false);
     const [coordinators, setCoordinators] = useState([]);

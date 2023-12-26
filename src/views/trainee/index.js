@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import {
     Box,
@@ -32,17 +32,35 @@ import { calculateAge } from 'utils/functions';
 import { saveAs } from 'file-saver';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router';
 import * as XLSX from 'xlsx';
 import Connections from 'api';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 import TraineesTable from './components/TraineesTable';
 import AddTrainee from './components/AddTrainee';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| TRAINEE DETAIL PAGE ||============================== //
 
 const Trainee = () => {
     const { t } = useTranslation();
     const theme = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
+
+    const userstring = sessionStorage.getItem('user');
+    const user = JSON.parse(userstring);
+    const uid = user.user.id;
+    const role = user.user.role;
 
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState([]);
@@ -74,7 +92,7 @@ const Trainee = () => {
         var Api =
             Connections.api +
             Connections.trainee +
-            `?gender=${filters.gender}&age=${filters.age}&address=${filters.address}&department=${filters.department}&page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+            `?uid=${uid}&gender=${filters.gender}&age=${filters.age}&address=${filters.address}&department=${filters.department}&page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -102,7 +120,9 @@ const Trainee = () => {
     const handleSearching = () => {
         setSearching(true);
         var Api =
-            Connections.api + Connections.searchtrainee + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
+            Connections.api +
+            Connections.searchtrainee +
+            `?uid=${uid}&page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -376,31 +396,33 @@ const Trainee = () => {
                                 sx={{ marginTop: 1 }}
                             />
 
-                            <FormControl sx={{ marginTop: 3 }}>
-                                <FormLabel component="legend">{t('Department')}</FormLabel>
-                                <Select
-                                    value={filters.department}
-                                    onChange={handleFilterChange}
-                                    id="outlined-adornment-job-title"
-                                    name="department"
-                                    sx={{ marginTop: 1 }}
-                                >
-                                    <MenuItem value={''}>All</MenuItem>
+                            {role === 'Admin' && (
+                                <FormControl sx={{ marginTop: 3 }}>
+                                    <FormLabel component="legend">{t('Department')}</FormLabel>
+                                    <Select
+                                        value={filters.department}
+                                        onChange={handleFilterChange}
+                                        id="outlined-adornment-job-title"
+                                        name="department"
+                                        sx={{ marginTop: 1 }}
+                                    >
+                                        <MenuItem value={''}>{t('All')}</MenuItem>
 
-                                    {filterData.departments && filterData.departments.length == 0 ? (
-                                        <Typography variant="body2" sx={{ padding: 1 }}>
-                                            {t('Department is not found')}
-                                        </Typography>
-                                    ) : (
-                                        filterData.departments &&
-                                        filterData.departments.map((position, index) => (
-                                            <MenuItem key={index} value={position}>
-                                                {t(position)}
-                                            </MenuItem>
-                                        ))
-                                    )}
-                                </Select>
-                            </FormControl>
+                                        {filterData.departments && filterData.departments.length == 0 ? (
+                                            <Typography variant="body2" sx={{ padding: 1 }}>
+                                                {t('Department is not found')}
+                                            </Typography>
+                                        ) : (
+                                            filterData.departments &&
+                                            filterData.departments.map((position, index) => (
+                                                <MenuItem key={index} value={position}>
+                                                    {t(position)}
+                                                </MenuItem>
+                                            ))
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            )}
                         </Box>
 
                         <Box
