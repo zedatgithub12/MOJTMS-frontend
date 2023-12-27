@@ -10,14 +10,14 @@ import Routes from 'routes';
 import themes from 'themes';
 
 // project imports
-import NavigationScroll from 'layout/NavigationScroll';
 import { AuthContext } from 'context/context';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
-import Loadable from 'ui-component/Loadable';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HelmetProvider } from 'react-helmet-async';
 import { I18nextProvider } from 'react-i18next';
+import Loadable from 'ui-component/Loadable';
+import NavigationScroll from 'layout/NavigationScroll';
 import i18n from './i18n';
 
 // ==============================|| APP ||============================== //

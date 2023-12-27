@@ -351,7 +351,9 @@ const ViewSurvey = () => {
                                     >
                                         <FormControlLabel
                                             key={option.id}
-                                            control={<Checkbox checked={option.is_correct} color="primary" />}
+                                            control={
+                                                <Checkbox checked={parseInt(option.is_correct) === 1 ? true : false} color="primary" />
+                                            }
                                             label={option.option_text}
                                         />
                                     </Box>
@@ -386,7 +388,7 @@ const ViewSurvey = () => {
                                                 <FormControlLabel
                                                     value={option.option_text}
                                                     control={<Radio />}
-                                                    checked={option.is_correct}
+                                                    checked={parseInt(option.is_correct) === 1 ? true : false}
                                                     label={option.option_text}
                                                 />
                                             ))}

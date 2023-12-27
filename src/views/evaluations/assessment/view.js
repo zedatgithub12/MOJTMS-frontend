@@ -31,7 +31,6 @@ const ViewAssessement = () => {
     const navigate = useNavigate();
     const { state } = useLocation();
 
-    const [data, setData] = useState([]);
     const [publishing, setPublishing] = useState('init');
     const [questions, setQuestions] = useState([]);
     const [addQuestion, setAddQuestion] = useState(false);
@@ -72,7 +71,7 @@ const ViewAssessement = () => {
         if (parsed.success) {
             const data = parsed.data.assessment;
             const question = parsed.data.questions;
-            setData(data);
+
             setQuestions(question);
         }
     };
@@ -352,7 +351,9 @@ const ViewAssessement = () => {
                                       >
                                           <FormControlLabel
                                               key={option.id}
-                                              control={<Checkbox checked={option.is_correct} color="primary" />}
+                                              control={
+                                                  <Checkbox checked={parseInt(option.is_correct) === 1 ? true : false} color="primary" />
+                                              }
                                               label={t(option.option_text)}
                                           />
                                       </Box>
@@ -371,7 +372,7 @@ const ViewAssessement = () => {
                                                   <FormControlLabel
                                                       value={option.option_text}
                                                       control={<Radio />}
-                                                      checked={parseInt(option.is_correct)}
+                                                      checked={parseInt(option.is_correct) === 1 ? true : false}
                                                       label={t(option.option_text)}
                                                   />
                                               ))}

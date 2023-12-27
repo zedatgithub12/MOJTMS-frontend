@@ -32,7 +32,7 @@ const CoordinatorScheme = Yup.object().shape({
     department: Yup.string().required('Department is required')
 });
 
-export default function AddCoordinator({ open, handleDialogClose }) {
+export default function AddCoordinator({ open, handleDialogClose, onRefresh }) {
     const { t } = useTranslation();
     const theme = useTheme();
 
@@ -90,6 +90,7 @@ export default function AddCoordinator({ open, handleDialogClose }) {
                 if (response.success) {
                     setAdding(false);
                     handleDialogClose();
+                    onRefresh();
                     handlePrompts(response.message, 'success');
                 } else {
                     setAdding(false);
@@ -256,5 +257,6 @@ export default function AddCoordinator({ open, handleDialogClose }) {
 
 AddCoordinator.propTypes = {
     open: PropTypes.bool,
-    handleDialogClose: PropTypes.func
+    handleDialogClose: PropTypes.func,
+    onRefresh: PropTypes.func
 };

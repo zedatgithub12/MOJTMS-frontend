@@ -13,7 +13,6 @@ import {
     Radio,
     RadioGroup,
     Divider,
-    Select,
     Menu,
     MenuItem,
     TablePagination,
@@ -26,7 +25,6 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { FilterPanel } from 'ui-component/FilterPanel';
-import { useSelector } from 'react-redux';
 import { IconDotsVertical, IconX } from '@tabler/icons';
 import { saveAs } from 'file-saver';
 import { CSVLink } from 'react-csv';
@@ -408,7 +406,9 @@ const Coordinators = () => {
                     />
                 </Grid>
             </Grid>
-            {openDialog && <AddCoordinator open={openDialog} handleDialogClose={() => handleDialogClose()} />}
+            {openDialog && (
+                <AddCoordinator open={openDialog} handleDialogClose={() => handleDialogClose()} onRefresh={() => FetchCoordinators()} />
+            )}
 
             <SnackbarProvider maxSnack={3} style={{ zIndex: 5 }} />
         </Grid>
