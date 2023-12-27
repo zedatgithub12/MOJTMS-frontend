@@ -2,7 +2,8 @@ import { lazy, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 // routing
 import Routes from 'routes';
 
@@ -33,6 +34,7 @@ const queryClient = new QueryClient();
 const App = () => {
     const customization = useSelector((state) => state.customization);
     const location = useLocation();
+    const navigate = useNavigate();
     const path = location.pathname;
     const pathIndex = path.lastIndexOf('/') + 1;
     const id = path.substring(pathIndex);
@@ -44,8 +46,9 @@ const App = () => {
         if (path === `/training/shared/${id}` && !loged) {
             sessionStorage.setItem('t_id', id);
         }
+
         return () => {};
-    }, []);
+    }, [path, id, loged]);
 
     const authContext = useMemo(
         () => ({
@@ -57,7 +60,14 @@ const App = () => {
                     sessionStorage.setItem('user', JSON.stringify(users));
                     sessionStorage.setItem('token', users.token);
                     sessionStorage.setItem('tokenExpiration', expirationTime);
-                    window.location.reload();
+
+                    const t_id = sessionStorage.getItem('t_id'); //check if there is an id of  externally opened link stored in sessionStorage
+                    //if the training id is found navigate to the training session detail page
+                    if (t_id) {
+                        navigate('/training/session/detail', { state: { id: id } });
+                        sessionStorage.removeItem('t_id');
+                        window.location.reload();
+                    }
                     setLoged(true);
                 } else {
                     setLoged(false);
@@ -92,7 +102,7 @@ const App = () => {
                 return user.user.role;
             }
         }),
-        []
+        [id]
     );
 
     useEffect(() => {
@@ -112,7 +122,9 @@ const App = () => {
                             <HelmetProvider>
                                 <CssBaseline />
                                 <NavigationScroll>
-                                    {loged ? (
+                                    {loged && location.pathname === `/training/shared/${id}` ? (
+                                        navigate('training/session/detail', { state: { id: id } })
+                                    ) : loged ? (
                                         <Routes />
                                     ) : location.pathname === '/pages/register/register' ? (
                                         <AuthRegister />

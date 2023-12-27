@@ -32,6 +32,7 @@ const SessionDetails = () => {
     const smallDevice = useMediaQuery(theme.breakpoints.down('md'));
     const activeIndex = SessionStatus.findIndex((item) => item === state.status); //find the index that match with current status of session
 
+    const [data, setData] = useState(state ? state : []);
     const [openShare, setOpenShare] = useState(false);
     const [status, setStatus] = useState(state ? state.status : '');
     const [selectedIndex, setSelectedIndex] = useState(activeIndex);
@@ -94,6 +95,7 @@ const SessionDetails = () => {
             const assessments = parsed.assessment;
             const survey = parsed.survey;
 
+            setData(data.data);
             setEnrolledCount(count);
             setTrainee(TraineeInfo);
             EnrollmentInfo && setEnrollment(EnrollmentInfo);
@@ -236,11 +238,11 @@ const SessionDetails = () => {
                         >
                             <DetailHeader
                                 back={true}
-                                title={t(state.title)}
+                                title={t(data.title)}
                                 option={true}
                                 optionChildrens={
                                     <Box>
-                                        <MenuItem onClick={() => navigate('/training/session/update', { state: state })}>
+                                        <MenuItem onClick={() => navigate('/training/session/update', { state: data })}>
                                             <ListItemIcon>
                                                 <IconEdit size={18} />
                                             </ListItemIcon>
@@ -277,9 +279,9 @@ const SessionDetails = () => {
                                     }}
                                 >
                                     <Box sx={{ marginX: 3, padding: 0.2 }}>
-                                        {state.training_name ? (
+                                        {data.training_name ? (
                                             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2 }}>
-                                                <Typography variant="subtitle1">{state.training_name} </Typography>{' '}
+                                                <Typography variant="subtitle1">{data.training_name} </Typography>{' '}
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
@@ -294,9 +296,9 @@ const SessionDetails = () => {
                                                         paddingX: 1
                                                     }}
                                                 >
-                                                    {state.round_number && (
+                                                    {data.round_number && (
                                                         <Typography variant="h4" color="primary">
-                                                            {state.round_number} <sup>{t(FormattedRound(state.round_number))} </sup>{' '}
+                                                            {data.round_number} <sup>{t(FormattedRound(data.round_number))} </sup>{' '}
                                                             {t('Round')}
                                                         </Typography>
                                                     )}
@@ -306,18 +308,18 @@ const SessionDetails = () => {
                                             <Typography variant="subtitle1">{t('Training title')}</Typography>
                                         )}
 
-                                        {state.round_name ? (
-                                            <Typography variant="h3">{t(state.round_name)}</Typography>
+                                        {data.round_name ? (
+                                            <Typography variant="h3">{t(data.round_name)}</Typography>
                                         ) : (
                                             <Typography variant="h4">{t('Session title')}</Typography>
                                         )}
-                                        {state.round_description && (
+                                        {data.round_description && (
                                             <Typography
                                                 variant="body2"
                                                 marginTop={2}
                                                 sx={{ maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                             >
-                                                {t(state.round_description)}
+                                                {t(data.round_description)}
                                             </Typography>
                                         )}
                                         <ChangeStatus
@@ -377,7 +379,7 @@ const SessionDetails = () => {
                                         }}
                                     >
                                         {/* tabone for session details */}
-                                        <TabOne training_id={state.training_id} session_id={state.id} />
+                                        <TabOne training_id={data.training_id} session_id={data.id} />
                                     </Grid>
 
                                     <Grid item xs={12} sm={12} md={3.1} lg={3.1} xl={3.1} sx={{ paddingX: 2 }}>
@@ -385,10 +387,10 @@ const SessionDetails = () => {
                                             isLoading={false}
                                             status={status}
                                             title="Training Details"
-                                            startdate={formatDate(state.start_date)}
-                                            enddate={formatDate(state.end_date)}
-                                            address={state.address}
-                                            capacity={state.maximum_capacity}
+                                            startdate={formatDate(data.start_date)}
+                                            enddate={formatDate(data.end_date)}
+                                            address={data.address}
+                                            capacity={data.maximum_capacity}
                                         />
 
                                         <Box
@@ -464,11 +466,11 @@ const SessionDetails = () => {
                         >
                             <DetailHeader
                                 back={true}
-                                title={state.title}
+                                title={data.title}
                                 option={false}
                                 optionChildrens={
                                     <Box>
-                                        <MenuItem onClick={() => navigate('/training/session/update', { state: state })}>
+                                        <MenuItem onClick={() => navigate('/training/session/update', { state: data })}>
                                             <ListItemIcon>
                                                 <IconEdit size={18} />
                                             </ListItemIcon>
@@ -500,9 +502,9 @@ const SessionDetails = () => {
                                     }}
                                 >
                                     <Box sx={{ marginX: 3, padding: 0.2 }}>
-                                        {state.training_name ? (
+                                        {data.training_name ? (
                                             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 2 }}>
-                                                <Typography variant="subtitle1">{t(state.training_name)} </Typography>{' '}
+                                                <Typography variant="subtitle1">{t(data.training_name)} </Typography>{' '}
                                                 <Box
                                                     sx={{
                                                         display: 'flex',
@@ -517,9 +519,9 @@ const SessionDetails = () => {
                                                         paddingX: 1
                                                     }}
                                                 >
-                                                    {state.round_number && (
+                                                    {data.round_number && (
                                                         <Typography variant="h4" color="primary">
-                                                            {state.round_number} <sup>{t(FormattedRound(state.round_number))} </sup>{' '}
+                                                            {data.round_number} <sup>{t(FormattedRound(data.round_number))} </sup>{' '}
                                                             {t('Round')}
                                                         </Typography>
                                                     )}
@@ -529,18 +531,18 @@ const SessionDetails = () => {
                                             <Typography variant="subtitle1">{t('Training title')}</Typography>
                                         )}
 
-                                        {state.round_name ? (
-                                            <Typography variant="h3">{t(state.round_name)}</Typography>
+                                        {data.round_name ? (
+                                            <Typography variant="h3">{t(data.round_name)}</Typography>
                                         ) : (
                                             <Typography variant="h4">{t('Session title')}</Typography>
                                         )}
-                                        {state.round_description && (
+                                        {data.round_description && (
                                             <Typography
                                                 variant="body2"
                                                 marginTop={2}
                                                 sx={{ maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                             >
-                                                {t(state.round_description)}
+                                                {t(data.round_description)}
                                             </Typography>
                                         )}
 
@@ -620,7 +622,7 @@ const SessionDetails = () => {
                                         }}
                                     >
                                         {/* tabone for session details */}
-                                        <TraineeTabContainer training_id={state.training_id} session_id={state.id} />
+                                        <TraineeTabContainer training_id={data.training_id} session_id={state.id} />
                                     </Grid>
 
                                     <Grid item xs={12} sm={12} md={3.1} lg={3.1} xl={3.1} sx={{ paddingX: 2 }}>
@@ -628,10 +630,10 @@ const SessionDetails = () => {
                                             isLoading={false}
                                             status={status}
                                             title="Training Details"
-                                            startdate={formatDate(state.start_date)}
-                                            enddate={formatDate(state.end_date)}
-                                            address={state.address}
-                                            capacity={state.maximum_capacity}
+                                            startdate={formatDate(data.start_date)}
+                                            enddate={formatDate(data.end_date)}
+                                            address={data.address}
+                                            capacity={data.maximum_capacity}
                                         />
                                     </Grid>
                                 </Grid>
@@ -682,7 +684,7 @@ const SessionDetails = () => {
                         <IconListDetails size={54} style={{ color: theme.palette.secondary.dark }} />
 
                         <Typography variant="h3" marginY={1}>
-                            {state.round_name}
+                            {data.round_name}
                         </Typography>
                         <Typography variant="body">Let's take some moment and fill this training survey </Typography>
                         <Button
