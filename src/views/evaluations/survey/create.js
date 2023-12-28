@@ -1,6 +1,17 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Button, useTheme, CircularProgress, FormControl, InputLabel, OutlinedInput, FormHelperText } from '@mui/material';
+import {
+    Grid,
+    Button,
+    useTheme,
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    FormHelperText,
+    Select,
+    MenuItem
+} from '@mui/material';
 
 // project imports
 import { useFormik } from 'formik';
@@ -14,7 +25,10 @@ import * as Yup from 'yup';
 
 // ==============================|| CREATE SURVEY PAGE ||============================== //
 
+const SurveyTypes = ['Training', 'Trainer'];
+
 const validationSchema = Yup.object().shape({
+    type: Yup.string().required('Survey type is required'),
     title: Yup.string().required('Survey title is required'),
     description: Yup.string().required('Survey description is required')
 });
@@ -34,6 +48,7 @@ const CreateSurvey = () => {
         };
 
         const data = new FormData();
+        data.append('type', values.type);
         data.append('title', values.title);
         data.append('description', values.description);
         data.append('status', 'draft');
@@ -56,7 +71,7 @@ const CreateSurvey = () => {
     };
 
     const formik = useFormik({
-        initialValues: { title: '', description: '' },
+        initialValues: { type: SurveyTypes[0], title: '', description: '' },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSubmitting(values);
@@ -101,6 +116,37 @@ const CreateSurvey = () => {
                             <form noValidate onSubmit={formik.handleSubmit}>
                                 <Grid container paddingX={5} spacing={1}>
                                     <Grid item xs={12}>
+                                        <InputLabel htmlFor="outlined-adornment-type" sx={{ padding: 0.5 }}>
+                                            {t('Survey Type')}
+                                        </InputLabel>
+                                        <Select
+                                            value={formik.values.type}
+                                            onChange={formik.handleChange}
+                                            id="outlined-adornment-type"
+                                            name="type"
+                                            error={formik.touched.type && Boolean(formik.errors.type)}
+                                            sx={{ width: '40%' }}
+                                        >
+                                            {SurveyTypes.length == 0 ? (
+                                                <Typography variant="body2" sx={{ padding: 1 }}>
+                                                    {t('Question Type Not Found')}
+                                                </Typography>
+                                            ) : (
+                                                SurveyTypes.map((type, index) => (
+                                                    <MenuItem key={index} value={type}>
+                                                        {t(type)}
+                                                    </MenuItem>
+                                                ))
+                                            )}
+                                        </Select>
+                                        {formik.touched.type && formik.errors.type && (
+                                            <FormHelperText error id="standard-weight-helper-text-question-type">
+                                                {t(formik.errors.type)}
+                                            </FormHelperText>
+                                        )}
+                                    </Grid>
+
+                                    <Grid item xs={12} sx={{ marginTop: 1 }}>
                                         <FormControl
                                             fullWidth
                                             error={formik.touched.title && Boolean(formik.errors.title)}

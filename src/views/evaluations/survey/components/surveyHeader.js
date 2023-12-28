@@ -14,7 +14,7 @@ const letterConfig = {
     endat: 500
 };
 
-const SurveyHeader = ({ back, name, description }) => {
+const SurveyHeader = ({ back, type, name, description }) => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -64,6 +64,7 @@ const SurveyHeader = ({ back, name, description }) => {
                     )}
                 </Box>
             </Box>
+
             {description && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 1 }}>
                     <Typography variant="body2">
@@ -83,6 +84,7 @@ const SurveyHeader = ({ back, name, description }) => {
 
 SurveyHeader.propTypes = {
     back: PropTypes.bool,
+    type: PropTypes.string,
     name: PropTypes.string,
     description: PropTypes.string
 };

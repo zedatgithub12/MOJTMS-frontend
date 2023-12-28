@@ -23,7 +23,7 @@ const TraineeHome = () => {
     const getTraineeId = () => {
         const userString = sessionStorage.getItem('user');
         const userDetails = JSON.parse(userString);
-        return userDetails.trainee[0].id;
+        return userDetails.trainee[0]?.id;
     };
 
     return (

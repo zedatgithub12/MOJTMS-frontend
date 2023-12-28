@@ -15,7 +15,7 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import * as Yup from 'yup';
-import SQTypes from 'data/static/SQTypes';
+import SQTypes, { TQTypes } from 'data/static/SQTypes';
 import PropTypes from 'prop-types';
 
 const validationSchema = Yup.object().shape({
@@ -23,7 +23,8 @@ const validationSchema = Yup.object().shape({
     question: Yup.string().required('Question is required').max(250)
 });
 
-const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
+const CreateQuestion = ({ type, isSubmitting, handleSubmission, handleClose }) => {
+    const QTypes = type === 'Training' ? SQTypes : TQTypes;
     const { t } = useTranslation();
     const theme = useTheme();
 
@@ -59,12 +60,12 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                         id="outlined-adornment-question_type"
                         name="question_type"
                     >
-                        {SQTypes.length == 0 ? (
+                        {QTypes.length == 0 ? (
                             <Typography variant="body2" sx={{ padding: 1 }}>
                                 {t('Question Type Not Found')}
                             </Typography>
                         ) : (
-                            SQTypes.map((type, index) => (
+                            QTypes.map((type, index) => (
                                 <MenuItem key={index} value={type.name}>
                                     {t(type.label)}
                                 </MenuItem>
@@ -124,6 +125,7 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
 };
 
 CreateQuestion.propTypes = {
+    type: PropTypes.string,
     isSubmitting: PropTypes.bool,
     handleSubmission: PropTypes.func,
     handleClose: PropTypes.func

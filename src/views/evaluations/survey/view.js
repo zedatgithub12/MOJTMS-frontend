@@ -244,13 +244,13 @@ const ViewSurvey = () => {
             >
                 <SurveyViewHeader
                     back={true}
+                    type={state.type}
                     title={state.title}
                     description={state.description}
                     option={true}
                     status={state.status}
                     onPublish={() => handleSurveyStatus('active')}
                     publishing={publishing}
-                    sx={{}}
                     optionChildrens={
                         <Box>
                             <MenuItem onClick={() => setAddQuestion(!addQuestion)}>
@@ -303,6 +303,7 @@ const ViewSurvey = () => {
                             <CreateOptions question={QuestionInfo} handleSubmission={handleOptionSubmission} isSubmitting={addingOption} />
                         ) : (
                             <CreateQuestion
+                                type={state.type}
                                 isSubmitting={creatingQuestion}
                                 handleSubmission={handleCreatingQuestion}
                                 handleClose={() => setAddQuestion(false)}

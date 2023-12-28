@@ -15,7 +15,7 @@ const letterConfig = {
     endat: 180
 };
 
-const SurveyViewHeader = ({ back, title, description, onClick, status, onPublish, option, optionChildrens, publishing, sx }) => {
+const SurveyViewHeader = ({ back, type, title, description, onClick, status, onPublish, option, optionChildrens, publishing }) => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -107,6 +107,23 @@ const SurveyViewHeader = ({ back, title, description, onClick, status, onPublish
                     )}
                 </Box>
             )}
+
+            <Typography
+                variant="body2"
+                onClick={onClick}
+                sx={{
+                    width: 'fit-content',
+                    backgroundColor: type === 'Trainer' ? theme.palette.secondary[200] : theme.palette.primary[200],
+                    color: theme.palette.grey[600],
+                    padding: 0.5,
+                    paddingX: 2,
+                    borderRadius: 1.2,
+                    cursor: 'pointer',
+                    marginY: 0.5
+                }}
+            >
+                {t(type)} {t('Survey')}
+            </Typography>
         </Box>
     );
 };

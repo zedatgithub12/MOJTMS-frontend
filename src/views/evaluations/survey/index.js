@@ -196,11 +196,11 @@ const Survey = () => {
                             {data.map((item) => (
                                 <SurveyCard
                                     key={item.id}
+                                    type={item.type}
                                     title={item.title}
                                     description={item.description}
                                     onClick={() => navigate('/survey/view', { state: item })}
                                     status={item.status}
-                                    sx={{}}
                                 />
                             ))}
                             {rowCount > paginationModel.pageSize && (

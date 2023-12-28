@@ -58,6 +58,10 @@ const App = () => {
         return () => {};
     }, [path, id, loged]);
 
+    const RefreshWindow = async () => {
+        window.location.reload();
+    };
+
     const authContext = useMemo(
         () => ({
             SignIn: async (status, users) => {
@@ -74,8 +78,12 @@ const App = () => {
                     if (t_id) {
                         navigate('/training/session/detail', { state: { id: id } });
                         sessionStorage.removeItem('t_id');
-                        window.location.reload();
+                        await RefreshWindow();
+                        setLoged(true);
+                        return;
                     }
+
+                    await RefreshWindow();
                     setLoged(true);
                 } else {
                     setLoged(false);
