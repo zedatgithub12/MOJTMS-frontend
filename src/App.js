@@ -45,6 +45,14 @@ const App = () => {
     useEffect(() => {
         if (path === `/training/shared/${id}` && !loged) {
             sessionStorage.setItem('t_id', id);
+        } else if (loged && location.pathname === `/training/shared/${id}`) {
+            navigate('training/session/detail', { state: { id: id } });
+        }
+
+        if (path === `/backend/api/training/shared/${id}` && !loged) {
+            sessionStorage.setItem('t_id', id);
+        } else if (loged && path === `/backend/api/training/shared/${id}`) {
+            navigate('training/session/detail', { state: { id: id } });
         }
 
         return () => {};
@@ -122,9 +130,7 @@ const App = () => {
                             <HelmetProvider>
                                 <CssBaseline />
                                 <NavigationScroll>
-                                    {loged && location.pathname === `/training/shared/${id}` ? (
-                                        navigate('training/session/detail', { state: { id: id } })
-                                    ) : loged ? (
+                                    {loged ? (
                                         <Routes />
                                     ) : location.pathname === '/pages/register/register' ? (
                                         <AuthRegister />
@@ -135,6 +141,8 @@ const App = () => {
                                     ) : location.pathname === '/pages/login/login' ? (
                                         <AuthLogin />
                                     ) : location.pathname === `/training/shared/${id}` ? (
+                                        <AuthLogin />
+                                    ) : location.pathname === `/backend/api/training/shared/${id}` ? (
                                         <AuthLogin />
                                     ) : location.pathname === '/' ? (
                                         <AuthLogin />
