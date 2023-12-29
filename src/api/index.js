@@ -18,7 +18,7 @@ const Connections = {
     refresh_token: 'refresh-token',
     changepass: 'changepassword/',
 
-    //a dashboard statistics report fetching api endpoint path
+    //a dashboard statistics report fetching api endpoint
     dashboard: 'dashboard',
 
     // users management api endpoints

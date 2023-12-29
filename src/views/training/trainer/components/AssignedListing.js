@@ -1,9 +1,21 @@
-import { Divider, Typography } from '@mui/material';
+import { Chip, Divider, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { useTranslation } from 'react-i18next';
+import { IconPlus } from '@tabler/icons';
 import PropTypes from 'prop-types';
 
-const AssignedListing = ({ name, education_level, specialisation, status, isRemoving }) => {
+const AssignedListing = ({
+    name,
+    education_level,
+    specialisation,
+    status,
+    isRemoving,
+    onAddSurvey,
+    onView,
+    surveyStatus,
+    onRemoveSurvey
+}) => {
+    const theme = useTheme();
     const { t } = useTranslation();
 
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
@@ -21,13 +33,38 @@ const AssignedListing = ({ name, education_level, specialisation, status, isRemo
             }}
         >
             <Box>
-                <Typography variant="subtitle1">{t(name)}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography variant="subtitle1">{t(name)} </Typography>
+                    {surveyStatus ? (
+                        <Chip
+                            color="secondary"
+                            label={role === 'Trainee' ? 'Review Trainer' : 'Survey Assigned'}
+                            size="small"
+                            sx={{ marginLeft: 1 }}
+                            onClick={onView}
+                            onDelete={role === 'Admin' ? onRemoveSurvey : undefined}
+                        />
+                    ) : (
+                        <Chip
+                            icon={<IconPlus size={14} style={{ color: theme.palette.primary.main }} />}
+                            label="Add Survey"
+                            size="small"
+                            sx={{
+                                backgroundColor: theme.palette.primary[200],
+                                color: theme.palette.primary.main,
+                                marginLeft: 1,
+                                padding: 0.5
+                            }}
+                            onClick={onAddSurvey}
+                        />
+                    )}
+                </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     {education_level && (
                         <Typography variant="body2" paddingRight={1}>
                             {t(education_level)}
                         </Typography>
-                    )}{' '}
+                    )}
                     <Divider orientation="vertical" flexItem />
                     {specialisation && (
                         <Typography variant="body2" marginLeft={1}>
@@ -61,6 +98,10 @@ AssignedListing.propType = {
     education_level: PropTypes.string,
     specialisation: PropTypes.string,
     status: PropTypes.string,
-    isRemoving: PropTypes.node
+    isRemoving: PropTypes.node,
+    onAddSurvey: PropTypes.func,
+    onView: PropTypes.func,
+    surveyStatus: PropTypes.bool,
+    onRemoveSurvey: PropTypes.func
 };
 export default AssignedListing;

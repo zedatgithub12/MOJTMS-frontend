@@ -52,6 +52,7 @@ const UpdateSurvey = Loadable(lazy(() => import('views/evaluations/survey/update
 const ViewSurvey = Loadable(lazy(() => import('views/evaluations/survey/view')));
 const FillSurvey = Loadable(lazy(() => import('views/evaluations/survey/fillsurvey')));
 const FilledSurveyDetails = Loadable(lazy(() => import('views/training/survey/filleddetails')));
+const TrainerSurvey = Loadable(lazy(() => import('views/evaluations/survey/trainersurvey')));
 
 //element page routing
 const Elements = Loadable(lazy(() => import('views/elements')));
@@ -367,6 +368,10 @@ const MainRoutes = {
         {
             path: 'training/survey/filled',
             element: <FilledSurveyDetails />
+        },
+        {
+            path: 'training/trainer/survey',
+            element: <TrainerSurvey />
         }
     ]
 };

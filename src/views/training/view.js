@@ -194,7 +194,7 @@ const ViewTraining = () => {
                         <Grid item xs={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
                             <Tabs value={tab} onChange={handleChange} aria-label="tabs">
                                 {TrainingTabs.map((tab, index) => (
-                                    <Tab label={t(tab.name)} {...a11yProps(index)} />
+                                    <Tab key={index} label={t(tab.name)} {...a11yProps(index)} />
                                 ))}
                             </Tabs>
 

@@ -71,7 +71,7 @@ const ViewSurvey = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            const data = parsed.data.surveys;
+            const data = parsed.data.survey;
             const question = parsed.data.questions;
             setData(data);
             setQuestions(question);
@@ -244,11 +244,11 @@ const ViewSurvey = () => {
             >
                 <SurveyViewHeader
                     back={true}
-                    type={state.type}
-                    title={state.title}
-                    description={state.description}
+                    type={data.type}
+                    title={data.title}
+                    description={data.description}
                     option={true}
-                    status={state.status}
+                    status={data.status}
                     onPublish={() => handleSurveyStatus('active')}
                     publishing={publishing}
                     optionChildrens={
@@ -260,14 +260,14 @@ const ViewSurvey = () => {
                                 {t('Create Question')}
                             </MenuItem>
                             <Divider />
-                            <MenuItem onClick={() => navigate('/survey/update', { state: state })}>
+                            <MenuItem onClick={() => navigate('/survey/update', { state: data })}>
                                 <ListItemIcon>
                                     <IconEdit size={18} />
                                 </ListItemIcon>
                                 {t('Update')}
                             </MenuItem>
                             <Divider />
-                            {state.status === 'active' && (
+                            {data.status === 'active' && (
                                 <MenuItem onClick={() => handleSurveyStatus('archived')}>
                                     <ListItemIcon>
                                         <IconArchive size={18} />
@@ -276,7 +276,7 @@ const ViewSurvey = () => {
                                 </MenuItem>
                             )}
 
-                            {state.status === 'archived' && (
+                            {data.status === 'archived' && (
                                 <MenuItem onClick={() => handleSurveyStatus('active')}>
                                     <ListItemIcon>
                                         <IconArchiveOff size={18} />
@@ -313,7 +313,7 @@ const ViewSurvey = () => {
                 )}
 
                 {questions.map((question, index) => (
-                    <Box key={question.id} sx={{ marginTop: 6, paddingX: 1 }}>
+                    <Box key={index} sx={{ marginTop: 6, paddingX: 1 }}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -342,8 +342,9 @@ const ViewSurvey = () => {
 
                         <Box>
                             {question.question_type === 'multiple-choice' && question.surveyoptions ? (
-                                question.surveyoptions.map((option) => (
+                                question.surveyoptions.map((option, index) => (
                                     <Box
+                                        key={index}
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'row',
@@ -385,8 +386,9 @@ const ViewSurvey = () => {
                                         }}
                                     >
                                         <RadioGroup aria-label="selection" name="selection">
-                                            {question.surveyoptions.map((option) => (
+                                            {question.surveyoptions.map((option, index) => (
                                                 <FormControlLabel
+                                                    key={index}
                                                     value={option.option_text}
                                                     control={<Radio />}
                                                     checked={parseInt(option.is_correct) === 1 ? true : false}

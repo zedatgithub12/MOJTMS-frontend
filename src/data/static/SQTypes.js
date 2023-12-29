@@ -24,11 +24,6 @@ const SQTypes = [
 const TQTypes = [
     {
         id: 1,
-        label: 'True or False',
-        name: 'true/false'
-    },
-    {
-        id: 2,
         label: 'Choice',
         name: 'choice'
     }
