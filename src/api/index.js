@@ -18,7 +18,7 @@ const Connections = {
     refresh_token: 'refresh-token',
     changepass: 'changepassword/',
 
-    //a dashboard statistics report fetching api endpoint
+    //A dashboard statistics report fetching api endpoint
     dashboard: 'dashboard',
 
     // users management api endpoints
@@ -85,6 +85,7 @@ const Connections = {
     traineeassessment: 'trainee-assessments',
 
     trainersurveys: 'trainer-surveys',
+    trainerreview: 'trainer-review',
     trainingsurvey: 'training-surveys',
     sessionsurvey: 'training-surveys/session/',
 

@@ -44,7 +44,7 @@ const AssignedListing = ({
                             onClick={onView}
                             onDelete={role === 'Admin' ? onRemoveSurvey : undefined}
                         />
-                    ) : (
+                    ) : role === 'Admin' ? (
                         <Chip
                             icon={<IconPlus size={14} style={{ color: theme.palette.primary.main }} />}
                             label="Add Survey"
@@ -57,7 +57,7 @@ const AssignedListing = ({
                             }}
                             onClick={onAddSurvey}
                         />
-                    )}
+                    ) : null}
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                     {education_level && (

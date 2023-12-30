@@ -1,17 +1,5 @@
 import { useState } from 'react';
-import {
-    Grid,
-    Box,
-    Typography,
-    Button,
-    Checkbox,
-    FormControlLabel,
-    Radio,
-    RadioGroup,
-    CircularProgress,
-    OutlinedInput,
-    FormControl
-} from '@mui/material';
+import { Grid, Box, Typography, Button, FormControlLabel, Radio, RadioGroup, CircularProgress } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
@@ -26,6 +14,7 @@ import SurveyHeader from './components/surveyHeader';
 const TrainerSurvey = () => {
     const { t } = useTranslation();
     const { state } = useLocation();
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -85,40 +74,32 @@ const TrainerSurvey = () => {
         const option = questionoptions[selectedOption];
 
         handleSingleSelect({
-            qid: que.id,
-            oid: option.id
+            survey_id: que.survey_id,
+            survey_question_id: que.id,
+            survey_option_id: option.id
         });
     };
 
     //handle the selection of answer in each question
     const handleSingleSelect = (answer) => {
         // answer is will be an new answer selected and it will be referencing to answer paramer, the answer parameter is an object containing, qid, oid, and isCorrect attributes
-        const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.qid === answer.qid); //return the existing answer index if exist
-
-        const newAnswer = {
-            qid: answer.qid,
-            answers: [
-                {
-                    oid: answer.oid
-                }
-            ]
-        };
+        const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.survey_question_id === answer.survey_question_id); //return the existing answer index if exist
 
         const updatedAnswers = [...surveyresponse];
 
         if (existingAnswerIndex !== -1) {
             //if the answers exist
             const existingAnswer = surveyresponse[existingAnswerIndex];
-            if (JSON.stringify(existingAnswer).qid === JSON.stringify(newAnswer).qid) {
+            if (JSON.stringify(existingAnswer).survey_question_id === JSON.stringify(answer).survey_question_id) {
                 const updatedAnswers = [...surveyresponse];
 
                 updatedAnswers.splice(existingAnswerIndex, 1);
-                updatedAnswers.push(newAnswer);
+                updatedAnswers.push(answer);
                 dispatch(setSurveyResponses(updatedAnswers));
                 return;
             }
         } else {
-            updatedAnswers.push(newAnswer);
+            updatedAnswers.push(answer);
             dispatch(setSurveyResponses(updatedAnswers));
         }
     };
@@ -128,11 +109,11 @@ const TrainerSurvey = () => {
         let questioncount = questions.length;
         let answeredcount = surveyresponse.length;
 
-        if (questioncount !== answeredcount) {
+        if (answeredcount < questioncount) {
             handlePrompts('Please answer all questions before submitting', 'info');
         } else {
             setIsSubmitting(true);
-            const Api = Connections.api + Connections.surveyresponse;
+            const Api = Connections.api + Connections.trainerreview;
             const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
             const Addedby = ActiveUser.user.id;
             const token = sessionStorage.getItem('token');
@@ -141,12 +122,14 @@ const TrainerSurvey = () => {
                 'Content-Type': 'application/json'
             };
 
-            const answerstring = JSON.stringify(surveyresponse);
+            const thissurveyanswers = surveyresponse.filter((item) => item.survey_id === state.survey_id);
+            const answerstring = JSON.stringify(thissurveyanswers);
             const data = {
+                trainer_id: state.trainer_id,
+                session_id: state.session_id,
                 survey_id: state.survey_id,
                 user_id: Addedby,
-                session_id: state.session_id,
-                response: answerstring
+                reviews: answerstring
             };
 
             fetch(Api, { method: 'POST', headers: headers, body: JSON.stringify(data) })
@@ -216,7 +199,7 @@ const TrainerSurvey = () => {
                     <SurveyHeader back={true} name={data.title} description={data.description} />
 
                     {questions.map((question, index) => {
-                        const existingAnswer = surveyresponse.find((ans) => ans.qid === question.id);
+                        const existingAnswer = surveyresponse.find((ans) => ans.survey_question_id === question.id);
 
                         return (
                             <Box key={index} sx={{ marginTop: 6, paddingX: 1 }}>
@@ -255,7 +238,7 @@ const TrainerSurvey = () => {
                                         <RadioGroup
                                             aria-label="selection"
                                             name="selection"
-                                            value={existingAnswer ? existingAnswer.answers[0].oid : ''}
+                                            value={existingAnswer ? existingAnswer.survey_option_id : ''}
                                             onChange={(e) => handleRadioSelection(e, question)}
                                         >
                                             {question.surveyoptions.map((option, index) => (
