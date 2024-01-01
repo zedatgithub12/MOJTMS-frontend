@@ -29,6 +29,7 @@ import TrainingModules from './module';
 import SessionListing from './session/components/Listing';
 import TrainingTrainees from './trainee/trainingtrainees';
 import FilledSurveys from './survey/filledsurveys';
+import TrainersSurveys from './survey/trainerssurveys';
 
 // ==============================|| VIEW TRAINING PAGE ||============================== //
 
@@ -210,6 +211,9 @@ const ViewTraining = () => {
                             </TabPanel>
                             <TabPanel value={tab} index={3}>
                                 <FilledSurveys training_id={state.id} />
+                            </TabPanel>
+                            <TabPanel value={tab} index={4}>
+                                <TrainersSurveys training_id={state.id} />
                             </TabPanel>
                         </Grid>
                     </Grid>

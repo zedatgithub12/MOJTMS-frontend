@@ -18,7 +18,7 @@ const Trainers = Loadable(lazy(() => import('views/trainer')));
 const AddTrainer = Loadable(lazy(() => import('views/trainer/add')));
 const ViewTrainer = Loadable(lazy(() => import('views/trainer/view')));
 const UpdateTrainer = Loadable(lazy(() => import('views/trainer/update')));
-
+const TrainerReviews = Loadable(lazy(() => import('views/training/survey/trainerreviews')));
 //category routing
 const Category = Loadable(lazy(() => import('views/category')));
 
@@ -266,7 +266,10 @@ const MainRoutes = {
             path: 'trainer/update',
             element: <UpdateTrainer />
         },
-
+        {
+            path: 'training/trainer/reviews',
+            element: <TrainerReviews />
+        },
         //categories
         {
             path: 'categories',

@@ -4,9 +4,9 @@ import { DateFormatter, FormattedRound } from 'utils/functions';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-const columns = ['Survey', 'Session', 'Round', 'User name', 'Email', 'Filled on'];
+const columns = ['Trainer name', 'Email', 'Survey', 'Session', 'Round', 'Added on', 'Status'];
 
-export default function FilledSurveyTable({ rows }) {
+export default function TrainerSurveyListing({ rows }) {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -25,8 +25,10 @@ export default function FilledSurveyTable({ rows }) {
                         <TableRow
                             key={index}
                             sx={{ cursor: 'pointer' }}
-                            onClick={() => navigate('/training/survey/filled', { state: row })}
+                            onClick={() => navigate('/training/trainer/reviews', { state: row })}
                         >
+                            <TableCell>{row.name ? row.name : 'N/A'}</TableCell>
+                            <TableCell>{row.email ? row.email : 'N/A'}</TableCell>
                             <TableCell component="th" scope="row">
                                 <Typography variant="subtitle1">{row.title}</Typography>
                             </TableCell>
@@ -55,10 +57,9 @@ export default function FilledSurveyTable({ rows }) {
                                     'N/A'
                                 )}
                             </TableCell>
-                            <TableCell>{row.name ? row.name : 'N/A'}</TableCell>
-                            <TableCell>{row.email ? row.email : 'N/A'}</TableCell>
 
                             <TableCell>{row.created_at ? DateFormatter(row.created_at) : 'N/A'}</TableCell>
+                            <TableCell sx={{ textTransform: 'capitalize' }}>{row.status ? row.status : 'N/A'}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

@@ -85,6 +85,7 @@ const Connections = {
     traineeassessment: 'trainee-assessments',
 
     trainersurveys: 'trainer-surveys',
+    alltrainersurveys: 'trainer-surveys/all/',
     trainerreview: 'trainer-review',
     trainingsurvey: 'training-surveys',
     sessionsurvey: 'training-surveys/session/',

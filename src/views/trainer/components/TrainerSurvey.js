@@ -4,9 +4,9 @@ import { DateFormatter, FormattedRound } from 'utils/functions';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-const columns = ['Survey', 'Session', 'Round', 'User name', 'Email', 'Filled on'];
+const columns = ['Training', 'Session', 'Round', 'Survey', 'Added on', 'Status'];
 
-export default function FilledSurveyTable({ rows }) {
+export default function TrainerSurveyListing({ rows }) {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -25,12 +25,11 @@ export default function FilledSurveyTable({ rows }) {
                         <TableRow
                             key={index}
                             sx={{ cursor: 'pointer' }}
-                            onClick={() => navigate('/training/survey/filled', { state: row })}
+                            onClick={() => navigate('/training/trainer/reviews', { state: row })}
                         >
-                            <TableCell component="th" scope="row">
-                                <Typography variant="subtitle1">{row.title}</Typography>
-                            </TableCell>
+                            <TableCell>{row.training_name ? row.training_name : 'N/A'}</TableCell>
                             <TableCell>{row.round_name ? row.round_name : 'N/A'}</TableCell>
+
                             <TableCell>
                                 {row.round_number ? (
                                     <Box
@@ -47,7 +46,7 @@ export default function FilledSurveyTable({ rows }) {
                                     >
                                         {row.round_number && (
                                             <Typography variant="subtitle1" color="primary">
-                                                {row.round_number} <sup>{FormattedRound(row.round_number)} </sup>
+                                                {row.round_number} <sup>{t(FormattedRound(row.round_number))} </sup>
                                             </Typography>
                                         )}{' '}
                                     </Box>
@@ -55,10 +54,12 @@ export default function FilledSurveyTable({ rows }) {
                                     'N/A'
                                 )}
                             </TableCell>
-                            <TableCell>{row.name ? row.name : 'N/A'}</TableCell>
-                            <TableCell>{row.email ? row.email : 'N/A'}</TableCell>
+                            <TableCell component="th" scope="row">
+                                {row.title}
+                            </TableCell>
 
                             <TableCell>{row.created_at ? DateFormatter(row.created_at) : 'N/A'}</TableCell>
+                            <TableCell sx={{ textTransform: 'capitalize' }}>{row.status ? row.status : 'N/A'}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
