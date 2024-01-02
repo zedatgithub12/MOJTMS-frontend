@@ -671,6 +671,19 @@
     "Update material":"ቁሳቁስ ያዘምኑ",
     "You can now sign in into MOJTMS with your new password":"አሁን በአዲሱ የይለፍ ቃልዎ ወደ MOJTMS መግባት ይችላሉ",
 
+    "Trainers Surveys":"የአሰልጣኝ ግምገማ",
+    "Added on":"የታከለበት ቀን",
+    "Ongoing":"በሂደት ላይ",
+    "ongoing":"በሂደት ላይ",
+    "Survey Assigned":"ግምገማ ተመድቧል",
+    "Review Trainer":"አሰልጣኙን ይገምግሙ",
+    "Review trainer":"አሰልጣኙን ይገምግሙ",
+    "Training session":"ክፍለ ጊዜ",
+    "Oooops... There is server error fetching trainer reviews":"የአሰልጣኝ ግምገማዎችን ማምጣት ላይ የቴክኒክ ችግር አለ",
+    "Oooops... no review made yet":"እስካሁን ምንም ግምገማ አልተደረገም",
+    "Training Surveys":"የስልጠና ዳሰሳዎች",
+
+
     "Select License":"ፈቃድ ይምረጡ",
     "License":" ፈቃድ",
     "monthly":"ወርሃዊ",
@@ -704,6 +717,7 @@
     "How to get started":"እንዴት መጠቀም እንደሚጀምሩ",
     "All steps completed happy parenting":"ሁሉም እርምጃዎች ተጠናቅቀዋል",
   
+    
     "Find More":"ተጨማሪ",
     "Package Pricing":"የጥቅል ዋጋ ዝርዝር",
     "One license for one device":"ለአንድ ዘመናዊ መሣሪያ አንድ ፈቃድ",

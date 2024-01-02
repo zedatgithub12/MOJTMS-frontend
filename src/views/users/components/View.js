@@ -60,7 +60,7 @@ export const View = ({ user, children }) => {
     );
 };
 
-View.PropTypes = {
-    user: PropTypes.object,
+View.propTypes = {
+    user: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     children: PropTypes.node
 };

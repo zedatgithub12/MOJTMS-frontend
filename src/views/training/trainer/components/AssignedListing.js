@@ -8,11 +8,13 @@ const AssignedListing = ({
     name,
     education_level,
     specialisation,
-    status,
+
     isRemoving,
     onAddSurvey,
     onView,
+    surveyAssigned,
     surveyStatus,
+    canReview,
     onRemoveSurvey
 }) => {
     const theme = useTheme();
@@ -21,6 +23,12 @@ const AssignedListing = ({
     const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
     const role = ActiveUser.user.role;
 
+    const CanReview = () => {
+        if (role === 'Trainee' && canReview && surveyAssigned && surveyStatus === 'ongoing') {
+            return true;
+        }
+        return false;
+    };
     return (
         <Box
             sx={{
@@ -35,19 +43,21 @@ const AssignedListing = ({
             <Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant="subtitle1">{t(name)} </Typography>
-                    {surveyStatus ? (
+                    {CanReview() ? (
+                        <Chip color="secondary" label={t('Review Trainer')} size="small" sx={{ marginLeft: 1 }} onClick={onView} />
+                    ) : role === 'Admin' && surveyAssigned ? (
                         <Chip
                             color="secondary"
-                            label={role === 'Trainee' ? 'Review Trainer' : 'Survey Assigned'}
+                            label={t('Survey Assigned')}
                             size="small"
                             sx={{ marginLeft: 1 }}
                             onClick={onView}
-                            onDelete={role === 'Admin' ? onRemoveSurvey : undefined}
+                            onDelete={onRemoveSurvey}
                         />
                     ) : role === 'Admin' ? (
                         <Chip
                             icon={<IconPlus size={14} style={{ color: theme.palette.primary.main }} />}
-                            label="Add Survey"
+                            label={t('Add Survey')}
                             size="small"
                             sx={{
                                 backgroundColor: theme.palette.primary[200],
@@ -76,16 +86,16 @@ const AssignedListing = ({
 
             {role === 'Admin' ? (
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Typography variant="body1" marginRight={2}>
+                    {/* <Typography variant="body1" marginRight={2}>
                         {t(status)}
-                    </Typography>
+                    </Typography> */}
                     {isRemoving}
                 </Box>
             ) : role === 'Coordinator' ? (
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                    <Typography variant="body1" marginRight={2}>
+                    {/* <Typography variant="body1" marginRight={2}>
                         {t(status)}
-                    </Typography>
+                    </Typography> */}
                     {isRemoving}
                 </Box>
             ) : null}
@@ -93,15 +103,16 @@ const AssignedListing = ({
     );
 };
 
-AssignedListing.propType = {
+AssignedListing.propTypes = {
     name: PropTypes.string,
     education_level: PropTypes.string,
     specialisation: PropTypes.string,
-    status: PropTypes.string,
     isRemoving: PropTypes.node,
     onAddSurvey: PropTypes.func,
     onView: PropTypes.func,
-    surveyStatus: PropTypes.bool,
+    surveyAssigned: PropTypes.bool,
+    surveyStatus: PropTypes.string,
+    canReview: PropTypes.bool,
     onRemoveSurvey: PropTypes.func
 };
 export default AssignedListing;

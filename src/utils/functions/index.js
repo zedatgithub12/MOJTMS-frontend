@@ -267,3 +267,16 @@ export function calculateAge(dateString) {
 
     return age;
 }
+
+export function isDateGreaterOrEqualToday(dateString) {
+    // Create Date objects for the passed date string and today
+    const givenDate = new Date(dateString);
+    const today = new Date();
+
+    // Set the time parts to zero for accurate comparison
+    givenDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    // Compare the dates and return the boolean result
+    return givenDate <= today;
+}

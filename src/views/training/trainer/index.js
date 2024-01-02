@@ -13,12 +13,14 @@ import TrainerListing from './components/TrainerListing';
 import AssignedListing from './components/AssignedListing';
 import AddTrainerSurvey from './components/AddTrainerSurvey';
 
-const TrainingTrainers = ({ session_id }) => {
+const TrainingTrainers = ({ session_id, canReview }) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
 
-    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
-    const role = ActiveUser.user.role;
+    const userString = sessionStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const userID = user?.user?.id;
+    const role = user?.user?.role;
 
     const [assigned, setAssigned] = useState([]);
     const [allTrainers, setAllTrainers] = useState([]);
@@ -53,7 +55,7 @@ const TrainingTrainers = ({ session_id }) => {
 
     const FetchTrainers = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.trainersofsession + session_id + `?role=${role}`;
+        var Api = Connections.api + Connections.trainersofsession + session_id + `?uid=${userID}&role=${role}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -93,11 +95,10 @@ const TrainingTrainers = ({ session_id }) => {
             'Content-Type': 'application/json'
         };
 
-        var assigned_by = ActiveUser.user.id;
         const data = {
             trainer_id: trainer,
             session_id: session_id,
-            assigned_by: assigned_by
+            assigned_by: userID
         };
 
         fetch(Api, { method: 'POST', headers: headers, body: JSON.stringify(data) })
@@ -257,12 +258,14 @@ const TrainingTrainers = ({ session_id }) => {
                         status={trainer.training_status}
                         isRemoving={
                             <IconButton onClick={() => handleDeleteInit(trainer.id)}>
-                                {trainer.id === selectedTrainer && deleting ? <CircularProgress size={18} /> : <IconX size={20} />}
+                                {trainer.id === selectedTrainer && deleting ? <CircularProgress size={18} /> : <IconX size={18} />}
                             </IconButton>
                         }
                         onAddSurvey={() => handleOpen(trainer.trainer_id)}
                         onView={() => handleViewSurvey(trainer.surveyAssigned)}
-                        surveyStatus={trainer.surveyAssigned ? true : false}
+                        surveyAssigned={trainer.surveyAssigned ? true : false}
+                        surveyStatus={trainer.surveyStatus}
+                        canReview={canReview}
                         onRemoveSurvey={() => handleRemoveSurvey(trainer.surveyAssigned)}
                     />
                 ))
@@ -349,7 +352,8 @@ const TrainingTrainers = ({ session_id }) => {
 };
 
 TrainingTrainers.propTypes = {
-    session_id: PropTypes.number
+    session_id: PropTypes.number,
+    canReview: PropTypes.bool
 };
 
 export default TrainingTrainers;

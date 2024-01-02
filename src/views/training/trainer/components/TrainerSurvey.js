@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableBody, TableRow, TableCell, useTheme, Box, Typography } from '@mui/material';
 import { DateFormatter, FormattedRound } from 'utils/functions';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 const columns = ['Trainer name', 'Email', 'Survey', 'Session', 'Round', 'Added on', 'Status'];
 
@@ -67,3 +67,7 @@ export default function TrainerSurveyListing({ rows }) {
         </TableContainer>
     );
 }
+
+TrainerSurveyListing.propTypes = {
+    rows: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+};

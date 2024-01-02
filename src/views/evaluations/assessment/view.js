@@ -14,7 +14,6 @@ import {
     IconButton
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
-import { TimeFormatter } from 'utils/functions';
 import { IconArchive, IconArchiveOff, IconEdit, IconPlus, IconTrash } from '@tabler/icons';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
@@ -69,7 +68,6 @@ const ViewAssessement = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            const data = parsed.data.assessment;
             const question = parsed.data.questions;
 
             setQuestions(question);
@@ -243,8 +241,8 @@ const ViewAssessement = () => {
                     back={true}
                     name={state.assessment_name}
                     description={state.assessment_description}
-                    score={state.passing_score}
-                    duration={TimeFormatter(state.duration)}
+                    score={parseInt(state.passing_score)}
+                    duration={parseInt(state.duration)}
                     instruction={state.instructions}
                     option={true}
                     status={state.status}
@@ -341,8 +339,9 @@ const ViewAssessement = () => {
 
                         <Box>
                             {question.question_type === 'multiple-choice' && question.options
-                                ? question.options.map((option) => (
+                                ? question.options.map((option, index) => (
                                       <Box
+                                          key={index}
                                           sx={{
                                               display: 'flex',
                                               flexDirection: 'row',
@@ -368,8 +367,9 @@ const ViewAssessement = () => {
                                           }}
                                       >
                                           <RadioGroup aria-label="selection" name="selection">
-                                              {question.options.map((option) => (
+                                              {question.options.map((option, index) => (
                                                   <FormControlLabel
+                                                      key={index}
                                                       value={option.option_text}
                                                       control={<Radio />}
                                                       checked={parseInt(option.is_correct) === 1 ? true : false}

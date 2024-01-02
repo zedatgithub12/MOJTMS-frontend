@@ -29,7 +29,7 @@ import TrainingModules from './module';
 import SessionListing from './session/components/Listing';
 import TrainingTrainees from './trainee/trainingtrainees';
 import FilledSurveys from './survey/filledsurveys';
-import TrainersSurveys from './survey/trainerssurveys';
+import TrainersSurveys from './trainer/trainerssurveys';
 
 // ==============================|| VIEW TRAINING PAGE ||============================== //
 
@@ -159,10 +159,10 @@ const ViewTraining = () => {
                                         pl: 0.5
                                     }}
                                 >
-                                    <Typography variant="subtitle1"> {parseFloat(state.trainee_reviews_avg_rating).toFixed(1)}</Typography>
+                                    <Typography variant="subtitle1"> {parseInt(state.trainee_reviews_avg_rating).toFixed(1)}</Typography>
                                     <Rating
                                         name="hover-feedback"
-                                        value={parseFloat(state.trainee_reviews_avg_rating).toFixed(1)}
+                                        value={parseInt(state.trainee_reviews_avg_rating)}
                                         readOnly
                                         emptyIcon={<StarOutline style={{ opacity: 0.85 }} fontSize="inherit" />}
                                         sx={{ marginX: 2 }}

@@ -232,8 +232,8 @@ const ModuleList = ({ modules, loading, error, sx }) => {
     };
 
     return (
-        <Grid container sx={{ ...sx }}>
-            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap' }} spacing={1}>
+        <Grid container sx={{ ...sx }} spacing={1}>
+            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap' }}>
                 {loading ? (
                     <Grid container>
                         <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>

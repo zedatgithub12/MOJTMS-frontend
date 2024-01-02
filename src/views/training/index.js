@@ -11,7 +11,6 @@ import { ErrorPrompt } from 'utils/components/errorprompt';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { useDispatch } from 'react-redux';
 import { setbasicinfos } from 'store/actions';
-import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import errorImage from 'assets/images/error.jpg';
 import TrainingCard from 'ui-component/cards/TrainingCard';
@@ -21,7 +20,6 @@ import CheckPathPermission from 'utils/path-checker';
 // ==============================|| TRAINING PAGE ||============================== //
 
 const Training = () => {
-    const { t } = useTranslation();
     const theme = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -177,7 +175,7 @@ const Training = () => {
                 />
 
                 <Grid container>
-                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
+                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                         {loading ? (
                             <Grid container>
                                 <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>

@@ -19,7 +19,7 @@ function a11yProps(index) {
     };
 }
 
-const TraineeTabContainer = ({ training_id, session_id }) => {
+const TraineeTabContainer = ({ training_id, session_id, canReview }) => {
     const { t } = useTranslation();
     const [tab, setTab] = useState(0);
     const handleChange = (event, newValue) => {
@@ -30,7 +30,7 @@ const TraineeTabContainer = ({ training_id, session_id }) => {
         <React.Fragment>
             <Tabs value={tab} onChange={handleChange} aria-label="tabs" variant="scrollable" scrollButtons="auto">
                 {TraineeTabs.map((tab, index) => (
-                    <Tab label={t(tab.name)} {...a11yProps(index)} />
+                    <Tab key={index} label={t(tab.name)} {...a11yProps(index)} />
                 ))}
             </Tabs>
             <TabPanel value={tab} index={0}>
@@ -42,7 +42,7 @@ const TraineeTabContainer = ({ training_id, session_id }) => {
             </TabPanel>
 
             <TabPanel value={tab} index={2}>
-                <TrainingTrainers session_id={session_id} />
+                <TrainingTrainers session_id={session_id} canReview={canReview} />
             </TabPanel>
 
             <TabPanel value={tab} index={3}>
@@ -66,7 +66,8 @@ const TraineeTabContainer = ({ training_id, session_id }) => {
 
 TraineeTabContainer.propTypes = {
     training_id: PropTypes.number,
-    session_id: PropTypes.number
+    session_id: PropTypes.number,
+    canReview: PropTypes.bool
 };
 
 export default TraineeTabContainer;

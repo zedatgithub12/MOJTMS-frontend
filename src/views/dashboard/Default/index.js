@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // material-ui
-import { Typography, Grid, Skeleton, TableRow, TableCell, Table, TableHead, useTheme } from '@mui/material';
+import { Typography, Grid, Skeleton, TableRow, TableCell, Table, TableHead, useTheme, TableBody } from '@mui/material';
 import { gridSpacing } from 'store/constant';
 
 // project imports
@@ -154,7 +154,7 @@ const Dashboard = () => {
                                     <UpcomingTrainings
                                         key={index}
                                         name={item.training_name}
-                                        round={item.round_number}
+                                        round={parseInt(item.round_number)}
                                         start_date={formatDate(item.start_date)}
                                         end_date={formatDate(item.start_date)}
                                         onPress={() => navigate('/training/session/detail', { state: item })}
@@ -175,22 +175,24 @@ const Dashboard = () => {
                                                 <TableCell>{t('F')}</TableCell>
                                             </TableRow>
                                         </TableHead>
-                                        {data &&
-                                            data.department_stat.map((item, index) => (
-                                                <TableRow
-                                                    key={index}
-                                                    sx={{
-                                                        width: '100%',
-                                                        '&:nth-of-type(odd)': {
-                                                            backgroundColor: theme.palette.grey[100]
-                                                        }
-                                                    }}
-                                                >
-                                                    <TableCell>{item.department}</TableCell>
-                                                    <TableCell>{item.male}</TableCell>
-                                                    <TableCell>{item.female}</TableCell>
-                                                </TableRow>
-                                            ))}
+                                        <TableBody>
+                                            {data &&
+                                                data.department_stat.map((item, index) => (
+                                                    <TableRow
+                                                        key={index}
+                                                        sx={{
+                                                            width: '100%',
+                                                            '&:nth-of-type(odd)': {
+                                                                backgroundColor: theme.palette.grey[100]
+                                                            }
+                                                        }}
+                                                    >
+                                                        <TableCell>{item.department}</TableCell>
+                                                        <TableCell>{item.male}</TableCell>
+                                                        <TableCell>{item.female}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                        </TableBody>
                                     </Table>
                                 }
                                 categories={
@@ -201,21 +203,23 @@ const Dashboard = () => {
                                                 <TableCell>{t('Training')}</TableCell>
                                             </TableRow>
                                         </TableHead>
-                                        {data &&
-                                            data.training_cat.map((item, index) => (
-                                                <TableRow
-                                                    key={index}
-                                                    sx={{
-                                                        width: '100%',
-                                                        '&:nth-of-type(odd)': {
-                                                            backgroundColor: theme.palette.grey[100]
-                                                        }
-                                                    }}
-                                                >
-                                                    <TableCell>{item.category}</TableCell>
-                                                    <TableCell>{item.count}</TableCell>
-                                                </TableRow>
-                                            ))}
+                                        <TableBody>
+                                            {data &&
+                                                data.training_cat.map((item, index) => (
+                                                    <TableRow
+                                                        key={index}
+                                                        sx={{
+                                                            width: '100%',
+                                                            '&:nth-of-type(odd)': {
+                                                                backgroundColor: theme.palette.grey[100]
+                                                            }
+                                                        }}
+                                                    >
+                                                        <TableCell>{item.category}</TableCell>
+                                                        <TableCell>{item.count}</TableCell>
+                                                    </TableRow>
+                                                ))}
+                                        </TableBody>
                                     </Table>
                                 }
                             />

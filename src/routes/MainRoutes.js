@@ -18,7 +18,7 @@ const Trainers = Loadable(lazy(() => import('views/trainer')));
 const AddTrainer = Loadable(lazy(() => import('views/trainer/add')));
 const ViewTrainer = Loadable(lazy(() => import('views/trainer/view')));
 const UpdateTrainer = Loadable(lazy(() => import('views/trainer/update')));
-const TrainerReviews = Loadable(lazy(() => import('views/training/survey/trainerreviews')));
+const TrainerReviews = Loadable(lazy(() => import('views/training/trainer/trainerreviews')));
 //category routing
 const Category = Loadable(lazy(() => import('views/category')));
 
@@ -53,9 +53,6 @@ const ViewSurvey = Loadable(lazy(() => import('views/evaluations/survey/view')))
 const FillSurvey = Loadable(lazy(() => import('views/evaluations/survey/fillsurvey')));
 const FilledSurveyDetails = Loadable(lazy(() => import('views/training/survey/filleddetails')));
 const TrainerSurvey = Loadable(lazy(() => import('views/evaluations/survey/trainersurvey')));
-
-//element page routing
-const Elements = Loadable(lazy(() => import('views/elements')));
 
 //Trainees page routing
 const TrainingSession = Loadable(lazy(() => import('views/training/session')));
@@ -206,10 +203,6 @@ const MainRoutes = {
             element: <Changepassword />
         },
 
-        {
-            path: 'elements',
-            element: <Elements />
-        },
         {
             path: 'trainees/home',
             element: <TrainingSession />

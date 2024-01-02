@@ -7,10 +7,8 @@ import { useLocation, useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
-import { TimeFormatter } from 'utils/functions';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { NoResult } from 'utils/components/noresult';
-import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import AssessmentCard from './components/assessmentCard';
 import SplitButton from 'ui-component/Buttons/SplitButton';
@@ -22,7 +20,6 @@ import CheckPathPermission from 'utils/path-checker';
 const AssessmentStatus = ['draft', 'active', 'archived'];
 
 const Assessment = () => {
-    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
@@ -200,8 +197,8 @@ const Assessment = () => {
                                     key={item.id}
                                     name={item.assessment_name}
                                     description={item.assessment_description}
-                                    score={item.passing_score}
-                                    duration={TimeFormatter(item.duration)}
+                                    score={parseInt(item.passing_score)}
+                                    duration={parseInt(item.duration)}
                                     instruction={item.instructions}
                                     option={true}
                                     onClick={() => navigate('/assessment/view', { state: item })}

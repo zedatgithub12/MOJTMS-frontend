@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableBody, TableRow, TableCell, useTheme } from '@mui/material';
 import { calculateAge } from 'utils/functions';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 const columns = ['Name', 'Email', 'Gender', 'Age', 'Job Title', 'Education Level'];
 
@@ -15,8 +15,8 @@ export default function TraineeTable({ rows }) {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead sx={{ backgroundColor: theme.palette.primary[200] }}>
                     <TableRow>
-                        {columns.map((item) => (
-                            <TableCell>{t(item)}</TableCell>
+                        {columns.map((item, index) => (
+                            <TableCell key={index}>{t(item)}</TableCell>
                         ))}
                     </TableRow>
                 </TableHead>
@@ -38,3 +38,7 @@ export default function TraineeTable({ rows }) {
         </TableContainer>
     );
 }
+
+TraineeTable.propTypes = {
+    rows: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+};

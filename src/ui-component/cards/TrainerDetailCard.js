@@ -57,7 +57,7 @@ const TrainerDetailCard = forwardRef(
                         onClick={onPress}
                         ref={ref}
                         sx={{
-                            width: 380,
+                            width: 320,
                             border: '1px solid',
                             borderColor: theme.palette.secondary.light,
                             cursor: 'pointer',

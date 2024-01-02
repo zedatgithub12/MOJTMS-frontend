@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import TrainingSessionSkel from './Skeleton/TrainingSessionSkel';
 
 const TrainingSessionCard = forwardRef(
-    ({ sx = {}, isLoading, image, status, title, round, level, address, capacity, startdate, enddate, onPress, ...others }, ref) => {
+    ({ sx = {}, isLoading, image, status, title, round, address, capacity, startdate, enddate, onPress, ...others }, ref) => {
         const theme = useTheme();
         const { t } = useTranslation();
 
@@ -174,7 +174,6 @@ TrainingSessionCard.propTypes = {
     status: PropTypes.string,
     title: PropTypes.string,
     round: PropTypes.number,
-    level: PropTypes.string,
     address: PropTypes.string,
     capacity: PropTypes.number,
     startdate: PropTypes.string.isRequired,

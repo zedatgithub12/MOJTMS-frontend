@@ -158,9 +158,8 @@ const CreateAssessment = () => {
                                     </Grid>
 
                                     <Grid item xs={12}>
-                                        <Grid continer sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <Grid container sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                             <Grid item xs={12} sm={12} md={5} lg={5} xl={5}>
-                                                {' '}
                                                 <FormControl
                                                     fullWidth
                                                     error={formik.touched.score && Boolean(formik.errors.score)}

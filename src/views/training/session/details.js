@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery, IconButton, Button } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { IconEdit, IconListDetails, IconShare, IconTrash, IconX } from '@tabler/icons';
-import { FormattedRound, formatDate } from 'utils/functions';
+import { FormattedRound, formatDate, isDateGreaterOrEqualToday } from 'utils/functions';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Delete } from 'ui-component/delete/Delete';
 import { SessionStatus } from 'data/static/SessionStatus';
@@ -195,6 +195,14 @@ const SessionDetails = () => {
     //handle share dialog open close functionality
     const handleShareDialogClose = () => {
         setOpenShare(false);
+    };
+
+    // a function that checks the condition if the user can review the trainer or not
+    const canReview = () => {
+        if (enrollmentstatus === 'accepted' && isDateGreaterOrEqualToday(data.start_date)) {
+            return true;
+        }
+        return false;
     };
 
     useEffect(() => {
@@ -621,8 +629,8 @@ const SessionDetails = () => {
                                             backgroundColor: theme.palette.background.default
                                         }}
                                     >
-                                        {/* tabone for session details */}
-                                        <TraineeTabContainer training_id={data.training_id} session_id={state.id} />
+                                        {/* tabs of session details for trainees */}
+                                        <TraineeTabContainer training_id={data.training_id} session_id={state.id} canReview={canReview()} />
                                     </Grid>
 
                                     <Grid item xs={12} sm={12} md={3.1} lg={3.1} xl={3.1} sx={{ paddingX: 2 }}>
@@ -686,14 +694,14 @@ const SessionDetails = () => {
                         <Typography variant="h3" marginY={1}>
                             {data.round_name}
                         </Typography>
-                        <Typography variant="body">Let's take some moment and fill this training survey </Typography>
+                        <Typography variant="body">{t(`Let's take some moment and fill this training survey`)} </Typography>
                         <Button
                             variant="contained"
                             color="primary"
                             sx={{ marginTop: 5, paddingX: 4, paddingY: 1 }}
                             onClick={() => navigate('/training/session/survey', { state: surveys.data })}
                         >
-                            Take Survey
+                            {t('Take Survey')}
                         </Button>
                     </Box>
                 </Box>

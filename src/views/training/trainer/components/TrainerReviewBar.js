@@ -1,6 +1,6 @@
-import React from 'react';
 import { LinearProgress, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import PropTypes from 'prop-types';
 
 const TrainerReviewBar = ({ ratingCounts, totalCount }) => {
     return (
@@ -25,6 +25,11 @@ const TrainerReviewBar = ({ ratingCounts, totalCount }) => {
             ))}
         </div>
     );
+};
+
+TrainerReviewBar.propTypes = {
+    ratingCounts: PropTypes.number,
+    totalCount: PropTypes.number
 };
 
 export default TrainerReviewBar;

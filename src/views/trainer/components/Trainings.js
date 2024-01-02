@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
 import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 import errorImage from 'assets/images/error.jpg';
+import PropTypes from 'prop-types';
 
 // ==============================|| VIEW TRAINER PAGE ||============================== //
 
@@ -42,8 +43,9 @@ const TrainerTrainings = ({ loading, error, trainings, trainer_name, children })
                 ) : (
                     <div>
                         <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingY: 3 }}>
-                            {trainings.map((training) => (
+                            {trainings.map((training, index) => (
                                 <TrainingSessionCard
+                                    key={index}
                                     isLoading={false}
                                     status={training.session.status}
                                     title={training.session.training_name}
@@ -63,6 +65,14 @@ const TrainerTrainings = ({ loading, error, trainings, trainer_name, children })
             {children}
         </Grid>
     );
+};
+
+TrainerTrainings.propTypes = {
+    loading: PropTypes.bool,
+    error: PropTypes.any,
+    trainings: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    trainer_name: PropTypes.string,
+    children: PropTypes.node
 };
 
 export default TrainerTrainings;

@@ -1,10 +1,10 @@
-import { Button, CircularProgress, IconButton, Typography, useTheme } from '@mui/material';
+import { Button, IconButton, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconArrowLeft, IconChevronDown, IconChevronRight } from '@tabler/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ActionMenu } from 'ui-component/menu/action';
-import { ReadMore } from 'utils/functions';
+import { ReadMore, TimeFormatter } from 'utils/functions';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
@@ -27,8 +27,7 @@ const ViewHeader = ({
     onPublish,
     option,
     optionChildrens,
-    publishing,
-    sx
+    publishing
 }) => {
     const { t } = useTranslation();
     const theme = useTheme();
@@ -115,7 +114,7 @@ const ViewHeader = ({
                                 borderRadius: 2
                             }}
                         >
-                            {duration}
+                            {TimeFormatter(duration)}
                         </Typography>
                     )}
 
@@ -182,7 +181,6 @@ ViewHeader.propTypes = {
     option: PropTypes.bool,
     optionChildrens: PropTypes.node,
     onClick: PropTypes.func,
-    sx: PropTypes.object,
     publishing: PropTypes.string
 };
 export default ViewHeader;

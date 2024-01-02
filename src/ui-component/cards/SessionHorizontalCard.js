@@ -221,7 +221,7 @@ SessionHorizontalCard.propTypes = {
     isLoading: PropTypes.bool,
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     image: PropTypes.string,
-    round: PropTypes.string,
+    round: PropTypes.number,
     description: PropTypes.string,
     address: PropTypes.string,
     capacity: PropTypes.number,

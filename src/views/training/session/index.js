@@ -84,7 +84,7 @@ const TrainingSession = () => {
 
     return (
         <Grid container alignItems="center" justifyContent="center">
-            <Grid xs={12} marginTop={4}>
+            <Grid item xs={12} marginTop={4}>
                 <Grid container>
                     <Grid item xs={12} sx={{ minHeight: 200, padding: 3 }}>
                         <Typography variant="h4" color="dark" marginBottom={2} marginLeft={1.4}>
@@ -92,7 +92,7 @@ const TrainingSession = () => {
                         </Typography>
                         {loading ? (
                             <Grid container>
-                                <Grid xs={12}>
+                                <Grid item xs={12}>
                                     {[1, 2, 3].map((item) => (
                                         <SessionHorizontalSkel key={item} />
                                     ))}
@@ -104,8 +104,9 @@ const TrainingSession = () => {
                             <NoResult title="" message="Oooops... no upcoming training" />
                         ) : (
                             data.upcomings &&
-                            data.upcomings.map((training) => (
+                            data.upcomings.map((training, index) => (
                                 <SessionHorizontalCard
+                                    key={index}
                                     isLoading={false}
                                     title={training.training_name}
                                     description={training.round_description}
@@ -141,14 +142,10 @@ const TrainingSession = () => {
                             <NoResult title="" message="Oooops... no other training found" />
                         ) : (
                             <div>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingY: 3 }}
-                                    spacing={1}
-                                >
-                                    {data.others.map((training) => (
+                                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingY: 3 }}>
+                                    {data.others.map((training, index) => (
                                         <TrainingSessionCard
+                                            key={index}
                                             isLoading={false}
                                             status={training.status}
                                             title={training.training_name}

@@ -37,14 +37,7 @@ function HomeTabs({ home, training }) {
                     backgroundColor: theme.palette.background.default
                 }}
             >
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="trainee tabs"
-                    sx={{ paddingTop: 2 }}
-                    textColor="white"
-                    indicatorColor="primary"
-                >
+                <Tabs value={value} onChange={handleChange} aria-label="trainee tabs" sx={{ paddingTop: 2 }} indicatorColor="primary">
                     <Tab label={t('Home')} {...a11yProps(0)} />
                     <Tab label={t('Your Tranings')} {...a11yProps(1)} />
                 </Tabs>

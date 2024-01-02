@@ -9,7 +9,6 @@ import { RefreshToken } from 'utils/token-refresh';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
-import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import DepartmentCard from 'ui-component/cards/DepartmentCard';
 import noresult from 'assets/images/no_result.png';
@@ -18,7 +17,6 @@ import CheckPathPermission from 'utils/path-checker';
 // ==============================|| DEPARTMENT PAGE ||============================== //
 
 const Department = () => {
-    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
@@ -169,8 +167,8 @@ const Department = () => {
                     ) : error ? (
                         <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the departments!" />
                     ) : (
-                        <Grid container>
-                            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }} spacing={1}>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
                                 {departments.map((department, index) => (
                                     <DepartmentCard
                                         key={index}

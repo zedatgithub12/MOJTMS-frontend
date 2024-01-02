@@ -2,7 +2,7 @@ import { Button, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconChevronDown, IconChevronRight } from '@tabler/icons';
 import { useState } from 'react';
-import { ReadMore } from 'utils/functions';
+import { ReadMore, TimeFormatter } from 'utils/functions';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
@@ -13,7 +13,7 @@ const letterConfig = {
     endat: 180
 };
 
-const AssessmentCard = ({ name, description, score, duration, instruction, onClick, status, sx }) => {
+const AssessmentCard = ({ name, description, score, duration, instruction, onClick }) => {
     const { t } = useTranslation();
     const theme = useTheme();
 
@@ -83,7 +83,7 @@ const AssessmentCard = ({ name, description, score, duration, instruction, onCli
                                 borderRadius: 2
                             }}
                         >
-                            {t(duration)}
+                            {t(TimeFormatter(duration))}
                         </Typography>
                     )}
                 </Box>
@@ -130,8 +130,6 @@ AssessmentCard.propTypes = {
     score: PropTypes.number,
     duration: PropTypes.number,
     instruction: PropTypes.string,
-    status: PropTypes.string,
-    onClick: PropTypes.func,
-    sx: PropTypes.object
+    onClick: PropTypes.func
 };
 export default AssessmentCard;

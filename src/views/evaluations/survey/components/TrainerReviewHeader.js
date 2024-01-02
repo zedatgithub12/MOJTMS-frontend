@@ -76,7 +76,7 @@ const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, d
     useEffect(() => {
         const index = SurveyStatus.findIndex((item) => item === status);
         setSelectedIndex(index);
-    }, []);
+    }, [status]);
     return (
         <Box
             sx={{
@@ -111,7 +111,7 @@ const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, d
                         </IconButton>
                     )}
                     <Typography variant="subtitle1" sx={{ marginLeft: 1, cursor: 'pointer' }}>
-                        Back
+                        {t('Back')}
                     </Typography>
                 </Box>
 
@@ -125,7 +125,7 @@ const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, d
 
             <Box marginY={1}>
                 {session && <Typography variant="subtitle1">{t(session)}</Typography>}
-                <Typography variant="subtitle2">Training Session</Typography>
+                <Typography variant="subtitle2">{t('Training session')}</Typography>
             </Box>
             <Box marginY={1}>
                 {round && (
@@ -134,17 +134,17 @@ const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, d
                         {t(FormattedRound(round))}
                     </Typography>
                 )}
-                <Typography variant="subtitle2">Round</Typography>
+                <Typography variant="subtitle2">{t('Round')}</Typography>
             </Box>
 
             <Box marginY={1}>
                 {trainer && <Typography variant="subtitle1">{t(trainer)}</Typography>}
-                <Typography variant="subtitle2">Trainer</Typography>
+                <Typography variant="subtitle2">{t('Trainer')}</Typography>
             </Box>
 
             <Box marginY={1}>
                 {title && <Typography variant="subtitle1">{t(title)}</Typography>}
-                <Typography variant="subtitle2">Survey</Typography>
+                <Typography variant="subtitle2">{t('Survey')}</Typography>
             </Box>
 
             {description && (
@@ -167,11 +167,13 @@ const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, d
 };
 
 TrainerReviewHeader.propTypes = {
+    surveyID: PropTypes.number,
     back: PropTypes.bool,
     trainer: PropTypes.string,
     session: PropTypes.string,
     round: PropTypes.number,
     title: PropTypes.string,
-    description: PropTypes.string
+    description: PropTypes.string,
+    status: PropTypes.string
 };
 export default TrainerReviewHeader;

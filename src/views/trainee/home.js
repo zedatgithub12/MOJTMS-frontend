@@ -29,6 +29,7 @@ const TraineeHome = () => {
     return (
         <Grid container alignItems="center" justifyContent="center">
             <Grid
+                item
                 xs={12}
                 sm={12}
                 md={10}

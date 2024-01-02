@@ -210,7 +210,7 @@ const Category = () => {
                     />
 
                     <Grid container>
-                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', paddingX: 2 }} spacing={1}>
+                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', paddingX: 2 }}>
                             {loading ? (
                                 <Grid container>
                                     <Grid
