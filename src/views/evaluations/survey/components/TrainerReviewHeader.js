@@ -19,7 +19,7 @@ const letterConfig = {
 
 const SurveyStatus = ['ongoing', 'completed'];
 
-const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, description, status }) => {
+const TrainingReviewHeader = ({ surveyID, back, session, round, title, description, status }) => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -138,11 +138,6 @@ const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, d
             </Box>
 
             <Box marginY={1}>
-                {trainer && <Typography variant="subtitle1">{t(trainer)}</Typography>}
-                <Typography variant="subtitle2">{t('Trainer')}</Typography>
-            </Box>
-
-            <Box marginY={1}>
                 {title && <Typography variant="subtitle1">{t(title)}</Typography>}
                 <Typography variant="subtitle2">{t('Survey')}</Typography>
             </Box>
@@ -166,14 +161,13 @@ const TrainerReviewHeader = ({ surveyID, back, trainer, session, round, title, d
     );
 };
 
-TrainerReviewHeader.propTypes = {
+TrainingReviewHeader.propTypes = {
     surveyID: PropTypes.number,
     back: PropTypes.bool,
-    trainer: PropTypes.string,
     session: PropTypes.string,
     round: PropTypes.number,
     title: PropTypes.string,
     description: PropTypes.string,
     status: PropTypes.string
 };
-export default TrainerReviewHeader;
+export default TrainingReviewHeader;

@@ -15,10 +15,10 @@ const monthsMap = {
 };
 
 const ChangeMonth = (givenyear, month, day) => {
-    let year = CheckLeapYear(givenyear);
+    let year = CheckLeapYear(parseInt(givenyear) + 1); //we check if the coming gregorian calendar year is leap year or not
 
     if (year) {
-        if (month === 9 && day >= 6 && day < 12) {
+        if (month == 9 && day >= 6 && day < 12) {
             const etmonth = 13;
             return etmonth;
         } else {
@@ -26,7 +26,7 @@ const ChangeMonth = (givenyear, month, day) => {
             return etmonth;
         }
     } else {
-        if (month === 9 && day >= 6 && day < 11) {
+        if (month == 9 && day >= 6 && day < 11) {
             const etmonth = 13;
             return etmonth;
         } else {

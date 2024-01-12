@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, useMediaQuery, IconButton, Button } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { IconEdit, IconListDetails, IconShare, IconTrash, IconX } from '@tabler/icons';
-import { FormattedRound, formatDate, isDateGreaterOrEqualToday } from 'utils/functions';
+import { DateFormatter, FormattedRound, formatDate, isDateGreaterOrEqualToday } from 'utils/functions';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Delete } from 'ui-component/delete/Delete';
 import { SessionStatus } from 'data/static/SessionStatus';
@@ -211,7 +211,7 @@ const SessionDetails = () => {
                 setOpenSurvey(true);
             }
         }, 4000);
-    }, []);
+    }, [surveys.status]);
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
@@ -395,8 +395,8 @@ const SessionDetails = () => {
                                             isLoading={false}
                                             status={status}
                                             title="Training Details"
-                                            startdate={formatDate(data.start_date)}
-                                            enddate={formatDate(data.end_date)}
+                                            startdate={DateFormatter(data.start_date)}
+                                            enddate={DateFormatter(data.end_date)}
                                             address={data.address}
                                             capacity={data.maximum_capacity}
                                         />

@@ -4,12 +4,9 @@ import { Box, Divider, Stack, useTheme } from '@mui/material';
 import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
 import { FormatStatus, ReadMore } from 'utils/functions';
 import { useTranslation } from 'react-i18next';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import SessionDetailSkel from './Skeleton/SessionDetailsSkel';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 
@@ -19,12 +16,11 @@ const letterConfig = {
 };
 
 const SessionDetailCard = forwardRef(
-    ({ sx = {}, isLoading, status, title, startdate, enddate, address, capacity, description, resources, children, ...others }, ref) => {
+    ({ sx = {}, isLoading, status, title, startdate, enddate, address, capacity, description, children, ...others }, ref) => {
         const { t } = useTranslation();
         const theme = useTheme();
 
         const [collapse, setCollapse] = React.useState(true);
-        const [showResources, setShowResources] = React.useState(false);
 
         const ExpndText = () => {
             setCollapse(!collapse);
@@ -144,7 +140,6 @@ SessionDetailCard.propTypes = {
     enddate: PropTypes.string,
     address: PropTypes.string,
     capacity: PropTypes.number,
-    resources: PropTypes.array,
     children: PropTypes.node
 };
 

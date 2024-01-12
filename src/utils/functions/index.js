@@ -43,7 +43,6 @@ export const ReadMore = (content, initial, max, collapse) => {
 
 export const DateFormatter = (dates) => {
     const isAmharic = localStorage.getItem('lang');
-
     if (isAmharic === 'am') {
         const ethioDate = EtDate(dates);
         return ethioDate;
@@ -55,6 +54,98 @@ export const DateFormatter = (dates) => {
         return formattedDate;
     }
 };
+
+export const TimeFormatter = (number) => {
+    if (number === 0) {
+        return '0 min';
+    } else if (number < 0) {
+        return 'Invalid time';
+    } else if (number === 60) {
+        return '1 hour';
+    } else if (number > 60) {
+        const hours = Math.floor(number / 60);
+        const minutes = number % 60;
+        return `${hours}:${minutes.toString().padStart(2, '0')} min`;
+    } else {
+        return `${number} min`;
+    }
+};
+//format date and time then return it in the nov,30,2023 | 10:00am
+export const formatDate = (inputDate) => {
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const ethioDate = EtDate(inputDate);
+
+        const date = new Date(inputDate);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = 'ሰዓት';
+
+        if (hours >= 7 && hours <= 18) {
+            const convertedTime = `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+            return `${ethioDate} | ${convertedTime}`;
+        }
+    } else {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const date = new Date(inputDate);
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+        return `${formattedDate} | ${formattedTime}`;
+    }
+};
+
+//format date only and return it in the nov,30,2023
+export const formatDateOnly = (inputDate) => {
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const ethioDate = EtDate(inputDate);
+        return ethioDate;
+    } else {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const date = new Date(inputDate);
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        return formattedDate;
+    }
+};
+
+export const convertDateTime = (datetime) => {
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const date = new Date(datetime);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = 'ሰዓት';
+
+        if (hours >= 7 && hours <= 18) {
+            return `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+        }
+    } else {
+        const date = new Date(datetime);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? 'pm' : 'am';
+
+        const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+        return convertedTime;
+    }
+};
+
+export function isDateGreaterOrEqualToday(dateString) {
+    // Create Date objects for the passed date string and today
+    const givenDate = new Date(dateString);
+    const today = new Date();
+
+    // Set the time parts to zero for accurate comparison
+    givenDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    // Compare the dates and return the boolean result
+    return givenDate <= today;
+}
 
 export const convertToMB = (sizeInBytes) => {
     const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -122,63 +213,6 @@ export const ProfileValidator = (file, size) => {
     };
 };
 
-export const TimeFormatter = (number) => {
-    if (number === 0) {
-        return '0 min';
-    } else if (number < 0) {
-        return 'Invalid time';
-    } else if (number === 60) {
-        return '1 hour';
-    } else if (number > 60) {
-        const hours = Math.floor(number / 60);
-        const minutes = number % 60;
-        return `${hours}:${minutes.toString().padStart(2, '0')} min`;
-    } else {
-        return `${number} min`;
-    }
-};
-
-//format date and time then return it in the nov,30,2023 | 10:00am
-export const formatDate = (inputDate) => {
-    const isAmharic = localStorage.getItem('lang');
-
-    if (isAmharic === 'am') {
-        const ethioDate = EtDate(inputDate);
-
-        const date = new Date(inputDate);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const period = 'ሰዓት';
-
-        if (hours >= 7 && hours <= 18) {
-            const convertedTime = `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
-            return `${ethioDate} | ${convertedTime}`;
-        }
-    } else {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        const date = new Date(inputDate);
-        const formattedDate = date.toLocaleDateString('en-US', options);
-        const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-
-        return `${formattedDate} | ${formattedTime}`;
-    }
-};
-
-//format date only and return it in the nov,30,2023
-export const formatDateOnly = (inputDate) => {
-    const isAmharic = localStorage.getItem('lang');
-
-    if (isAmharic === 'am') {
-        const ethioDate = EtDate(inputDate);
-        return ethioDate;
-    } else {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        const date = new Date(inputDate);
-        const formattedDate = date.toLocaleDateString('en-US', options);
-        return formattedDate;
-    }
-};
-
 //round count formatter
 export const FormattedRound = (number) => {
     var count;
@@ -226,29 +260,6 @@ export const FormatStatus = (statusInput) => {
     return statusColor;
 };
 
-export const convertDateTime = (datetime) => {
-    const isAmharic = localStorage.getItem('lang');
-
-    if (isAmharic === 'am') {
-        const date = new Date(datetime);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const period = 'ሰዓት';
-
-        if (hours >= 7 && hours <= 18) {
-            return `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
-        }
-    } else {
-        const date = new Date(datetime);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const period = hours >= 12 ? 'pm' : 'am';
-
-        const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
-        return convertedTime;
-    }
-};
-
 export function calculateAge(dateString) {
     if (dateString === null) {
         return 'N/A';
@@ -266,17 +277,4 @@ export function calculateAge(dateString) {
     }
 
     return age;
-}
-
-export function isDateGreaterOrEqualToday(dateString) {
-    // Create Date objects for the passed date string and today
-    const givenDate = new Date(dateString);
-    const today = new Date();
-
-    // Set the time parts to zero for accurate comparison
-    givenDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-
-    // Compare the dates and return the boolean result
-    return givenDate <= today;
 }

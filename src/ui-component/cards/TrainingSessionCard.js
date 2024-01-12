@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { Grid, Box, useTheme } from '@mui/material';
 import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
-import { FormatStatus, formatDate } from 'utils/functions';
+import { DateFormatter, FormatStatus } from 'utils/functions';
 import { useTranslation } from 'react-i18next';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -120,7 +120,7 @@ const TrainingSessionCard = forwardRef(
                                 >
                                     <IconClockPlay size={18} />
                                     <Box sx={{ marginX: 1 }}>
-                                        <Typography variant="subtitle1">{formatDate(startdate)}</Typography>
+                                        <Typography variant="subtitle1">{DateFormatter(startdate)}</Typography>
                                         <Typography variant="subtitle2">{t('From')} </Typography>
                                     </Box>
                                 </Box>
@@ -138,7 +138,7 @@ const TrainingSessionCard = forwardRef(
                                 >
                                     <IconClockStop size={18} />
                                     <Box sx={{ marginX: 1 }}>
-                                        <Typography variant="subtitle1">{formatDate(enddate)}</Typography>
+                                        <Typography variant="subtitle1">{DateFormatter(enddate)}</Typography>
                                         <Typography variant="subtitle2">{t('To')} </Typography>
                                     </Box>
                                 </Box>

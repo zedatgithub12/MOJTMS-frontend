@@ -159,7 +159,9 @@ const ViewTraining = () => {
                                         pl: 0.5
                                     }}
                                 >
-                                    <Typography variant="subtitle1"> {parseInt(state.trainee_reviews_avg_rating).toFixed(1)}</Typography>
+                                    <Typography variant="subtitle1">
+                                        {state.trainee_reviews_avg_rating > 0 && parseInt(state.trainee_reviews_avg_rating).toFixed(1)}
+                                    </Typography>
                                     <Rating
                                         name="hover-feedback"
                                         value={parseInt(state.trainee_reviews_avg_rating)}

@@ -1,12 +1,12 @@
-import * as React from 'react';
 import { TableContainer, Paper, Table, TableHead, TableBody, TableRow, TableCell, useTheme, Box, Typography } from '@mui/material';
 import { DateFormatter, FormattedRound } from 'utils/functions';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
-const columns = ['Training', 'Session', 'Round', 'Survey', 'Added on', 'Status'];
+const columns = ['Trainer name', 'Email', 'Survey', 'Session', 'Round', 'Added on', 'Status'];
 
-export default function FilledSurveyTable({ rows }) {
+export default function TrainerSurveyListing({ rows }) {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -25,10 +25,12 @@ export default function FilledSurveyTable({ rows }) {
                         <TableRow
                             key={index}
                             sx={{ cursor: 'pointer' }}
-                            onClick={() => navigate('/training/session/reviews', { state: row })}
+                            onClick={() => navigate('/training/trainer/reviews', { state: row })}
                         >
+                            <TableCell>{row.name ? row.name : 'N/A'}</TableCell>
+                            <TableCell>{row.email ? row.email : 'N/A'}</TableCell>
                             <TableCell component="th" scope="row">
-                                <Typography variant="subtitle1">{row.training_name}</Typography>
+                                <Typography variant="subtitle1">{row.title}</Typography>
                             </TableCell>
                             <TableCell>{row.round_name ? row.round_name : 'N/A'}</TableCell>
                             <TableCell>
@@ -56,10 +58,8 @@ export default function FilledSurveyTable({ rows }) {
                                 )}
                             </TableCell>
 
-                            <TableCell>{row.survey_name ? row.survey_name : 'N/A'}</TableCell>
-
                             <TableCell>{row.created_at ? DateFormatter(row.created_at) : 'N/A'}</TableCell>
-                            <TableCell>{row.status ? row.status : 'N/A'}</TableCell>
+                            <TableCell sx={{ textTransform: 'capitalize' }}>{row.status ? row.status : 'N/A'}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
@@ -67,3 +67,7 @@ export default function FilledSurveyTable({ rows }) {
         </TableContainer>
     );
 }
+
+TrainerSurveyListing.propTypes = {
+    rows: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
+};
