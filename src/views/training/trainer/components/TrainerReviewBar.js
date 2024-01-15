@@ -28,7 +28,7 @@ const TrainerReviewBar = ({ ratingCounts, totalCount }) => {
 };
 
 TrainerReviewBar.propTypes = {
-    ratingCounts: PropTypes.number,
+    ratingCounts: PropTypes.oneOfType([PropTypes.number, PropTypes.array, PropTypes.object]),
     totalCount: PropTypes.number
 };
 

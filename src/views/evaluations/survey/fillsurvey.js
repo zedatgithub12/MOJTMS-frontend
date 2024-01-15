@@ -77,13 +77,12 @@ const FillSurvey = () => {
 
     //handle a single selection change here
     const handleRadioSelection = (e, que) => {
-        const selectedQuestion = questions.find((item) => item.id === que.id);
-        const questionoptions = selectedQuestion.options;
-
+        const selectedQuestion = questions.find((item) => item.id == que.id);
+        const questionoptions = selectedQuestion.surveyoptions;
         const selectedOption = questionoptions.findIndex((option) => option.id == e.target.value);
         const option = questionoptions[selectedOption];
-
         handleSingleSelect({
+            type: 'choice',
             qid: que.id,
             oid: option.id
         });
@@ -95,6 +94,7 @@ const FillSurvey = () => {
         const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.qid === answer.qid); //return the existing answer index if exist
 
         const newAnswer = {
+            type: 'choice',
             qid: answer.qid,
             answers: [
                 {
@@ -143,6 +143,7 @@ const FillSurvey = () => {
         const existingAnswerIndex = surveyresponse.findIndex((answer) => answer.qid === qid);
 
         const newAnswer = {
+            type: 'multiple-choice',
             qid: qid,
             answers: [{ oid: oid }]
         };
@@ -180,6 +181,7 @@ const FillSurvey = () => {
         const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.qid === qid); //return the existing answer index if exist
 
         const newAnswer = {
+            type: 'text',
             qid: qid,
             answers: [
                 {
@@ -223,9 +225,10 @@ const FillSurvey = () => {
 
             const answerstring = JSON.stringify(surveyresponse);
             const data = {
+                training_id: state.training_id,
                 survey_id: state.survey_id,
-                user_id: Addedby,
                 session_id: state.session_id,
+                user_id: Addedby,
                 response: answerstring
             };
 

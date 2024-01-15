@@ -173,7 +173,7 @@ const TakeAssessment = () => {
     //handle multiple question select
     function handleMultiSelect({ qid, oid, iscorrect }) {
         const existingAnswerIndex = assessmentAnswers.findIndex((answer) => answer.qid === qid);
-        const isCorrect = iscorrect === 1 ? true : false;
+        const isCorrect = iscorrect == 1 ? true : false;
         const newAnswer = {
             qid: qid,
             answers: [{ oid: oid, is_correct: isCorrect }],
@@ -210,43 +210,45 @@ const TakeAssessment = () => {
     };
 
     //calculate the score before submitting
-    function calculateScore() {
-        let question = assessmentAnswers.length;
+    const calculateScore = () => {
+        let question = questions.length;
         let totalPoints = 0;
 
         assessmentAnswers.forEach((answer) => {
-            var type = answer.answers.length;
-            if (type > 1) {
-                const origionaloptioncount = questions.find((item) => item.id === answer.qid);
-                const numberofoptions = origionaloptioncount.options.length;
-                let thecorrects = origionaloptioncount.options.filter((item) => item.is_correct == 1);
-                let eachpoint = 1 / numberofoptions;
+            let length = answer.answers.length;
+            if (length > 1) {
+                const origionaloptions = questions.find((item) => item.id == answer.qid);
+                const thecorrects = origionaloptions.options.filter((item) => item.is_correct == 1);
+                let thecorrlength = thecorrects.length;
+                const eachpoint = parseFloat(1 / thecorrlength).toFixed(2);
 
-                let correct = answer.answers.filter((item) => item.is_correct === true);
-                let wrong = answer.answers.filter((item) => item.is_correct === false);
+                let correct = answer.answers.filter((item) => item.is_correct == true);
+                let corrlength = correct.length;
 
-                const thepoints = (correct.length -= wrong.length);
+                let wrong = answer.answers.filter((item) => item.is_correct == false);
+                let wronglength = wrong.length;
+
+                let thepoints = (corrlength -= wronglength);
 
                 if (thepoints > 0) {
-                    var correctone;
-                    if (correct.length != thecorrects.length) {
-                        correctone = thepoints * eachpoint;
-                        totalPoints += correctone;
-                    } else {
-                        totalPoints += 1;
-                    }
+                    let correctone = thepoints * eachpoint;
+                    totalPoints += correctone;
                 }
             } else {
-                totalPoints += answer.point;
+                totalPoints += parseInt(answer.point);
             }
         });
 
-        var score = (totalPoints / question) * 100;
-        return parseInt(score);
-    }
+        if (totalPoints < 0) {
+            return 0;
+        } else {
+            let score = (totalPoints / question) * 100;
+            return parseInt(score);
+        }
+    };
 
     //handle answer submission here
-    const handleAnsSubmission = () => {
+    const handleAnsSubmission = async () => {
         let questioncount = questions.length;
         let answeredcount = assessmentAnswers.length;
 

@@ -19,7 +19,7 @@ const letterConfig = {
 
 const SurveyStatus = ['ongoing', 'completed'];
 
-const TrainerReviewHeader = ({ surveyID, back, session, round, title, description, status }) => {
+const TrainingReviewHeader = ({ surveyID, back, session, round, title, description, status }) => {
     const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -33,13 +33,13 @@ const TrainerReviewHeader = ({ surveyID, back, session, round, title, descriptio
     //handle status change
     const handleStatusChange = (index) => {
         const selectedStatus = SurveyStatus[index];
-        handleTrainerSurveyStatus(selectedStatus);
+        handleTrainingSurveyStatus(selectedStatus);
     };
 
     // Handle survey status change here
-    const handleTrainerSurveyStatus = (newStatus) => {
+    const handleTrainingSurveyStatus = (newStatus) => {
         setIsUpdating(true);
-        const Api = Connections.api + Connections.trainersurveys + '/status/' + surveyID;
+        const Api = Connections.api + Connections.trainingsurvey + '/status/' + surveyID;
         const token = sessionStorage.getItem('token');
         const headers = {
             Authorization: 'Bearer' + token
@@ -161,7 +161,7 @@ const TrainerReviewHeader = ({ surveyID, back, session, round, title, descriptio
     );
 };
 
-TrainerReviewHeader.propTypes = {
+TrainingReviewHeader.propTypes = {
     surveyID: PropTypes.number,
     back: PropTypes.bool,
     session: PropTypes.string,
@@ -170,4 +170,4 @@ TrainerReviewHeader.propTypes = {
     description: PropTypes.string,
     status: PropTypes.string
 };
-export default TrainerReviewHeader;
+export default TrainingReviewHeader;

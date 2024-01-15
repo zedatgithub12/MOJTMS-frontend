@@ -9,7 +9,7 @@ import { ErrorPrompt } from 'utils/components/errorprompt';
 import errorImage from 'assets/images/error.jpg';
 import Connections from 'api';
 import TrainerReviewBar from './components/TrainerReviewBar';
-import TrainerReviewHeader from 'views/evaluations/survey/components/TrainerReviewHeader';
+import TrainingReviewHeader from 'views/evaluations/survey/components/TrainingReviewHeader.js';
 
 const TrainingReviews = () => {
     const { t } = useTranslation();
@@ -36,7 +36,12 @@ const TrainingReviews = () => {
 
     const FetchReviews = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.trainingreviews + '/' + state.id;
+        var Api =
+            Connections.api +
+            Connections.trainingreviews +
+            '/' +
+            state.training_id +
+            `?session_id=${state.session_id}&survey_id=${state.survey_id}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -84,7 +89,7 @@ const TrainingReviews = () => {
                         minHeight: '90vh'
                     }}
                 >
-                    <TrainerReviewHeader
+                    <TrainingReviewHeader
                         back={true}
                         surveyID={state.id}
                         title={t(state.survey_name)}
@@ -167,7 +172,7 @@ const TrainingReviews = () => {
                                     {item?.surveyoptions?.map((option, index) => (
                                         <TrainerReviewBar
                                             key={index}
-                                            ratingCounts={[{ type: option.option_text, count: option.trainer_review_count }]}
+                                            ratingCounts={[{ type: option.option_text, count: option.training_review_count }]}
                                             totalCount={item.total_answers}
                                         />
                                     ))}

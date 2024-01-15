@@ -35,7 +35,7 @@ const CreateQuestion = ({ type, isSubmitting, handleSubmission, handleClose }) =
     };
 
     const formik = useFormik({
-        initialValues: { question_type: 'true/false', question: '' },
+        initialValues: { question_type: 'choice', question: '' },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSubmitting(values);

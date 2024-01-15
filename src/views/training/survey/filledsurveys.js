@@ -205,7 +205,7 @@ const FilledSurveys = ({ training_id }) => {
                         message="Oooops... There is server error fetching filled surveys"
                     />
                 ) : filledSurveys.length === 0 ? (
-                    <NoResult title="" message="Oooops... No filled survey found" />
+                    <NoResult title="" message="Oooops... No assigned survey found" />
                 ) : (
                     <div>
                         <FilledSurveyTable rows={filledSurveys} />
