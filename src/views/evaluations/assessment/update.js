@@ -4,22 +4,24 @@ import { Grid, Button, useTheme, CircularProgress, FormControl, InputLabel, Outl
 
 // project imports
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import { useLocation, useNavigate } from 'react-router';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import * as Yup from 'yup';
 
 // ==============================|| UPDATE ASSESSMENT PAGE ||============================== //
 
 const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Assessment name is required').max(80),
-    description: Yup.string().required('Assessment description is required').min(15),
+    name: Yup.string().required('Assessment name is required'),
+    description: Yup.string().required('Assessment description is required'),
     duration: Yup.number().required('Assessment duration is required')
 });
 
 const UpdateAssessment = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -28,8 +30,7 @@ const UpdateAssessment = () => {
         // Handle form submission here
         setIsSubmitting(true);
         const Api = Connections.api + Connections.assessments + '/' + state.id;
-        const created_by = JSON.parse(sessionStorage.getItem('user'));
-        const id = created_by.user.id;
+
         const token = sessionStorage.getItem('token');
         const headers = {
             Authorization: 'Bearer' + token
@@ -77,7 +78,7 @@ const UpdateAssessment = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -116,19 +117,18 @@ const UpdateAssessment = () => {
                                             error={formik.touched.name && Boolean(formik.errors.name)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="assessment-name">Name</InputLabel>
+                                            <InputLabel htmlFor="assessment-name"> {t('Assessment name')}</InputLabel>
                                             <OutlinedInput
                                                 id="assessment-name"
                                                 name="name"
-                                                label="Assessment name"
+                                                label={t('Assessment name')}
                                                 value={formik.values.name}
                                                 onChange={formik.handleChange}
                                                 fullWidth
-                                                inputProps={{}}
                                             />
                                             {formik.touched.name && formik.errors.name && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.name}
+                                                    {t(formik.errors.name)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -140,11 +140,11 @@ const UpdateAssessment = () => {
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="assessment-description">Description </InputLabel>
+                                            <InputLabel htmlFor="assessment-description">{t('Description')} </InputLabel>
                                             <OutlinedInput
                                                 id="assessment-description"
                                                 name="description"
-                                                label="Description"
+                                                label={t('Description')}
                                                 value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -154,33 +154,32 @@ const UpdateAssessment = () => {
                                             />
                                             {formik.touched.description && formik.errors.description && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.description}
+                                                    {t(formik.errors.description)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
                                     </Grid>
 
                                     <Grid item xs={12}>
-                                        <Grid continer sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <Grid container sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                             <Grid item xs={12} sm={12} md={5} lg={5} xl={5}>
-                                                {' '}
                                                 <FormControl
                                                     fullWidth
                                                     error={formik.touched.score && Boolean(formik.errors.score)}
                                                     sx={{ ...theme.typography.customInput, marginRight: 3 }}
                                                 >
-                                                    <InputLabel htmlFor="assessment-score">Passing score out of 100 </InputLabel>
+                                                    <InputLabel htmlFor="assessment-score">{t('Passing score out of 100')} </InputLabel>
                                                     <OutlinedInput
                                                         id="assessment-score"
                                                         name="score"
-                                                        label="Passing score"
+                                                        label={t('Passing score')}
                                                         value={formik.values.score}
                                                         onChange={formik.handleChange}
                                                         fullWidth
                                                     />
                                                     {formik.touched.score && formik.errors.score && (
                                                         <FormHelperText error id="standard-weight-helper-text-name">
-                                                            {formik.errors.score}
+                                                            {t(formik.errors.score)}
                                                         </FormHelperText>
                                                     )}
                                                 </FormControl>
@@ -192,18 +191,18 @@ const UpdateAssessment = () => {
                                                     error={formik.touched.duration && Boolean(formik.errors.duration)}
                                                     sx={{ ...theme.typography.customInput }}
                                                 >
-                                                    <InputLabel htmlFor="assessment-duration">Duration in Minute </InputLabel>
+                                                    <InputLabel htmlFor="assessment-duration">{t('Duration in Minute')} </InputLabel>
                                                     <OutlinedInput
                                                         id="assessment-duration"
                                                         name="duration"
-                                                        label="Duration"
+                                                        label={t('Duration in Minute')}
                                                         value={formik.values.duration}
                                                         onChange={formik.handleChange}
                                                         fullWidth
                                                     />
                                                     {formik.touched.duration && formik.errors.duration && (
                                                         <FormHelperText error id="standard-weight-helper-text-name">
-                                                            {formik.errors.duration}
+                                                            {t(formik.errors.duration)}
                                                         </FormHelperText>
                                                     )}
                                                 </FormControl>
@@ -217,11 +216,11 @@ const UpdateAssessment = () => {
                                             error={formik.touched.instructions && Boolean(formik.errors.instructions)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="assessment-instructions">Instructions </InputLabel>
+                                            <InputLabel htmlFor="assessment-instructions">{t('Instruction')} </InputLabel>
                                             <OutlinedInput
                                                 id="assessment-instructions"
                                                 name="instructions"
-                                                label="Instructions"
+                                                label={t('Instruction')}
                                                 value={formik.values.instructions}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -231,7 +230,7 @@ const UpdateAssessment = () => {
                                             />
                                             {formik.touched.instructions && formik.errors.instructions && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.instructions}
+                                                    {t(formik.errors.instructions)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -244,7 +243,7 @@ const UpdateAssessment = () => {
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
 
                                         <AnimateButton>
@@ -258,7 +257,7 @@ const UpdateAssessment = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Update'
+                                                    t('Update')
                                                 )}
                                             </Button>
                                         </AnimateButton>

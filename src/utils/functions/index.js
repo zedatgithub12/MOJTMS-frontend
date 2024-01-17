@@ -1,3 +1,32 @@
+import EtDate from '../ethiopian-date';
+
+const etTime = {
+    0: 12,
+    1: 7,
+    2: 8,
+    3: 9,
+    4: 10,
+    5: 11,
+    6: 12,
+    7: 1,
+    8: 2,
+    9: 3,
+    10: 4,
+    11: 5,
+    12: 6,
+    13: 7,
+    14: 8,
+    15: 9,
+    16: 10,
+    17: 11,
+    18: 12,
+    19: 1,
+    20: 2,
+    21: 3,
+    22: 4,
+    23: 5
+};
+
 export const ReadMore = (content, initial, max, collapse) => {
     var text;
     let textLength = content.length;
@@ -13,12 +42,110 @@ export const ReadMore = (content, initial, max, collapse) => {
 };
 
 export const DateFormatter = (dates) => {
-    var year = dates.slice(0, 4);
-    var month = dates.slice(5, 7);
-    var day = dates.slice(8, 10);
-    const date = day + '-' + month + '-' + year;
-    return date;
+    const isAmharic = localStorage.getItem('lang');
+    if (isAmharic === 'am') {
+        const ethioDate = EtDate(dates);
+        return ethioDate;
+    } else {
+        var year = dates.slice(0, 4);
+        var month = dates.slice(5, 7);
+        var day = dates.slice(8, 10);
+        const formattedDate = day + '-' + month + '-' + year;
+        return formattedDate;
+    }
 };
+
+export const TimeFormatter = (number) => {
+    if (number === 0) {
+        return '0 min';
+    } else if (number < 0) {
+        return 'Invalid time';
+    } else if (number === 60) {
+        return '1 hour';
+    } else if (number > 60) {
+        const hours = Math.floor(number / 60);
+        const minutes = number % 60;
+        return `${hours}:${minutes.toString().padStart(2, '0')} min`;
+    } else {
+        return `${number} min`;
+    }
+};
+//format date and time then return it in the nov,30,2023 | 10:00am
+export const formatDate = (inputDate) => {
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const ethioDate = EtDate(inputDate);
+
+        const date = new Date(inputDate);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = 'ሰዓት';
+
+        if (hours >= 7 && hours <= 18) {
+            const convertedTime = `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+            return `${ethioDate} | ${convertedTime}`;
+        }
+    } else {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const date = new Date(inputDate);
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+
+        return `${formattedDate} | ${formattedTime}`;
+    }
+};
+
+//format date only and return it in the nov,30,2023
+export const formatDateOnly = (inputDate) => {
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const ethioDate = EtDate(inputDate);
+        return ethioDate;
+    } else {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        const date = new Date(inputDate);
+        const formattedDate = date.toLocaleDateString('en-US', options);
+        return formattedDate;
+    }
+};
+
+export const convertDateTime = (datetime) => {
+    const isAmharic = localStorage.getItem('lang');
+
+    if (isAmharic === 'am') {
+        const date = new Date(datetime);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = 'ሰዓት';
+
+        if (hours >= 7 && hours <= 18) {
+            return `${etTime[hours]}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+        }
+    } else {
+        const date = new Date(datetime);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const period = hours >= 12 ? 'pm' : 'am';
+
+        const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
+        return convertedTime;
+    }
+};
+
+export function isDateGreaterOrEqualToday(dateString) {
+    // Create Date objects for the passed date string and today
+    const givenDate = new Date(dateString);
+    const today = new Date();
+
+    // Set the time parts to zero for accurate comparison
+    givenDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    // Compare the dates and return the boolean result
+    return givenDate <= today;
+}
 
 export const convertToMB = (sizeInBytes) => {
     const units = ['bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -86,39 +213,6 @@ export const ProfileValidator = (file, size) => {
     };
 };
 
-export const TimeFormatter = (number) => {
-    if (number === 0) {
-        return '0 min';
-    } else if (number < 0) {
-        return 'Invalid time';
-    } else if (number === 60) {
-        return '1 hour';
-    } else if (number > 60) {
-        const hours = Math.floor(number / 60);
-        const minutes = number % 60;
-        return `${hours}:${minutes.toString().padStart(2, '0')} min`;
-    } else {
-        return `${number} min`;
-    }
-};
-
-//format date and time then return it in the nov,30,2023 | 10:00am
-export const formatDate = (inputDate) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const date = new Date(inputDate);
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    const formattedTime = date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-
-    return `${formattedDate} | ${formattedTime}`;
-};
-
-//format date only and return it in the nov,30,2023
-export const formatDateOnly = (inputDate) => {
-    const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    const date = new Date(inputDate);
-    const formattedDate = date.toLocaleDateString('en-US', options);
-    return formattedDate;
-};
 //round count formatter
 export const FormattedRound = (number) => {
     var count;
@@ -164,16 +258,6 @@ export const FormatStatus = (statusInput) => {
             break;
     }
     return statusColor;
-};
-
-export const convertDateTime = (datetime) => {
-    const date = new Date(datetime);
-    const hours = date.getHours();
-    const minutes = date.getMinutes();
-    const period = hours >= 12 ? 'pm' : 'am';
-
-    const convertedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' : ''}${minutes} ${period}`;
-    return convertedTime;
 };
 
 export function calculateAge(dateString) {

@@ -29,6 +29,7 @@ import TrainingModules from './module';
 import SessionListing from './session/components/Listing';
 import TrainingTrainees from './trainee/trainingtrainees';
 import FilledSurveys from './survey/filledsurveys';
+import TrainersSurveys from './trainer/trainerssurveys';
 
 // ==============================|| VIEW TRAINING PAGE ||============================== //
 
@@ -158,10 +159,12 @@ const ViewTraining = () => {
                                         pl: 0.5
                                     }}
                                 >
-                                    <Typography variant="subtitle1"> {parseFloat(state.trainee_reviews_avg_rating).toFixed(1)}</Typography>
+                                    <Typography variant="subtitle1">
+                                        {state.trainee_reviews_avg_rating > 0 && parseInt(state.trainee_reviews_avg_rating).toFixed(1)}
+                                    </Typography>
                                     <Rating
                                         name="hover-feedback"
-                                        value={parseFloat(state.trainee_reviews_avg_rating).toFixed(1)}
+                                        value={parseInt(state.trainee_reviews_avg_rating)}
                                         readOnly
                                         emptyIcon={<StarOutline style={{ opacity: 0.85 }} fontSize="inherit" />}
                                         sx={{ marginX: 2 }}
@@ -194,7 +197,7 @@ const ViewTraining = () => {
                         <Grid item xs={12} sx={{ alignItems: 'center', justifyContent: 'center' }}>
                             <Tabs value={tab} onChange={handleChange} aria-label="tabs">
                                 {TrainingTabs.map((tab, index) => (
-                                    <Tab label={t(tab.name)} {...a11yProps(index)} />
+                                    <Tab key={index} label={t(tab.name)} {...a11yProps(index)} />
                                 ))}
                             </Tabs>
 
@@ -210,6 +213,9 @@ const ViewTraining = () => {
                             </TabPanel>
                             <TabPanel value={tab} index={3}>
                                 <FilledSurveys training_id={state.id} />
+                            </TabPanel>
+                            <TabPanel value={tab} index={4}>
+                                <TrainersSurveys training_id={state.id} />
                             </TabPanel>
                         </Grid>
                     </Grid>

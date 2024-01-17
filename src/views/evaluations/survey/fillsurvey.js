@@ -13,21 +13,22 @@ import {
     FormControl
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
 import { useSelector, useDispatch } from 'react-redux';
 import { setSurveyResponses } from 'store/actions';
 import { RefreshToken } from 'utils/token-refresh';
+import { useTranslation } from 'react-i18next';
+import Connections from 'api';
 import TakenDialog from './components/takendialog';
 import SurveyHeader from './components/surveyHeader';
 
 const FillSurvey = () => {
+    const { t } = useTranslation();
     const { state } = useLocation();
-    // const theme = useTheme();
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
+
     const surveyresponse = useSelector((state) => state.customization.surveyresponse); // an array of response stored in redux state
 
     const [loading, setLoading] = useState(false);
@@ -76,13 +77,12 @@ const FillSurvey = () => {
 
     //handle a single selection change here
     const handleRadioSelection = (e, que) => {
-        const selectedQuestion = questions.find((item) => item.id === que.id);
-        const questionoptions = selectedQuestion.options;
-
+        const selectedQuestion = questions.find((item) => item.id == que.id);
+        const questionoptions = selectedQuestion.surveyoptions;
         const selectedOption = questionoptions.findIndex((option) => option.id == e.target.value);
         const option = questionoptions[selectedOption];
-
         handleSingleSelect({
+            type: 'choice',
             qid: que.id,
             oid: option.id
         });
@@ -94,6 +94,7 @@ const FillSurvey = () => {
         const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.qid === answer.qid); //return the existing answer index if exist
 
         const newAnswer = {
+            type: 'choice',
             qid: answer.qid,
             answers: [
                 {
@@ -142,6 +143,7 @@ const FillSurvey = () => {
         const existingAnswerIndex = surveyresponse.findIndex((answer) => answer.qid === qid);
 
         const newAnswer = {
+            type: 'multiple-choice',
             qid: qid,
             answers: [{ oid: oid }]
         };
@@ -179,6 +181,7 @@ const FillSurvey = () => {
         const existingAnswerIndex = surveyresponse.findIndex((ans) => ans.qid === qid); //return the existing answer index if exist
 
         const newAnswer = {
+            type: 'text',
             qid: qid,
             answers: [
                 {
@@ -222,9 +225,10 @@ const FillSurvey = () => {
 
             const answerstring = JSON.stringify(surveyresponse);
             const data = {
+                training_id: state.training_id,
                 survey_id: state.survey_id,
-                user_id: Addedby,
                 session_id: state.session_id,
+                user_id: Addedby,
                 response: answerstring
             };
 
@@ -256,7 +260,7 @@ const FillSurvey = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -316,7 +320,7 @@ const FillSurvey = () => {
                                     >
                                         <Typography variant="h4">{(index += 1)}.</Typography>
                                         <Typography variant="subtitle1" marginLeft={1.6}>
-                                            {question.question_text}
+                                            {t(question.question_text)}
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -347,7 +351,7 @@ const FillSurvey = () => {
                                                             }
                                                         />
                                                     }
-                                                    label={option.option_text}
+                                                    label={t(option.option_text)}
                                                 />
                                             </Box>
                                         ))
@@ -364,7 +368,7 @@ const FillSurvey = () => {
                                                 <OutlinedInput
                                                     id="survey-answer"
                                                     name={question.id}
-                                                    placeholder="Answer here"
+                                                    placeholder={t('Answer here')}
                                                     value={existingAnswer && existingAnswer.answers[0].text_ans}
                                                     onChange={(event) => handleTextChange(event)}
                                                     fullWidth
@@ -394,7 +398,7 @@ const FillSurvey = () => {
                                                         <FormControlLabel
                                                             value={option.id}
                                                             control={<Radio />}
-                                                            label={option.option_text}
+                                                            label={t(option.option_text)}
                                                         />
                                                     ))}
                                                 </RadioGroup>
@@ -418,7 +422,7 @@ const FillSurvey = () => {
                                 onClick={() => handleAnsSubmission()}
                                 disabled={isSubmitting}
                             >
-                                Submit
+                                {t('Submit')}
                             </Button>
                         </Grid>
                     </Grid>

@@ -3,6 +3,7 @@ import { Grid, Box, useTheme, useMediaQuery } from '@mui/material';
 import { IconClockPlay, IconClockStop, IconMapPin, IconUsers } from '@tabler/icons';
 import { ActionMenu } from 'ui-component/menu/action';
 import { FormattedRound } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -30,6 +31,7 @@ const SessionHorizontalCard = forwardRef(
         },
         ref
     ) => {
+        const { t } = useTranslation();
         const theme = useTheme();
         const belowmd = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -63,7 +65,7 @@ const SessionHorizontalCard = forwardRef(
                                             borderRadius: 1
                                         }}
                                         image={image}
-                                        title="Training Sessions"
+                                        title={t('Training Sessions')}
                                     />
                                 ) : (
                                     <Box
@@ -80,9 +82,9 @@ const SessionHorizontalCard = forwardRef(
                                             <Box>
                                                 <Typography variant="h1" color="primary">
                                                     {round}
-                                                    <sup>{FormattedRound(round)}</sup>
+                                                    <sup>{t(FormattedRound(round))}</sup>
                                                 </Typography>
-                                                <Typography variant="subtitle1">Round</Typography>
+                                                <Typography variant="subtitle1">{t('Round')}</Typography>
                                             </Box>
                                         )}
                                     </Box>
@@ -115,13 +117,13 @@ const SessionHorizontalCard = forwardRef(
                                     >
                                         {title && (
                                             <Typography variant="h2" sx={{ paddingX: 2, marginBottom: 1 }}>
-                                                {title}
+                                                {t(title)}
                                             </Typography>
                                         )}
 
                                         {description && (
                                             <Typography variant="body2" sx={{ paddingX: 2 }}>
-                                                {description.length > 120 ? description.slice(0, 120) + '...' : description}
+                                                {description.length > 120 ? description.slice(0, 120) + '...' : t(description)}
                                             </Typography>
                                         )}
 
@@ -137,8 +139,10 @@ const SessionHorizontalCard = forwardRef(
                                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 1 }}>
                                                     <IconUsers size={18} />
                                                     <Box sx={{ paddingX: 2 }}>
-                                                        <Typography variant="subtitle1">{capacity} Trainee </Typography>
-                                                        <Typography variant="subtitle2">Maximum Capacity </Typography>
+                                                        <Typography variant="subtitle1">
+                                                            {capacity} {t('Trainee')}{' '}
+                                                        </Typography>
+                                                        <Typography variant="subtitle2">{t('Maximum Capacity')} </Typography>
                                                     </Box>
                                                 </Box>
                                             )}
@@ -147,8 +151,8 @@ const SessionHorizontalCard = forwardRef(
                                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginY: 1 }}>
                                                     <IconMapPin size={18} />
                                                     <Box sx={{ paddingX: 2 }}>
-                                                        <Typography variant="subtitle1">{address} </Typography>
-                                                        <Typography variant="subtitle2">Training address </Typography>
+                                                        <Typography variant="subtitle1">{t(address)} </Typography>
+                                                        <Typography variant="subtitle2">{t('Training address')} </Typography>
                                                     </Box>
                                                 </Box>
                                             )}
@@ -180,7 +184,7 @@ const SessionHorizontalCard = forwardRef(
                                             >
                                                 <IconClockPlay size={18} />
                                                 <Box marginLeft={2}>
-                                                    <Typography variant="subtitle2">From </Typography>
+                                                    <Typography variant="subtitle2">{t('From')} </Typography>
                                                     <Typography variant="subtitle1">{startdate}</Typography>
                                                 </Box>
                                             </Box>
@@ -196,7 +200,7 @@ const SessionHorizontalCard = forwardRef(
                                             >
                                                 <IconClockStop size={18} />
                                                 <Box marginLeft={2}>
-                                                    <Typography variant="subtitle2">To </Typography>
+                                                    <Typography variant="subtitle2">{t('To')} </Typography>
                                                     <Typography variant="subtitle1">{enddate}</Typography>
                                                 </Box>
                                             </Box>
@@ -217,7 +221,7 @@ SessionHorizontalCard.propTypes = {
     isLoading: PropTypes.bool,
     title: PropTypes.oneOfType([PropTypes.node, PropTypes.string, PropTypes.object]),
     image: PropTypes.string,
-    round: PropTypes.string,
+    round: PropTypes.number,
     description: PropTypes.string,
     address: PropTypes.string,
     capacity: PropTypes.number,

@@ -14,24 +14,24 @@ import {
     Typography,
     useMediaQuery
 } from '@mui/material';
+import { Formik } from 'formik';
+import { IconCircleCheck } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
 
 // third party
 import * as Yup from 'yup';
-import { Formik } from 'formik';
-
-// project imports
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 
 // assets
 import Connections from 'api';
-import { IconCircleCheck } from '@tabler/icons';
 import AuthWrapper1 from './AuthWrapper1';
 import MainCard from 'ui-component/cards/MainCard';
 
 // ============================|| AUTH - FORGOT PASSWORD ||============================ //
 
 const Forgot_Password = ({ ...others }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const scriptedRef = useScriptRef();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
@@ -53,7 +53,7 @@ const Forgot_Password = ({ ...others }) => {
                                             className="text-success mb-3 mx-auto"
                                         />
                                         <Typography variant="body2" className="text-center">
-                                            A link to reset password is successfully sent to your email address, check your inbox.
+                                            {t('A link to reset password is successfully sent to your email address, check your inbox')}
                                         </Typography>
                                     </Box>
                                 ) : (
@@ -74,7 +74,7 @@ const Forgot_Password = ({ ...others }) => {
                                                                     gutterBottom
                                                                     variant={matchDownSM ? 'h3' : 'h2'}
                                                                 >
-                                                                    Forgot Password
+                                                                    {t('Forgot Password')}
                                                                 </Typography>
                                                             </Stack>
                                                         </Grid>
@@ -82,7 +82,7 @@ const Forgot_Password = ({ ...others }) => {
                                                 </Grid>
                                                 <Box sx={{ mb: 2 }}>
                                                     <Typography variant="subtitle1" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                                                        Enter email address associated with your account
+                                                        {t('Enter email address associated with your account')}
                                                     </Typography>
                                                 </Box>
                                             </Grid>
@@ -94,7 +94,7 @@ const Forgot_Password = ({ ...others }) => {
                                                 submit: null
                                             }}
                                             validationSchema={Yup.object().shape({
-                                                email: Yup.string().email('Must be a valid email').max(255).required('Email is required')
+                                                email: Yup.string().email('Invalid email').max(255).required('Email address is required')
                                             })}
                                             onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
                                                 try {
@@ -149,7 +149,9 @@ const Forgot_Password = ({ ...others }) => {
                                                         error={Boolean(touched.email && errors.email)}
                                                         sx={{ ...theme.typography.customInput }}
                                                     >
-                                                        <InputLabel htmlFor="outlined-adornment-email-login">Email Address</InputLabel>
+                                                        <InputLabel htmlFor="outlined-adornment-email-login">
+                                                            {t('Email Address')}
+                                                        </InputLabel>
                                                         <OutlinedInput
                                                             id="outlined-adornment-email-login"
                                                             type="email"
@@ -157,19 +159,19 @@ const Forgot_Password = ({ ...others }) => {
                                                             name="email"
                                                             onBlur={handleBlur}
                                                             onChange={handleChange}
-                                                            label="Email Address"
+                                                            label={t('Email Address')}
                                                             inputProps={{}}
                                                         />
                                                         {touched.email && errors.email && (
                                                             <FormHelperText error id="standard-weight-helper-text-email-login">
-                                                                {errors.email}
+                                                                {t(errors.email)}
                                                             </FormHelperText>
                                                         )}
                                                     </FormControl>
 
                                                     {errors.submit && (
                                                         <Box sx={{ mt: 3 }}>
-                                                            <FormHelperText error>{errors.submit}</FormHelperText>
+                                                            <FormHelperText error>{t(errors.submit)}</FormHelperText>
                                                         </Box>
                                                     )}
 
@@ -184,7 +186,7 @@ const Forgot_Password = ({ ...others }) => {
                                                                 variant="contained"
                                                                 color="primary"
                                                             >
-                                                                {logSpinner ? <CircularProgress size={20} color="primary" /> : 'Send'}
+                                                                {logSpinner ? <CircularProgress size={20} color="primary" /> : t('Send')}
                                                             </Button>
                                                         </AnimateButton>
                                                     </Box>

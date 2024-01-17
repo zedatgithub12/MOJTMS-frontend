@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Grid, Box, useTheme, Pagination, CircularProgress, IconButton, Typography } from '@mui/material';
 // project imports
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
@@ -24,7 +23,10 @@ import AddCategory from './components/add';
 const Category = () => {
     const { t } = useTranslation();
     const theme = useTheme();
-    const navigate = useNavigate();
+
+    const userstring = sessionStorage.getItem('user');
+    const user = JSON.parse(userstring);
+    const role = user.user.role;
 
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
@@ -33,7 +35,6 @@ const Category = () => {
     const [searching, setSearching] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [expand, setExpand] = useState(false);
-    const [count, setCount] = useState(0);
     const [pageCount, setPageCount] = useState(0);
     const [paginationModel, setPaginationModel] = useState({
         pageSize: 10,
@@ -72,9 +73,8 @@ const Category = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            setPageCount(parsed.data.last_page);
-            setCount(parsed.data.total);
             const data = parsed.data.data;
+            setPageCount(parsed.data.last_page);
             setCategories(data);
             setLoading(false);
         } else {
@@ -210,7 +210,7 @@ const Category = () => {
                     />
 
                     <Grid container>
-                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', paddingX: 2 }} spacing={1}>
+                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'column', flexWrap: 'wrap', paddingX: 2 }}>
                             {loading ? (
                                 <Grid container>
                                     <Grid
@@ -270,9 +270,11 @@ const Category = () => {
                                                     <IconButton onClick={() => handleUpdateInit(category)}>
                                                         <IconEdit size={16} />
                                                     </IconButton>
-                                                    <IconButton onClick={() => initiateDeleteCategory(category)}>
-                                                        <IconTrash size={16} style={{ color: theme.palette.error.main }} />
-                                                    </IconButton>
+                                                    {role === 'Admin' && (
+                                                        <IconButton onClick={() => initiateDeleteCategory(category)}>
+                                                            <IconTrash size={16} style={{ color: theme.palette.error.main }} />
+                                                        </IconButton>
+                                                    )}
                                                 </Box>
                                             </Box>
                                             {expand && selectedCategory && selectedCategory.id == category.id && (

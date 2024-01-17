@@ -1,8 +1,8 @@
 import { Button, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useTranslation } from 'react-i18next';
-import PropTypes from 'prop-types';
 import AnimateButton from 'ui-component/extended/AnimateButton';
+import PropTypes from 'prop-types';
 
 const TraineeListing = ({ name, education_level, job_title, onAssign, isAssigning }) => {
     const { t } = useTranslation();
@@ -31,7 +31,7 @@ const TraineeListing = ({ name, education_level, job_title, onAssign, isAssignin
 
             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <AnimateButton>
-                    <Button variant="contained" color="primary" sx={{ marginRight: 1, paddingX: 5.4, borderRadius: 10 }} onClick={onAssign}>
+                    <Button variant="outlined" color="primary" sx={{ marginRight: 1, paddingX: 5.4, borderRadius: 10 }} onClick={onAssign}>
                         {isAssigning}
                     </Button>
                 </AnimateButton>

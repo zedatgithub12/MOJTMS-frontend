@@ -1,14 +1,16 @@
 import { IconButton, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconAlarm, IconArrowLeft } from '@tabler/icons';
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { TimeFormatter } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import CountdownTimer from 'utils/functions/countdowntimer';
 
 //============================= ASSESSMENT TAKING HEADER COMPONENT =========================//
 
 const TestHeader = ({ back, name, duration, onClick, status, onElapsed, sx }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -51,7 +53,7 @@ const TestHeader = ({ back, name, duration, onClick, status, onElapsed, sx }) =>
 
                     {name && (
                         <Typography variant="h4" onClick={onClick} sx={{ marginLeft: 1, cursor: 'pointer' }}>
-                            {name}
+                            {t(name)}
                         </Typography>
                     )}
                 </Box>

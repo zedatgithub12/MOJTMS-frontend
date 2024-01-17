@@ -12,9 +12,10 @@ import {
     useTheme
 } from '@mui/material';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import * as Yup from 'yup';
-import SQTypes from 'data/static/SQTypes';
+import SQTypes, { TQTypes } from 'data/static/SQTypes';
 import PropTypes from 'prop-types';
 
 const validationSchema = Yup.object().shape({
@@ -22,7 +23,9 @@ const validationSchema = Yup.object().shape({
     question: Yup.string().required('Question is required').max(250)
 });
 
-const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
+const CreateQuestion = ({ type, isSubmitting, handleSubmission, handleClose }) => {
+    const QTypes = type === 'Training' ? SQTypes : TQTypes;
+    const { t } = useTranslation();
     const theme = useTheme();
 
     //submit the question to be added
@@ -32,7 +35,7 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
     };
 
     const formik = useFormik({
-        initialValues: { question_type: 'true/false', question: '' },
+        initialValues: { question_type: 'choice', question: '' },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSubmitting(values);
@@ -42,7 +45,7 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
     return (
         <Box>
             <Typography variant="h3" marginBottom={2}>
-                Create Question
+                {t('Create Question')}
             </Typography>
 
             <form noValidate onSubmit={formik.handleSubmit}>
@@ -50,28 +53,28 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                     error={formik.touched.question_type && Boolean(formik.errors.question_type)}
                     sx={{ ...theme.typography.customInput }}
                 >
-                    <InputLabel htmlFor="outlined-adornment-question_type">{formik.values.question_type ? '' : 'Type'}</InputLabel>
+                    <InputLabel htmlFor="outlined-adornment-question_type">{formik.values.question_type ? '' : t('Type')}</InputLabel>
                     <Select
                         value={formik.values.question_type}
                         onChange={formik.handleChange}
                         id="outlined-adornment-question_type"
                         name="question_type"
                     >
-                        {SQTypes.length == 0 ? (
+                        {QTypes.length == 0 ? (
                             <Typography variant="body2" sx={{ padding: 1 }}>
-                                Question Type Not Found
+                                {t('Question Type Not Found')}
                             </Typography>
                         ) : (
-                            SQTypes.map((type, index) => (
+                            QTypes.map((type, index) => (
                                 <MenuItem key={index} value={type.name}>
-                                    {type.label}
+                                    {t(type.label)}
                                 </MenuItem>
                             ))
                         )}
                     </Select>
                     {formik.touched.question_type && formik.errors.question_type && (
                         <FormHelperText error id="standard-weight-helper-text-question-type">
-                            {formik.errors.question_type}
+                            {t(formik.errors.question_type)}
                         </FormHelperText>
                     )}
                 </FormControl>
@@ -81,21 +84,20 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                     error={formik.touched.question && Boolean(formik.errors.question)}
                     sx={{ ...theme.typography.customInput }}
                 >
-                    <InputLabel htmlFor="question">Question</InputLabel>
+                    <InputLabel htmlFor="question">{t('Question')}</InputLabel>
                     <OutlinedInput
                         id="question"
                         name="question"
-                        label="Question"
+                        label={t('Question')}
                         value={formik.values.question}
                         onChange={formik.handleChange}
                         fullWidth
-                        inputProps={{}}
                         multiline
                         sx={{ marginTop: 1 }}
                     />
                     {formik.touched.question && formik.errors.question && (
                         <FormHelperText error id="standard-weight-helper-text-question">
-                            {formik.errors.question}
+                            {t(formik.errors.question)}
                         </FormHelperText>
                     )}
                 </FormControl>
@@ -109,12 +111,12 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                             color="primary"
                             sx={{ minWidth: 120, py: 1, px: 4, my: 2 }}
                         >
-                            {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : 'Done'}
+                            {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : t('Done')}
                         </Button>
                     </AnimateButton>
 
                     <Button variant="text" color="primary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={handleClose}>
-                        Cancel
+                        {t('Cancel')}
                     </Button>
                 </Box>
             </form>
@@ -123,6 +125,7 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
 };
 
 CreateQuestion.propTypes = {
+    type: PropTypes.string,
     isSubmitting: PropTypes.bool,
     handleSubmission: PropTypes.func,
     handleClose: PropTypes.func

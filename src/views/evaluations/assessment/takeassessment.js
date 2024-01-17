@@ -14,15 +14,16 @@ import {
 } from '@mui/material';
 import { IconChevronDown, IconChevronRight, IconX } from '@tabler/icons';
 import { useLocation, useNavigate } from 'react-router';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
-import TestHeader from './components/testHeader';
-import InfoDialog from './components/InfoDialog';
 import { ReadMore } from 'utils/functions';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAssessmentAnswers } from 'store/actions';
 import { RefreshToken } from 'utils/token-refresh';
+import { useTranslation } from 'react-i18next';
+import TestHeader from './components/testHeader';
+import Connections from 'api';
+import InfoDialog from './components/InfoDialog';
 import TakenDialog from './components/takendialog';
 
 const letterConfig = {
@@ -31,6 +32,7 @@ const letterConfig = {
 };
 
 const TakeAssessment = () => {
+    const { t } = useTranslation();
     const { state } = useLocation();
     const theme = useTheme();
     const navigate = useNavigate();
@@ -171,7 +173,7 @@ const TakeAssessment = () => {
     //handle multiple question select
     function handleMultiSelect({ qid, oid, iscorrect }) {
         const existingAnswerIndex = assessmentAnswers.findIndex((answer) => answer.qid === qid);
-        const isCorrect = iscorrect === 1 ? true : false;
+        const isCorrect = iscorrect == 1 ? true : false;
         const newAnswer = {
             qid: qid,
             answers: [{ oid: oid, is_correct: isCorrect }],
@@ -208,43 +210,45 @@ const TakeAssessment = () => {
     };
 
     //calculate the score before submitting
-    function calculateScore() {
-        let question = assessmentAnswers.length;
+    const calculateScore = () => {
+        let question = questions.length;
         let totalPoints = 0;
 
         assessmentAnswers.forEach((answer) => {
-            var type = answer.answers.length;
-            if (type > 1) {
-                const origionaloptioncount = questions.find((item) => item.id === answer.qid);
-                const numberofoptions = origionaloptioncount.options.length;
-                let thecorrects = origionaloptioncount.options.filter((item) => item.is_correct == 1);
-                let eachpoint = 1 / numberofoptions;
+            let length = answer.answers.length;
+            if (length > 1) {
+                const origionaloptions = questions.find((item) => item.id == answer.qid);
+                const thecorrects = origionaloptions.options.filter((item) => item.is_correct == 1);
+                let thecorrlength = thecorrects.length;
+                const eachpoint = parseFloat(1 / thecorrlength).toFixed(2);
 
-                let correct = answer.answers.filter((item) => item.is_correct === true);
-                let wrong = answer.answers.filter((item) => item.is_correct === false);
+                let correct = answer.answers.filter((item) => item.is_correct == true);
+                let corrlength = correct.length;
 
-                const thepoints = (correct.length -= wrong.length);
+                let wrong = answer.answers.filter((item) => item.is_correct == false);
+                let wronglength = wrong.length;
+
+                let thepoints = (corrlength -= wronglength);
 
                 if (thepoints > 0) {
-                    var correctone;
-                    if (correct.length != thecorrects.length) {
-                        correctone = thepoints * eachpoint;
-                        totalPoints += correctone;
-                    } else {
-                        totalPoints += 1;
-                    }
+                    let correctone = thepoints * eachpoint;
+                    totalPoints += correctone;
                 }
             } else {
-                totalPoints += answer.point;
+                totalPoints += parseInt(answer.point);
             }
         });
 
-        var score = (totalPoints / question) * 100;
-        return parseInt(score);
-    }
+        if (totalPoints < 0) {
+            return 0;
+        } else {
+            let score = (totalPoints / question) * 100;
+            return parseInt(score);
+        }
+    };
 
     //handle answer submission here
-    const handleAnsSubmission = () => {
+    const handleAnsSubmission = async () => {
         let questioncount = questions.length;
         let answeredcount = assessmentAnswers.length;
 
@@ -300,7 +304,7 @@ const TakeAssessment = () => {
     };
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -344,7 +348,6 @@ const TakeAssessment = () => {
                         duration={data.duration}
                         instruction={data.instructions}
                         status={teststatus}
-                        onStart={() => alert('okay i will start')}
                         onElapsed={handleElapsed}
                         isSubmitting={false}
                         sx={{}}
@@ -372,7 +375,7 @@ const TakeAssessment = () => {
                                     >
                                         <Typography variant="h4">{(index += 1)}.</Typography>
                                         <Typography variant="subtitle1" marginLeft={1.6}>
-                                            {question.question_text}
+                                            {t(question.question_text)}
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -402,7 +405,7 @@ const TakeAssessment = () => {
                                                               }
                                                           />
                                                       }
-                                                      label={option.option_text}
+                                                      label={t(option.option_text)}
                                                   />
                                               </Box>
                                           ))
@@ -425,7 +428,7 @@ const TakeAssessment = () => {
                                                           <FormControlLabel
                                                               value={option.id}
                                                               control={<Radio />}
-                                                              label={option.option_text}
+                                                              label={t(option.option_text)}
                                                           />
                                                       ))}
                                                   </RadioGroup>
@@ -448,7 +451,7 @@ const TakeAssessment = () => {
                                 onClick={() => handleAnsSubmission()}
                                 disabled={isSubmitting}
                             >
-                                Submit
+                                {t('Submit')}
                             </Button>
                         </Grid>
                     </Grid>
@@ -473,7 +476,7 @@ const TakeAssessment = () => {
                     ) : (
                         <Grid item xs={12} paddingX={4} paddingY={2}>
                             <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-                                <Typography variant="h4">Training Assessment</Typography>
+                                <Typography variant="h4">{t('Training Assessment')}</Typography>
                                 <IconButton onClick={() => navigate(-1)}>
                                     <IconX size={22} />
                                 </IconButton>
@@ -481,7 +484,7 @@ const TakeAssessment = () => {
                             {data && data.assessment_description && (
                                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                     <Typography variant="body2">
-                                        {ReadMore(data.assessment_description, letterConfig.startfrom, letterConfig.endat, collapse)}
+                                        {t(ReadMore(data.assessment_description, letterConfig.startfrom, letterConfig.endat, collapse))}
                                     </Typography>
 
                                     {data.assessment_description.length > letterConfig.endat && (
@@ -490,7 +493,7 @@ const TakeAssessment = () => {
                                             onClick={() => ExpndText()}
                                             sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                                         >
-                                            {collapse ? 'Read More' : 'Read Less'}
+                                            {collapse ? t('Read More') : t('Read Less')}
                                         </Typography>
                                     )}
                                 </Box>
@@ -516,8 +519,7 @@ const TakeAssessment = () => {
                                     onClick={() => handleStartingAssessment()}
                                 >
                                     <Typography variant="subtitle1" color={theme.palette.background.default}>
-                                        {' '}
-                                        Start Assessment
+                                        {t('Start Assessment')}
                                     </Typography>
                                 </Button>
                             </Box>
@@ -525,12 +527,13 @@ const TakeAssessment = () => {
                             {data.instructions && (
                                 <Box paddingTop={1}>
                                     <Button variant="text" color="primary" onClick={() => setOpenInstruction(!openInstruction)}>
-                                        Instructions {openInstruction ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+                                        {t('Instruction')}{' '}
+                                        {openInstruction ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
                                     </Button>
 
                                     {openInstruction && (
                                         <Typography variant="body2" sx={{ padding: 1 }}>
-                                            {data.instructions}
+                                            {t(data.instructions)}
                                         </Typography>
                                     )}
                                 </Box>

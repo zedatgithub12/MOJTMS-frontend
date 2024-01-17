@@ -13,12 +13,17 @@ const SQTypes = [
         id: 3,
         label: 'Multiple Choice',
         name: 'multiple-choice'
-    },
-    {
-        id: 4,
-        label: 'Fill in blank space',
-        name: 'fill'
     }
 ];
+
+const TQTypes = [
+    {
+        id: 1,
+        label: 'Choice',
+        name: 'choice'
+    }
+];
+
+export { TQTypes };
 
 export default SQTypes;

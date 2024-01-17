@@ -36,7 +36,7 @@ const SurveyListing = ({ name, question, actionButton }) => {
 
 SurveyListing.propTypes = {
     name: PropTypes.string,
-    question: PropTypes.string,
+    question: PropTypes.number,
     selected: PropTypes.bool,
     onSelected: PropTypes.func,
     actionButton: PropTypes.node

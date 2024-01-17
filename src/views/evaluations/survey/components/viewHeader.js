@@ -1,11 +1,12 @@
 import { Button, IconButton, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import { IconArrowLeft } from '@tabler/icons';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ActionMenu } from 'ui-component/menu/action';
 import { ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 //============================= SURVEY VIEW HEADER =========================//
 
@@ -14,7 +15,8 @@ const letterConfig = {
     endat: 180
 };
 
-const SurveyViewHeader = ({ back, title, description, onClick, status, onPublish, option, optionChildrens, publishing, sx }) => {
+const SurveyViewHeader = ({ back, type, title, description, onClick, status, onPublish, option, optionChildrens, publishing }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -59,7 +61,7 @@ const SurveyViewHeader = ({ back, title, description, onClick, status, onPublish
 
                     {title && (
                         <Typography variant="h4" onClick={onClick} sx={{ marginLeft: 1, cursor: 'pointer' }}>
-                            {title}
+                            {t(title)}
                         </Typography>
                     )}
                 </Box>
@@ -80,7 +82,7 @@ const SurveyViewHeader = ({ back, title, description, onClick, status, onPublish
                             sx={{ marginLeft: 2, paddingX: 4 }}
                             disabled={publishing === 'processing' ? true : false}
                         >
-                            Publish
+                            {t('Publish')}
                         </Button>
                     )}
 
@@ -90,7 +92,9 @@ const SurveyViewHeader = ({ back, title, description, onClick, status, onPublish
 
             {description && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', marginY: 3 }}>
-                    <Typography variant="body2">{ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse)}</Typography>
+                    <Typography variant="body2">
+                        {t(ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse))}
+                    </Typography>
 
                     {description.length > letterConfig.endat && (
                         <Typography
@@ -98,11 +102,28 @@ const SurveyViewHeader = ({ back, title, description, onClick, status, onPublish
                             onClick={() => ExpndText()}
                             sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                         >
-                            {collapse ? 'Read More' : 'Read Less'}
+                            {collapse ? t('Read More') : t('Read Less')}
                         </Typography>
                     )}
                 </Box>
             )}
+
+            <Typography
+                variant="body2"
+                onClick={onClick}
+                sx={{
+                    width: 'fit-content',
+                    backgroundColor: type === 'Trainer' ? theme.palette.secondary[200] : theme.palette.primary[200],
+                    color: theme.palette.grey[600],
+                    padding: 0.5,
+                    paddingX: 2,
+                    borderRadius: 1.2,
+                    cursor: 'pointer',
+                    marginY: 0.5
+                }}
+            >
+                {t(type)} {t('Survey')}
+            </Typography>
         </Box>
     );
 };

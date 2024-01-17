@@ -26,7 +26,7 @@ import { Delete } from 'ui-component/delete/Delete';
 import { sizes } from 'constants';
 import { ProfileValidator } from 'utils/functions';
 import { ErrorPrompt } from 'utils/components/errorprompt';
-
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import DetailTabs from './components/DetailTabs';
 import DetailContent from './components/DetailContent';
@@ -39,12 +39,16 @@ const validationSchema = Yup.object().shape({
 });
 
 const TraineeDetails = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
     const fileInputRef = useRef(null);
 
-    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
+    const userstring = sessionStorage.getItem('user');
+    const user = JSON.parse(userstring);
+    const role = user.user.role;
+
     const ImageApi = Connections.profiles;
 
     const [loading, setLoading] = useState(false);
@@ -225,7 +229,7 @@ const TraineeDetails = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -321,7 +325,7 @@ const TraineeDetails = () => {
                                 <IconArrowLeft color={theme.palette.grey[500]} />
                             </IconButton>
                             <Typography variant="subtitle1" marginLeft={2}>
-                                Trainee
+                                {t('Trainee')}
                             </Typography>
                         </Box>
 
@@ -331,15 +335,15 @@ const TraineeDetails = () => {
                                     <ListItemIcon>
                                         <IconEdit size={18} />
                                     </ListItemIcon>
-                                    Update
+                                    {t('Update')}
                                 </MenuItem>
-                                <Divider />
 
+                                <Divider />
                                 <MenuItem onClick={() => setDeleteTrainee(true)} sx={{ color: theme.palette.error.main }}>
                                     <ListItemIcon sx={{ color: theme.palette.error.main }}>
                                         <IconTrash size={18} />
                                     </ListItemIcon>
-                                    Delete
+                                    {t('Delete')}
                                 </MenuItem>
                             </Box>
                         </ActionMenu>
@@ -363,7 +367,7 @@ const TraineeDetails = () => {
                                 overlap="circular"
                                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                                 badgeContent={
-                                    ActiveUser.user.role === 'Trainee' && (
+                                    role === 'Trainee' && (
                                         <IconButton
                                             onClick={() => PickProfile()}
                                             sx={{ backgroundColor: theme.palette.background.default }}
@@ -379,7 +383,7 @@ const TraineeDetails = () => {
                             >
                                 {profile ? (
                                     <Avatar
-                                        alt="Trainee profile"
+                                        alt={t('Trainee profile')}
                                         src={previewImage}
                                         sx={{
                                             width: 120,
@@ -429,7 +433,7 @@ const TraineeDetails = () => {
                                                 />
                                                 {formik.touched.name && formik.errors.name && (
                                                     <FormHelperText error id="standard-weight-helper-text-name">
-                                                        {formik.errors.name}
+                                                        {t(formik.errors.name)}
                                                     </FormHelperText>
                                                 )}
                                             </FormControl>
@@ -446,9 +450,9 @@ const TraineeDetails = () => {
                             ) : (
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                     <Typography variant="h3" sx={{ marginY: 0.5 }}>
-                                        {formik.values.name}
+                                        {t(formik.values.name)}
                                     </Typography>
-                                    {ActiveUser.user.role === 'Trainee' && (
+                                    {role === 'Trainee' && (
                                         <IconButton onClick={() => setUpdateName(true)}>
                                             <IconEdit size={20} />
                                         </IconButton>
@@ -462,7 +466,7 @@ const TraineeDetails = () => {
 
                             {!validImage.status && (
                                 <Typography variant="body2" sx={{ marginBottom: 2, color: theme.palette.error.dark }}>
-                                    {validImage.message}
+                                    {t(validImage.message)}
                                 </Typography>
                             )}
                         </Grid>

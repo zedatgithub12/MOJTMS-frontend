@@ -17,7 +17,7 @@ const TrainerCardSkel = () => {
                 }
             }}
         >
-            <Grid direction="column" sx={{ padding: 1 }}>
+            <Grid sx={{ padding: 1 }}>
                 <Grid sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Skeleton variant="rectangular" width={280} height={180} sx={{ borderRadius: 2 }} />
                 </Grid>

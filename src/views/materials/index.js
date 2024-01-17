@@ -1,21 +1,23 @@
 import { Button, ButtonGroup, CircularProgress, Grid, Pagination, Typography, useTheme } from '@mui/material';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import TopContents from './components/TopContents';
 import { Box } from '@mui/system';
 import { Fragment, useState } from 'react';
 import { useLocation } from 'react-router';
 import { NoResult } from 'utils/components/noresult';
-import MaterialCard from 'ui-component/cards/materialCard';
-import noresult from 'assets/images/no_result.png';
-import Connections from 'api';
 import { useQuery } from 'react-query';
 import { UpdateMaterial } from './updatematerial';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { ErrorPrompt } from 'utils/components/errorprompt';
+import { useTranslation } from 'react-i18next';
+import MaterialCard from 'ui-component/cards/materialCard';
+import noresult from 'assets/images/no_result.png';
+import TopContents from './components/TopContents';
+import Connections from 'api';
 
 const ModuleStatus = ['active', 'archived'];
 
 const Materials = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const { state } = useLocation();
 
@@ -162,7 +164,7 @@ const Materials = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
     return (
         <Fragment>
@@ -226,7 +228,7 @@ const Materials = () => {
                             {totalMaterial > 0 && (
                                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                                     <Typography variant="subtitle2" paddingRight={2}>
-                                        Total
+                                        {t('Total')}
                                     </Typography>
                                     <Typography variant="subtitle1"> {totalMaterial}</Typography>
                                 </Box>
@@ -242,7 +244,7 @@ const Materials = () => {
                         ) : error ? (
                             <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the materials!" />
                         ) : !loading && data.length == 0 ? (
-                            <NoResult image={noresult} title="Result Not Found" message="Oooops... No material found in the moment!" />
+                            <NoResult image={noresult} title="Result Not Found" message="Oooops... No material found!" />
                         ) : (
                             data.map((item) => (
                                 <MaterialCard

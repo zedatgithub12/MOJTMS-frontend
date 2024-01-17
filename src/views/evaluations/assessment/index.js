@@ -1,19 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, Box, useTheme, Pagination, CircularProgress } from '@mui/material';
 // project imports
-import Connections from 'api';
 import { useQuery } from 'react-query';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
-import AssessmentCard from './components/assessmentCard';
-import { TimeFormatter } from 'utils/functions';
-import SplitButton from 'ui-component/Buttons/SplitButton';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { NoResult } from 'utils/components/noresult';
+import Connections from 'api';
+import AssessmentCard from './components/assessmentCard';
+import SplitButton from 'ui-component/Buttons/SplitButton';
 import noresult from 'assets/images/no_result.png';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| ASSESSEMENT PAGE ||============================== //
 
@@ -22,6 +22,16 @@ const AssessmentStatus = ['draft', 'active', 'archived'];
 const Assessment = () => {
     const theme = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -76,7 +86,7 @@ const Assessment = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel, status], () => handleDataFetching(), {
+    const { error } = useQuery(['data', paginationModel, status], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -177,7 +187,7 @@ const Assessment = () => {
                             <CircularProgress size={22} />
                         </Box>
                     ) : error ? (
-                        <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the assessments!" />
+                        <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to fetch the assessments!" />
                     ) : data.length === 0 ? (
                         <NoResult title="" message="No assessment found" />
                     ) : (
@@ -187,8 +197,8 @@ const Assessment = () => {
                                     key={item.id}
                                     name={item.assessment_name}
                                     description={item.assessment_description}
-                                    score={item.passing_score}
-                                    duration={TimeFormatter(item.duration)}
+                                    score={parseInt(item.passing_score)}
+                                    duration={parseInt(item.duration)}
                                     instruction={item.instructions}
                                     option={true}
                                     onClick={() => navigate('/assessment/view', { state: item })}

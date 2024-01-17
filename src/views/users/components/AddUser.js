@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
+import { Box, CircularProgress, FormControl, FormHelperText, IconButton, InputLabel, OutlinedInput, useTheme } from '@mui/material';
+import { useFormik } from 'formik';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { IconX } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import PropTypes from 'prop-types';
-import { Box, CircularProgress, FormControl, FormHelperText, IconButton, InputLabel, OutlinedInput, useTheme } from '@mui/material';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import { IconX } from '@tabler/icons';
 
 export default function AddUser({ open, handleDialogClose, onRefresh }) {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const AddUserScheme = Yup.object().shape({
         name: Yup.string().min(2, 'Too short for name').required('Name is required'),
-        email: Yup.string().email('Invalid Email').required('Email is required')
+        email: Yup.string().email('Invalid Email').required('Email address is required')
     });
 
     const handleSubmitting = (values) => {
@@ -78,7 +80,7 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -94,7 +96,7 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                         backgroundColor: theme.palette.primary[200]
                     }}
                 >
-                    <DialogTitle variant="h4">Add new user</DialogTitle>
+                    <DialogTitle variant="h4">{t('Add new user')}</DialogTitle>
 
                     <IconButton onClick={handleDialogClose}>
                         <IconX size={22} />
@@ -108,19 +110,19 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                             error={formik.touched.name && Boolean(formik.errors.name)}
                             sx={{ ...theme.typography.customInput, marginTop: 2 }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-name">Full name</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-name">{t('Full name')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-name"
                                 type="text"
-                                value={formik.values.name}
                                 name="name"
+                                label={t('Full name')}
+                                value={formik.values.name}
                                 onChange={formik.handleChange}
-                                label="Full name"
                                 inputProps={{}}
                             />
                             {formik.touched.name && formik.errors.name && (
                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                    {formik.errors.name}
+                                    {t(formik.errors.name)}
                                 </FormHelperText>
                             )}
                         </FormControl>
@@ -130,26 +132,26 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                             error={formik.touched.email && Boolean(formik.errors.email)}
                             sx={{ ...theme.typography.customInput }}
                         >
-                            <InputLabel htmlFor="outlined-adornment-email">Email address</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-email">{t('Email address')}</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-email"
                                 type="email"
-                                value={formik.values.email}
                                 name="email"
+                                label={t('Email Address')}
+                                value={formik.values.email}
                                 onChange={formik.handleChange}
-                                label="Email Address"
                                 inputProps={{}}
                             />
                             {formik.touched.email && formik.errors.email && (
                                 <FormHelperText error id="standard-weight-helper-text-email-login">
-                                    {formik.errors.email}
+                                    {t(formik.errors.email)}
                                 </FormHelperText>
                             )}
                         </FormControl>
 
                         <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginTop: 2 }}>
                             <Button onClick={handleDialogClose} variant="text" color="primary" sx={{ marginRight: 3 }}>
-                                Cancel
+                                {t('Cancel')}
                             </Button>
                             <AnimateButton>
                                 <Button
@@ -160,7 +162,7 @@ export default function AddUser({ open, handleDialogClose, onRefresh }) {
                                     color="primary"
                                     sx={{ paddingX: 8, paddingY: 0.8 }}
                                 >
-                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : 'Submit'}
+                                    {adding ? <CircularProgress size={16} sx={{ color: theme.palette.background.default }} /> : t('Submit')}
                                 </Button>
                             </AnimateButton>
                         </Box>

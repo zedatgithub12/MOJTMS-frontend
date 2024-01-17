@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 
-const AssessmentListing = ({ name, question, duration, score, selected, type, onSelected, actionButton }) => {
+const AssessmentListing = ({ name, question, duration, score, type, actionButton }) => {
     const { t } = useTranslation();
     const theme = useTheme();
 
@@ -68,12 +68,10 @@ const AssessmentListing = ({ name, question, duration, score, selected, type, on
 
 AssessmentListing.propTypes = {
     name: PropTypes.string,
-    duration: PropTypes.string,
-    score: PropTypes.string,
-    question: PropTypes.string,
+    duration: PropTypes.number,
+    score: PropTypes.number,
+    question: PropTypes.number,
     type: PropTypes.string,
-    selected: PropTypes.bool,
-    onSelected: PropTypes.func,
     actionButton: PropTypes.node
 };
 

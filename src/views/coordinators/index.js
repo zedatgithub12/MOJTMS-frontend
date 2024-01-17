@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import {
     Box,
@@ -13,7 +13,6 @@ import {
     Radio,
     RadioGroup,
     Divider,
-    Select,
     Menu,
     MenuItem,
     TablePagination,
@@ -26,22 +25,33 @@ import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { useQuery } from 'react-query';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
 import { FilterPanel } from 'ui-component/FilterPanel';
-import { useSelector } from 'react-redux';
 import { IconDotsVertical, IconX } from '@tabler/icons';
 import { saveAs } from 'file-saver';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router';
 import * as XLSX from 'xlsx';
 import Connections from 'api';
 import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
 import CoordinatorTable from './components/CoordinatorTable.js';
 import AddCoordinator from './components/AddCoordinator';
-
+import CheckPathPermission from 'utils/path-checker';
 // ==============================|| COORDINATOR LISTING PAGE ||============================== //
 
 const Coordinators = () => {
     const { t } = useTranslation();
     const theme = useTheme();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [loading, setLoading] = useState(false);
     const [coordinators, setCoordinators] = useState([]);
@@ -396,7 +406,9 @@ const Coordinators = () => {
                     />
                 </Grid>
             </Grid>
-            {openDialog && <AddCoordinator open={openDialog} handleDialogClose={() => handleDialogClose()} />}
+            {openDialog && (
+                <AddCoordinator open={openDialog} handleDialogClose={() => handleDialogClose()} onRefresh={() => FetchCoordinators()} />
+            )}
 
             <SnackbarProvider maxSnack={3} style={{ zIndex: 5 }} />
         </Grid>

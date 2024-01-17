@@ -2,36 +2,39 @@ import { useState } from 'react';
 // material-ui
 import {
     Grid,
-    Box,
-    Typography,
     Button,
     useTheme,
-    IconButton,
-    useMediaQuery,
     CircularProgress,
     FormControl,
     InputLabel,
     OutlinedInput,
-    FormHelperText
+    FormHelperText,
+    Select,
+    MenuItem
 } from '@mui/material';
 
 // project imports
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
 import { useNavigate } from 'react-router';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useTranslation } from 'react-i18next';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import Connections from 'api';
-import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import * as Yup from 'yup';
 
 // ==============================|| CREATE SURVEY PAGE ||============================== //
 
+const SurveyTypes = ['Training', 'Trainer'];
+
 const validationSchema = Yup.object().shape({
+    type: Yup.string().required('Survey type is required'),
     title: Yup.string().required('Survey title is required'),
-    description: Yup.string().required('Survey description is required').min(15)
+    description: Yup.string().required('Survey description is required')
 });
 
 const CreateSurvey = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
 
@@ -45,6 +48,7 @@ const CreateSurvey = () => {
         };
 
         const data = new FormData();
+        data.append('type', values.type);
         data.append('title', values.title);
         data.append('description', values.description);
         data.append('status', 'draft');
@@ -67,7 +71,7 @@ const CreateSurvey = () => {
     };
 
     const formik = useFormik({
-        initialValues: { title: '', description: '' },
+        initialValues: { type: SurveyTypes[0], title: '', description: '' },
         validationSchema: validationSchema,
         onSubmit: (values) => {
             handleSubmitting(values);
@@ -78,7 +82,7 @@ const CreateSurvey = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -112,24 +116,54 @@ const CreateSurvey = () => {
                             <form noValidate onSubmit={formik.handleSubmit}>
                                 <Grid container paddingX={5} spacing={1}>
                                     <Grid item xs={12}>
+                                        <InputLabel htmlFor="outlined-adornment-type" sx={{ padding: 0.5 }}>
+                                            {t('Survey Type')}
+                                        </InputLabel>
+                                        <Select
+                                            value={formik.values.type}
+                                            onChange={formik.handleChange}
+                                            id="outlined-adornment-type"
+                                            name="type"
+                                            error={formik.touched.type && Boolean(formik.errors.type)}
+                                            sx={{ width: '40%' }}
+                                        >
+                                            {SurveyTypes.length == 0 ? (
+                                                <Typography variant="body2" sx={{ padding: 1 }}>
+                                                    {t('Question Type Not Found')}
+                                                </Typography>
+                                            ) : (
+                                                SurveyTypes.map((type, index) => (
+                                                    <MenuItem key={index} value={type}>
+                                                        {t(type)}
+                                                    </MenuItem>
+                                                ))
+                                            )}
+                                        </Select>
+                                        {formik.touched.type && formik.errors.type && (
+                                            <FormHelperText error id="standard-weight-helper-text-question-type">
+                                                {t(formik.errors.type)}
+                                            </FormHelperText>
+                                        )}
+                                    </Grid>
+
+                                    <Grid item xs={12} sx={{ marginTop: 1 }}>
                                         <FormControl
                                             fullWidth
                                             error={formik.touched.title && Boolean(formik.errors.title)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="survey-title">Title</InputLabel>
+                                            <InputLabel htmlFor="survey-title">{t('Survey Title')}</InputLabel>
                                             <OutlinedInput
                                                 id="survey-title"
                                                 name="title"
-                                                label="Survey Title"
+                                                label={t('Survey Title')}
                                                 value={formik.values.title}
                                                 onChange={formik.handleChange}
                                                 fullWidth
-                                                inputProps={{}}
                                             />
                                             {formik.touched.title && formik.errors.title && (
                                                 <FormHelperText error id="standard-weight-helper-text-title">
-                                                    {formik.errors.title}
+                                                    {t(formik.errors.title)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -141,11 +175,11 @@ const CreateSurvey = () => {
                                             error={formik.touched.description && Boolean(formik.errors.description)}
                                             sx={{ ...theme.typography.customInput }}
                                         >
-                                            <InputLabel htmlFor="survey-description">Description </InputLabel>
+                                            <InputLabel htmlFor="survey-description">{t('Description')} </InputLabel>
                                             <OutlinedInput
                                                 id="survey-description"
                                                 name="description"
-                                                label="Description"
+                                                label={t('Description')}
                                                 value={formik.values.description}
                                                 onChange={formik.handleChange}
                                                 fullWidth
@@ -155,7 +189,7 @@ const CreateSurvey = () => {
                                             />
                                             {formik.touched.description && formik.errors.description && (
                                                 <FormHelperText error id="standard-weight-helper-text-name">
-                                                    {formik.errors.description}
+                                                    {t(formik.errors.description)}
                                                 </FormHelperText>
                                             )}
                                         </FormControl>
@@ -168,7 +202,7 @@ const CreateSurvey = () => {
                                             sx={{ py: 1, px: 4, my: 2, mx: 4 }}
                                             onClick={() => navigate(-1)}
                                         >
-                                            Cancel
+                                            {t('Cancel')}
                                         </Button>
 
                                         <AnimateButton>
@@ -182,7 +216,7 @@ const CreateSurvey = () => {
                                                 {isSubmitting ? (
                                                     <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                 ) : (
-                                                    'Save'
+                                                    t('Save')
                                                 )}
                                             </Button>
                                         </AnimateButton>

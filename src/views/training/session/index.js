@@ -9,6 +9,7 @@ import { RefreshToken } from 'utils/token-refresh';
 import { NoResult } from 'utils/components/noresult';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { formatDate } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
 import SessionHorizontalCard from 'ui-component/cards/SessionHorizontalCard';
@@ -19,6 +20,7 @@ import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
 // ==============================|| SESSION PAGE | TRAINEE USER ROLE HOMEPAGE ||============================== //
 
 const TrainingSession = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     const [loading, setLoading] = useState(true);
@@ -82,15 +84,15 @@ const TrainingSession = () => {
 
     return (
         <Grid container alignItems="center" justifyContent="center">
-            <Grid xs={12} marginTop={4}>
+            <Grid item xs={12} marginTop={4}>
                 <Grid container>
                     <Grid item xs={12} sx={{ minHeight: 200, padding: 3 }}>
                         <Typography variant="h4" color="dark" marginBottom={2} marginLeft={1.4}>
-                            Upcoming Training
+                            {t('Upcoming Trainings')}
                         </Typography>
                         {loading ? (
                             <Grid container>
-                                <Grid xs={12}>
+                                <Grid item xs={12}>
                                     {[1, 2, 3].map((item) => (
                                         <SessionHorizontalSkel key={item} />
                                     ))}
@@ -102,8 +104,9 @@ const TrainingSession = () => {
                             <NoResult title="" message="Oooops... no upcoming training" />
                         ) : (
                             data.upcomings &&
-                            data.upcomings.map((training) => (
+                            data.upcomings.map((training, index) => (
                                 <SessionHorizontalCard
+                                    key={index}
                                     isLoading={false}
                                     title={training.training_name}
                                     description={training.round_description}
@@ -123,7 +126,7 @@ const TrainingSession = () => {
                 <Grid container sx={{ padding: 3 }}>
                     <Grid item xs={12} sx={{ minHeight: 200, marginTop: 2 }}>
                         <Typography variant="h4" marginY={1} marginLeft={1.4}>
-                            Other Trainings
+                            {t('Other Trainings')}
                         </Typography>
                         {loading ? (
                             <Grid container>
@@ -139,14 +142,10 @@ const TrainingSession = () => {
                             <NoResult title="" message="Oooops... no other training found" />
                         ) : (
                             <div>
-                                <Grid
-                                    item
-                                    xs={12}
-                                    sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingY: 3 }}
-                                    spacing={1}
-                                >
-                                    {data.others.map((training) => (
+                                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingY: 3 }}>
+                                    {data.others.map((training, index) => (
                                         <TrainingSessionCard
+                                            key={index}
                                             isLoading={false}
                                             status={training.status}
                                             title={training.training_name}

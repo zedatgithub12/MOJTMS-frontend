@@ -1,13 +1,13 @@
 import React, { forwardRef } from 'react';
+import { Box, CircularProgress, Divider, IconButton, ListItemIcon, MenuItem, useTheme } from '@mui/material';
+import { IconArchive, IconArchiveOff, IconDownload, IconEdit, IconPaperclip } from '@tabler/icons';
+import { MaterialMenu } from 'ui-component/menu/material';
+import { useTranslation } from 'react-i18next';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Box, CircularProgress, Divider, IconButton, ListItemIcon, MenuItem, useTheme } from '@mui/material';
-import { IconArchive, IconArchiveOff, IconDownload, IconEdit, IconPaperclip } from '@tabler/icons';
 import FileTypes from 'data/static/fileTypes';
-import { MaterialMenu } from 'ui-component/menu/material';
-import { useTranslation } from 'react-i18next';
 
 const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUnarchive, onDownload }, ref) => {
     const { t } = useTranslation();
@@ -51,7 +51,7 @@ const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUna
                                 marginBottom: 2
                             }}
                         >
-                            {material.title && <Typography variant="subtitle1">{material.title}</Typography>}
+                            {material.title && <Typography variant="subtitle1">{t(material.title)}</Typography>}
 
                             {role === 'Admin' ? (
                                 <MaterialMenu
@@ -118,7 +118,7 @@ const MaterialCard = forwardRef(({ material, sx = {}, onUpdate, onArchive, onUna
 
                         {material.description && (
                             <Typography variant="body2" sx={{ paddingRight: 4, marginY: 1 }}>
-                                {material.description}
+                                {t(material.description)}
                             </Typography>
                         )}
 

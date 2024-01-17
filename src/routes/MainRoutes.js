@@ -18,7 +18,7 @@ const Trainers = Loadable(lazy(() => import('views/trainer')));
 const AddTrainer = Loadable(lazy(() => import('views/trainer/add')));
 const ViewTrainer = Loadable(lazy(() => import('views/trainer/view')));
 const UpdateTrainer = Loadable(lazy(() => import('views/trainer/update')));
-
+const TrainerReviews = Loadable(lazy(() => import('views/training/trainer/trainerreviews')));
 //category routing
 const Category = Loadable(lazy(() => import('views/category')));
 
@@ -30,10 +30,12 @@ const UpdateTraining = Loadable(lazy(() => import('views/training/update')));
 const CreateSession = Loadable(lazy(() => import('views/training/session/create')));
 const UpdateSession = Loadable(lazy(() => import('views/training/session/update')));
 const SessionDetails = Loadable(lazy(() => import('views/training/session/details')));
+const TrainingTrainees = Loadable(lazy(() => import('views/t-trainees')));
 
 //session schedule
 const CreateSchedule = Loadable(lazy(() => import('views/training/schedule/create')));
 const UpdateSchedule = Loadable(lazy(() => import('views/training/schedule/update')));
+
 // Modules Routing
 const TrainingModules = Loadable(lazy(() => import('views/training/module')));
 
@@ -51,12 +53,11 @@ const UpdateSurvey = Loadable(lazy(() => import('views/evaluations/survey/update
 const ViewSurvey = Loadable(lazy(() => import('views/evaluations/survey/view')));
 const FillSurvey = Loadable(lazy(() => import('views/evaluations/survey/fillsurvey')));
 const FilledSurveyDetails = Loadable(lazy(() => import('views/training/survey/filleddetails')));
-
-//element page routing
-const Elements = Loadable(lazy(() => import('views/elements')));
+const TrainerSurvey = Loadable(lazy(() => import('views/evaluations/survey/trainersurvey')));
 
 //Trainees page routing
 const TrainingSession = Loadable(lazy(() => import('views/training/session')));
+const TrainingReviews = Loadable(lazy(() => import('views/training/session/reviews')));
 const TraineeHome = Loadable(lazy(() => import('views/trainee/home')));
 const Trainee = Loadable(lazy(() => import('views/trainee')));
 const TraineeDetails = Loadable(lazy(() => import('views/trainee/detail')));
@@ -205,10 +206,6 @@ const MainRoutes = {
         },
 
         {
-            path: 'elements',
-            element: <Elements />
-        },
-        {
             path: 'trainees/home',
             element: <TrainingSession />
         },
@@ -264,6 +261,10 @@ const MainRoutes = {
             path: 'trainer/update',
             element: <UpdateTrainer />
         },
+        {
+            path: 'training/trainer/reviews',
+            element: <TrainerReviews />
+        },
 
         //categories
         {
@@ -304,6 +305,14 @@ const MainRoutes = {
         {
             path: 'training/session/detail',
             element: <SessionDetails />
+        },
+        {
+            path: 'training/trainees',
+            element: <TrainingTrainees />
+        },
+        {
+            path: 'training/session/reviews',
+            element: <TrainingReviews />
         },
 
         //schedules
@@ -362,6 +371,10 @@ const MainRoutes = {
         {
             path: 'training/survey/filled',
             element: <FilledSurveyDetails />
+        },
+        {
+            path: 'training/trainer/survey',
+            element: <TrainerSurvey />
         }
     ]
 };

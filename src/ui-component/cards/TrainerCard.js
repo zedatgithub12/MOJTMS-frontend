@@ -1,18 +1,15 @@
 import React, { forwardRef } from 'react';
+import { Grid, Box, useTheme, Link } from '@mui/material';
+import { IconCertificate, IconMapPin, IconUser } from '@tabler/icons';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { Grid, Box, useTheme, Link } from '@mui/material';
-import { IconCertificate, IconMapPin, IconUser } from '@tabler/icons';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TrainerCardSkel from './Skeleton/TrainerCardSkel';
 
 const TrainerCard = forwardRef(
-    (
-        { sx = {}, isLoading, image, name, qualification, address, gender, title, linkedin, trainingcount, rating, onPress, ...others },
-        ref
-    ) => {
+    ({ sx = {}, isLoading, image, name, qualification, address, gender, title, linkedin, trainingcount, onPress, ...others }, ref) => {
         const theme = useTheme();
         return (
             <React.Fragment>
@@ -99,7 +96,7 @@ const TrainerCard = forwardRef(
                                 </Box>
                             )}
 
-                            {/* <Box sx={{ marginY: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
+                            <Box sx={{ marginY: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
                                 {trainingcount && (
                                     <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                                         <IconChalkboard size={18} />
@@ -108,9 +105,7 @@ const TrainerCard = forwardRef(
                                         </Typography>
                                     </Box>
                                 )}
-
-                                <Stack flexDirection="column">{rating && <Rating name="read-only" value={rating} readOnly />}</Stack>
-                            </Box> */}
+                            </Box>
                         </Grid>
                     </Card>
                 )}
@@ -130,7 +125,6 @@ TrainerCard.propTypes = {
     name: PropTypes.string,
     linkedin: PropTypes.string,
     trainingcount: PropTypes.number,
-    rating: PropTypes.number,
     onPress: PropTypes.func
 };
 

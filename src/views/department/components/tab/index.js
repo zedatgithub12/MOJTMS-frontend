@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { TabPanel } from './tabpanel';
+import { useTranslation } from 'react-i18next';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import { TabPanel } from './tabpanel';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
 
 function a11yProps(index) {
     return {
@@ -26,7 +26,7 @@ function TMSTab({ tabsfor, children }) {
             <Box>
                 <Tabs value={value} onChange={handleChange} aria-label="tabs">
                     {tabsfor.map((tab, index) => (
-                        <Tab label={t(tab.name)} {...a11yProps(index)} />
+                        <Tab key={index} label={t(tab.name)} {...a11yProps(index)} />
                     ))}
                 </Tabs>
             </Box>

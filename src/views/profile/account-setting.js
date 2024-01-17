@@ -6,13 +6,17 @@ import AccountInfo from './components/accountInfo';
 import TraineeInfo from './components/traineeInfo';
 import ChangePassword from './components/changePassword';
 import Connections from 'api';
+import CoordinatorInfo from './components/coordinatorInfo';
 
 const AccountSetting = () => {
     const theme = useTheme();
+    const userString = sessionStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const id = user.user.id;
+    const role = user.user.role;
 
-    const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
-    const [trainee, setTrainee] = useState([]);
+    const [userData, setUserData] = useState([]);
 
     const handleDataFetching = async () => {
         const tokenExpiration = sessionStorage.getItem('tokenExpiration');
@@ -27,11 +31,7 @@ const AccountSetting = () => {
     };
 
     const FetchData = async () => {
-        setLoading(true);
-
-        let user = JSON.parse(sessionStorage.getItem('user'));
-
-        var Api = Connections.api + Connections.userdata + user.user.id;
+        var Api = Connections.api + Connections.userdata + id;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -45,15 +45,11 @@ const AccountSetting = () => {
             const resData = parsed.data;
 
             setData(resData.user);
-            setTrainee(resData.trainee);
-
-            setLoading(false);
-        } else {
-            setLoading(false);
+            setUserData(resData.data);
         }
     };
 
-    const { error } = useQuery(['data'], () => handleDataFetching(), {
+    useQuery(['data'], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -75,7 +71,10 @@ const AccountSetting = () => {
                 }}
             >
                 <AccountInfo userInfo={data} onRefresh={() => FetchData()} />
-                {trainee[0] && <TraineeInfo traineeInfo={trainee[0]} onRefresh={() => FetchData()} />}
+                {role === 'Coordinator'
+                    ? userData[0] && <CoordinatorInfo coordinatorinfo={userData[0]} onRefresh={() => FetchData()} />
+                    : userData[0] && <TraineeInfo traineeInfo={userData[0]} onRefresh={() => FetchData()} />}
+
                 <ChangePassword />
             </Grid>
         </Grid>

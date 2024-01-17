@@ -1,15 +1,11 @@
 import { useState } from 'react';
-// import { useSelector } from 'react-redux';
-
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
     Box,
     Button,
     CircularProgress,
-    // Checkbox,
     FormControl,
-    // FormControlLabel,
     FormHelperText,
     Grid,
     IconButton,
@@ -21,25 +17,23 @@ import {
     useMediaQuery
 } from '@mui/material';
 import { IconCircleCheck } from '@tabler/icons';
+import { useLocation } from 'react-router-dom';
 // third party
-import * as Yup from 'yup';
 import { Formik } from 'formik';
-
-// project imports
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-
-// assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Connections from 'api';
 import AuthWrapper1 from './AuthWrapper1';
-import { useLocation } from 'react-router-dom';
 import MainCard from 'ui-component/cards/MainCard';
 
 // ============================|| RESET PASSWORD ||============================ //
 
 const Reset_Password = ({ ...others }) => {
+    const { t } = useTranslation();
     const location = useLocation();
     const path = location.pathname;
     const tokenIndex = path.lastIndexOf('/') + 1;
@@ -71,10 +65,10 @@ const Reset_Password = ({ ...others }) => {
                                     <Box sx={{ textAlign: 'center' }}>
                                         <IconCircleCheck size={66} style={{ color: theme.palette.success.dark }} />
                                         <Typography variant="h3" mt={1}>
-                                            New password set successfully
+                                            {t('New password set successfully')}
                                         </Typography>
                                         <Typography variant="body1" mt={1}>
-                                            You can now sign in into MOJTMS with your new password
+                                            {t('You can now sign in into MOJTMS with your new password')}
                                         </Typography>
                                     </Box>
                                 ) : (
@@ -95,7 +89,7 @@ const Reset_Password = ({ ...others }) => {
                                                                     gutterBottom
                                                                     variant={matchDownSM ? 'h3' : 'h2'}
                                                                 >
-                                                                    Reset Password
+                                                                    {t('Reset Password')}
                                                                 </Typography>
                                                             </Stack>
                                                         </Grid>
@@ -103,7 +97,7 @@ const Reset_Password = ({ ...others }) => {
                                                 </Grid>
                                                 <Box sx={{ mb: 2 }}>
                                                     <Typography variant="subtitle1" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                                                        Enter and confirm new password
+                                                        {t('Enter and confirm new password')}
                                                     </Typography>
                                                 </Box>
                                             </Grid>
@@ -179,7 +173,9 @@ const Reset_Password = ({ ...others }) => {
                                                         error={Boolean(touched.password && errors.password)}
                                                         sx={{ ...theme.typography.customInput }}
                                                     >
-                                                        <InputLabel htmlFor="outlined-adornment-password-login">New Password</InputLabel>
+                                                        <InputLabel htmlFor="outlined-adornment-password-login">
+                                                            {t('New Password')}
+                                                        </InputLabel>
                                                         <OutlinedInput
                                                             id="outlined-adornment-password-login"
                                                             type={showPassword ? 'text' : 'password'}
@@ -187,12 +183,12 @@ const Reset_Password = ({ ...others }) => {
                                                             name="newPassword"
                                                             onBlur={handleBlur}
                                                             onChange={handleChange}
-                                                            label="New Password"
+                                                            label={t('New Password')}
                                                             inputProps={{}}
                                                         />
                                                         {touched.password && errors.password && (
                                                             <FormHelperText error id="standard-weight-helper-text-password-login">
-                                                                {errors.password}
+                                                                {t(errors.password)}
                                                             </FormHelperText>
                                                         )}
                                                     </FormControl>
@@ -203,7 +199,7 @@ const Reset_Password = ({ ...others }) => {
                                                         sx={{ ...theme.typography.customInput }}
                                                     >
                                                         <InputLabel htmlFor="outlined-adornment-password-login">
-                                                            Confirm Password
+                                                            {t('Confirm Password')}
                                                         </InputLabel>
                                                         <OutlinedInput
                                                             id="outlined-adornment-password-login"
@@ -225,19 +221,18 @@ const Reset_Password = ({ ...others }) => {
                                                                     </IconButton>
                                                                 </InputAdornment>
                                                             }
-                                                            label="Confirm Password"
-                                                            inputProps={{}}
+                                                            label={t('Confirm Password')}
                                                         />
                                                         {touched.password && errors.password && (
                                                             <FormHelperText error id="standard-weight-helper-text-password-login">
-                                                                {errors.password}
+                                                                {t(errors.password)}
                                                             </FormHelperText>
                                                         )}
                                                     </FormControl>
 
                                                     {errors.submit && (
                                                         <Box sx={{ mt: 3 }}>
-                                                            <FormHelperText error>{errors.submit}</FormHelperText>
+                                                            <FormHelperText error>{t(errors.submit)}</FormHelperText>
                                                         </Box>
                                                     )}
 
@@ -252,7 +247,7 @@ const Reset_Password = ({ ...others }) => {
                                                                 variant="contained"
                                                                 color="primary"
                                                             >
-                                                                {logSpinner ? <CircularProgress size={20} color="primary" /> : 'Submit'}
+                                                                {logSpinner ? <CircularProgress size={20} color="primary" /> : t('Submit')}
                                                             </Button>
                                                         </AnimateButton>
                                                     </Box>
@@ -262,7 +257,7 @@ const Reset_Password = ({ ...others }) => {
                                     </>
                                 )}
                                 <Button component="a" href="/" fullWidth size="large" variant="text" color="primary" sx={{ marginTop: 1 }}>
-                                    Sign In
+                                    {t('Sign In')}
                                 </Button>
                             </MainCard>
                         </Grid>

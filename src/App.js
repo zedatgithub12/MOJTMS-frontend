@@ -2,7 +2,8 @@ import { lazy, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 // routing
 import Routes from 'routes';
 
@@ -10,14 +11,14 @@ import Routes from 'routes';
 import themes from 'themes';
 
 // project imports
-import NavigationScroll from 'layout/NavigationScroll';
 import { AuthContext } from 'context/context';
 import { useEffect } from 'react';
 import { useMemo } from 'react';
-import Loadable from 'ui-component/Loadable';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { HelmetProvider } from 'react-helmet-async';
 import { I18nextProvider } from 'react-i18next';
+import Loadable from 'ui-component/Loadable';
+import NavigationScroll from 'layout/NavigationScroll';
 import i18n from './i18n';
 
 // ==============================|| APP ||============================== //
@@ -33,11 +34,33 @@ const queryClient = new QueryClient();
 const App = () => {
     const customization = useSelector((state) => state.customization);
     const location = useLocation();
+    const navigate = useNavigate();
     const path = location.pathname;
-    const tokenIndex = path.lastIndexOf('/') + 1;
-    const token = path.substring(tokenIndex);
+    const pathIndex = path.lastIndexOf('/') + 1;
+    const id = path.substring(pathIndex);
+    const token = path.substring(pathIndex);
 
     const [loged, setLoged] = useState(false);
+
+    useEffect(() => {
+        if (path === `/training/shared/${id}` && !loged) {
+            sessionStorage.setItem('t_id', id);
+        } else if (loged && location.pathname === `/training/shared/${id}`) {
+            navigate('training/session/detail', { state: { id: id } });
+        }
+
+        if (path === `/backend/api/training/shared/${id}` && !loged) {
+            sessionStorage.setItem('t_id', id);
+        } else if (loged && path === `/backend/api/training/shared/${id}`) {
+            navigate('training/session/detail', { state: { id: id } });
+        }
+
+        return () => {};
+    }, [path, id, loged]);
+
+    const RefreshWindow = async () => {
+        window.location.reload();
+    };
 
     const authContext = useMemo(
         () => ({
@@ -49,7 +72,18 @@ const App = () => {
                     sessionStorage.setItem('user', JSON.stringify(users));
                     sessionStorage.setItem('token', users.token);
                     sessionStorage.setItem('tokenExpiration', expirationTime);
-                    window.location.reload();
+
+                    const t_id = sessionStorage.getItem('t_id'); //check if there is an id of  externally opened link stored in sessionStorage
+                    //if the training id is found navigate to the training session detail page
+                    if (t_id) {
+                        navigate('/training/session/detail', { state: { id: id } });
+                        sessionStorage.removeItem('t_id');
+                        await RefreshWindow();
+                        setLoged(true);
+                        return;
+                    }
+
+                    await RefreshWindow();
                     setLoged(true);
                 } else {
                     setLoged(false);
@@ -84,7 +118,7 @@ const App = () => {
                 return user.user.role;
             }
         }),
-        []
+        [id]
     );
 
     useEffect(() => {
@@ -113,6 +147,10 @@ const App = () => {
                                     ) : location.pathname === `/reset-password/${token}` ? (
                                         <Reset_Password />
                                     ) : location.pathname === '/pages/login/login' ? (
+                                        <AuthLogin />
+                                    ) : location.pathname === `/training/shared/${id}` ? (
+                                        <AuthLogin />
+                                    ) : location.pathname === `/backend/api/training/shared/${id}` ? (
                                         <AuthLogin />
                                     ) : location.pathname === '/' ? (
                                         <AuthLogin />

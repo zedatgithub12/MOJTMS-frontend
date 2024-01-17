@@ -1,10 +1,10 @@
 import { Button, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import { IconChevronDown, IconChevronLeft, IconChevronRight } from '@tabler/icons';
-import PropTypes from 'prop-types';
+import { IconChevronDown, IconChevronRight } from '@tabler/icons';
 import { useState } from 'react';
-import { ActionMenu } from 'ui-component/menu/action';
-import { ReadMore } from 'utils/functions';
+import { ReadMore, TimeFormatter } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 //============================= ASSESSMENT LISTING CARD =========================//
 
@@ -13,7 +13,8 @@ const letterConfig = {
     endat: 180
 };
 
-const AssessmentCard = ({ name, description, score, duration, instruction, onClick, status, sx }) => {
+const AssessmentCard = ({ name, description, score, duration, instruction, onClick }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [collapse, setCollapse] = useState(true);
@@ -45,7 +46,7 @@ const AssessmentCard = ({ name, description, score, duration, instruction, onCli
             >
                 {name && (
                     <Typography variant="h4" onClick={onClick} sx={{ cursor: 'pointer' }}>
-                        {name}
+                        {t(name)}
                     </Typography>
                 )}
                 <Box
@@ -82,7 +83,7 @@ const AssessmentCard = ({ name, description, score, duration, instruction, onCli
                                 borderRadius: 2
                             }}
                         >
-                            {duration}
+                            {t(TimeFormatter(duration))}
                         </Typography>
                     )}
                 </Box>
@@ -90,7 +91,9 @@ const AssessmentCard = ({ name, description, score, duration, instruction, onCli
 
             {description && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', marginY: 1 }}>
-                    <Typography variant="body2">{ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse)}</Typography>
+                    <Typography variant="body2">
+                        {t(ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse))}
+                    </Typography>
 
                     {description.length > letterConfig.endat && (
                         <Typography
@@ -98,7 +101,7 @@ const AssessmentCard = ({ name, description, score, duration, instruction, onCli
                             onClick={() => ExpndText()}
                             sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                         >
-                            {collapse ? 'Read More' : 'Read Less'}
+                            {collapse ? t('Read More') : t('Read Less')}
                         </Typography>
                     )}
                 </Box>
@@ -107,12 +110,12 @@ const AssessmentCard = ({ name, description, score, duration, instruction, onCli
             {instruction && (
                 <Box paddingTop={1}>
                     <Button variant="text" color="primary" onClick={() => setOpenInstruction(!openInstruction)}>
-                        Instructions {openInstruction ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
+                        {t('Instruction')} {openInstruction ? <IconChevronDown size={16} /> : <IconChevronRight size={16} />}
                     </Button>
 
                     {openInstruction && (
                         <Typography variant="body2" sx={{ padding: 1 }}>
-                            {instruction}
+                            {t(instruction)}
                         </Typography>
                     )}
                 </Box>
@@ -127,8 +130,6 @@ AssessmentCard.propTypes = {
     score: PropTypes.number,
     duration: PropTypes.number,
     instruction: PropTypes.string,
-    status: PropTypes.string,
-    onClick: PropTypes.func,
-    sx: PropTypes.object
+    onClick: PropTypes.func
 };
 export default AssessmentCard;

@@ -12,17 +12,19 @@ import {
     Typography,
     useTheme
 } from '@mui/material';
-import QuestionTypes from 'data/static/questionTypes';
 import { useFormik } from 'formik';
+import { useTranslation } from 'react-i18next';
+import QuestionTypes from 'data/static/questionTypes';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import * as Yup from 'yup';
 
 const validationSchema = Yup.object().shape({
     question_type: Yup.string().required('Question type is required'),
-    question: Yup.string().required('Question is required').max(80)
+    question: Yup.string().required('Question is required')
 });
 
 const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     //submit the question to be added
@@ -42,7 +44,7 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
     return (
         <Box>
             <Typography variant="h3" marginBottom={2}>
-                Create Question
+                {t('Create Question')}
             </Typography>
 
             <form noValidate onSubmit={formik.handleSubmit}>
@@ -50,7 +52,7 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                     error={formik.touched.question_type && Boolean(formik.errors.question_type)}
                     sx={{ ...theme.typography.customInput }}
                 >
-                    <InputLabel htmlFor="outlined-adornment-question_type">{formik.values.question_type ? '' : 'Type'}</InputLabel>
+                    <InputLabel htmlFor="outlined-adornment-question_type">{formik.values.question_type ? '' : t('Type')}</InputLabel>
                     <Select
                         value={formik.values.question_type}
                         onChange={formik.handleChange}
@@ -59,19 +61,19 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                     >
                         {QuestionTypes.length == 0 ? (
                             <Typography variant="body2" sx={{ padding: 1 }}>
-                                Types Not Found
+                                {t('Types Not Found')}
                             </Typography>
                         ) : (
                             QuestionTypes.map((type, index) => (
                                 <MenuItem key={index} value={type.name}>
-                                    {type.name}
+                                    {t(type.name)}
                                 </MenuItem>
                             ))
                         )}
                     </Select>
                     {formik.touched.question_type && formik.errors.question_type && (
                         <FormHelperText error id="standard-weight-helper-text-question-type">
-                            {formik.errors.question_type}
+                            {t(formik.errors.question_type)}
                         </FormHelperText>
                     )}
                 </FormControl>
@@ -81,21 +83,20 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                     error={formik.touched.question && Boolean(formik.errors.question)}
                     sx={{ ...theme.typography.customInput }}
                 >
-                    <InputLabel htmlFor="question">Question</InputLabel>
+                    <InputLabel htmlFor="question">{t('Question')}</InputLabel>
                     <OutlinedInput
                         id="question"
                         name="question"
-                        label="Question"
+                        label={t('Question')}
                         value={formik.values.question}
                         onChange={formik.handleChange}
                         fullWidth
-                        inputProps={{}}
                         multiline
                         sx={{ marginTop: 1 }}
                     />
                     {formik.touched.question && formik.errors.question && (
                         <FormHelperText error id="standard-weight-helper-text-question">
-                            {formik.errors.question}
+                            {t(formik.errors.question)}
                         </FormHelperText>
                     )}
                 </FormControl>
@@ -109,12 +110,12 @@ const CreateQuestion = ({ isSubmitting, handleSubmission, handleClose }) => {
                             color="primary"
                             sx={{ minWidth: 120, py: 1, px: 4, my: 2 }}
                         >
-                            {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : 'Done'}
+                            {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : t('Done')}
                         </Button>
                     </AnimateButton>
 
                     <Button variant="text" color="primary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={handleClose}>
-                        Cancel
+                        {t('Cancel')}
                     </Button>
                 </Box>
             </form>

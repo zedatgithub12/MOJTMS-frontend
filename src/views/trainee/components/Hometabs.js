@@ -1,10 +1,11 @@
 import * as React from 'react';
+import { useTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import CustomTabPanel from './TabPanel';
-import { useTheme } from '@mui/material';
 
 function a11yProps(index) {
     return {
@@ -14,6 +15,7 @@ function a11yProps(index) {
 }
 
 function HomeTabs({ home, training }) {
+    const { t } = useTranslation();
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
 
@@ -35,16 +37,9 @@ function HomeTabs({ home, training }) {
                     backgroundColor: theme.palette.background.default
                 }}
             >
-                <Tabs
-                    value={value}
-                    onChange={handleChange}
-                    aria-label="trainee tabs"
-                    sx={{ paddingTop: 2 }}
-                    textColor="white"
-                    indicatorColor="primary"
-                >
-                    <Tab label="Home" {...a11yProps(0)} />
-                    <Tab label="Your Tranings" {...a11yProps(1)} />
+                <Tabs value={value} onChange={handleChange} aria-label="trainee tabs" sx={{ paddingTop: 2 }} indicatorColor="primary">
+                    <Tab label={t('Home')} {...a11yProps(0)} />
+                    <Tab label={t('Your Tranings')} {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>

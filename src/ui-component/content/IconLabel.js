@@ -28,9 +28,9 @@ export const IconLabel = ({ content, onTitleClick, label, children, sx }) => {
 };
 
 IconLabel.propTypes = {
-    content: PropTypes.string,
+    content: PropTypes.any,
     onTitleClick: PropTypes.func,
-    label: PropTypes.string,
+    label: PropTypes.any,
     children: PropTypes.node,
     sx: PropTypes.object
 };

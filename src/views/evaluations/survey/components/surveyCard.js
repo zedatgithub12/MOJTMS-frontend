@@ -1,8 +1,9 @@
 import { Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { ReadMore } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 //============================= SURVEY LISTING CARD =========================//
 
@@ -11,7 +12,8 @@ const letterConfig = {
     endat: 180
 };
 
-const SurveyCard = ({ title, description, onClick, status, sx }) => {
+const SurveyCard = ({ type, title, description, onClick, status }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [collapse, setCollapse] = useState(true);
@@ -32,6 +34,22 @@ const SurveyCard = ({ title, description, onClick, status, sx }) => {
                 marginTop: 1.6
             }}
         >
+            <Typography
+                variant="body2"
+                onClick={onClick}
+                sx={{
+                    width: 'fit-content',
+                    backgroundColor: type === 'Trainer' ? theme.palette.secondary[200] : theme.palette.primary[200],
+                    color: theme.palette.grey[600],
+                    padding: 0.5,
+                    paddingX: 2,
+                    borderRadius: 1.2,
+                    cursor: 'pointer',
+                    marginY: 0.5
+                }}
+            >
+                {t(type)} {t('Survey')}
+            </Typography>
             <Box
                 sx={{
                     display: 'flex',
@@ -42,14 +60,16 @@ const SurveyCard = ({ title, description, onClick, status, sx }) => {
             >
                 {title && (
                     <Typography variant="h4" onClick={onClick} sx={{ cursor: 'pointer' }}>
-                        {title}
+                        {t(title)}
                     </Typography>
                 )}
             </Box>
 
             {description && (
                 <Box sx={{ display: 'flex', flexDirection: 'column', marginY: 1 }}>
-                    <Typography variant="body2">{ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse)}</Typography>
+                    <Typography variant="body2">
+                        {t(ReadMore(description, letterConfig.startfrom, letterConfig.endat, collapse))}
+                    </Typography>
 
                     {description.length > letterConfig.endat && (
                         <Typography
@@ -57,7 +77,7 @@ const SurveyCard = ({ title, description, onClick, status, sx }) => {
                             onClick={() => ExpndText()}
                             sx={{ marginTop: 1, color: theme.palette.primary.main, cursor: 'pointer' }}
                         >
-                            {collapse ? 'Read More' : 'Read Less'}
+                            {collapse ? t('Read More') : t('Read Less')}
                         </Typography>
                     )}
                 </Box>
@@ -67,6 +87,7 @@ const SurveyCard = ({ title, description, onClick, status, sx }) => {
 };
 
 SurveyCard.propTypes = {
+    type: PropTypes.string,
     title: PropTypes.string,
     description: PropTypes.string,
     score: PropTypes.number,

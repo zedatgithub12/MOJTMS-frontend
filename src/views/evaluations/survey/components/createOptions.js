@@ -15,17 +15,19 @@ import {
     useTheme
 } from '@mui/material';
 import { Box } from '@mui/system';
-import PropTypes from 'prop-types';
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import { IconCheck, IconX } from '@tabler/icons';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 
 const validationSchema = Yup.object().shape({
     option: Yup.string().max(300)
 });
 
 const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
 
     const [options, setOptions] = useState([]); //an array the contains a question options
@@ -112,13 +114,13 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
             <Typography variant="h4">{question.question_text}</Typography>
             <Divider />
             <Box sx={{ paddingTop: 1, marginY: 1.6 }}>
-                <Typography variant="subtitle1">Options</Typography>
+                <Typography variant="subtitle1">{t('Options')}</Typography>
 
                 {question.question_type === 'true/false' ? (
                     <FormControl component="fieldset">
                         <RadioGroup aria-label="selection" name="selection" value={selection} onChange={handleSelectionChange}>
                             {truefalse.map((option) => (
-                                <FormControlLabel value={option.option_text} control={<Radio />} label={option.option_text} />
+                                <FormControlLabel value={option.option_text} control={<Radio />} label={t(option.option_text)} />
                             ))}
                         </RadioGroup>
                     </FormControl>
@@ -144,7 +146,7 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
                                             color="primary"
                                         />
                                     }
-                                    label={option.option_text}
+                                    label={t(option.option_text)}
                                 />
                                 <IconButton onClick={() => handleOptionRemoving(index)}>
                                     <IconX size={16} color={theme.palette.grey[400]} />
@@ -184,15 +186,14 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
                         error={formik.touched.option && Boolean(formik.errors.option)}
                         sx={{ display: 'flex', alignItems: 'center' }}
                     >
-                        <InputLabel htmlFor="option">Add option</InputLabel>
+                        <InputLabel htmlFor="option">{t('Add option')}</InputLabel>
                         <OutlinedInput
                             id="option"
                             name="option"
-                            label="Add option"
+                            label={t('Add option')}
                             value={formik.values.option}
                             onChange={formik.handleChange}
                             fullWidth
-                            inputProps={{}}
                             multiline
                             endAdornment={
                                 <Button
@@ -207,7 +208,7 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
                         />
                         {formik.touched.option && formik.errors.option && (
                             <FormHelperText error id="standard-weight-helper-text-option">
-                                {formik.errors.option}
+                                {t(formik.errors.option)}
                             </FormHelperText>
                         )}
                     </FormControl>
@@ -220,7 +221,7 @@ const CreateOptions = ({ question, handleSubmission, isSubmitting }) => {
                     color="primary"
                     sx={{ minWidth: 120, py: 1, px: 4, my: 2 }}
                 >
-                    {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : 'Done'}
+                    {isSubmitting ? <CircularProgress size={22} sx={{ color: theme.palette.background.default }} /> : t('Done')}
                 </Button>
             </form>
         </Box>

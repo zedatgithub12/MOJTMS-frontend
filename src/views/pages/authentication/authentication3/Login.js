@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Box, Grid, Stack, Typography, useMediaQuery } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 // project imports
 import AuthWrapper1 from '../AuthWrapper1';
@@ -10,10 +11,12 @@ import AuthCardWrapper from '../AuthCardWrapper';
 import AuthLogin from '../auth-forms/AuthLogin';
 import Logo from 'ui-component/Logo';
 import group from 'assets/images/group_training.png';
+import Language from 'ui-component/language';
 
 // ================================|| AUTH3 - LOGIN ||================================ //
 
 const Login = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
     const matchUpSM = useMediaQuery(theme.breakpoints.up('md'));
@@ -24,6 +27,11 @@ const Login = () => {
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" alignItems="center" sx={{ minHeight: 'calc(100vh - 68px)' }}>
                         <Grid item sx={{ m: { xs: 1, sm: 3 }, mb: 0 }}>
+                            <Grid container>
+                                <Grid item xs={12} paddingLeft={3} sx={{ display: 'flex' }}>
+                                    <Language />
+                                </Grid>
+                            </Grid>
                             <AuthCardWrapper>
                                 {matchUpSM && (
                                     <Grid
@@ -123,7 +131,7 @@ const Login = () => {
                                     <Grid item xs={12}>
                                         <Box display="flex" alignItems="center" justifyContent="center" marginBottom={1}>
                                             <Typography variant="caption" fontSize="16px" textAlign={matchDownSM ? 'center' : 'inherit'}>
-                                                Enter your credentials to continue
+                                                {t('Enter your credentials to continue')}
                                             </Typography>
                                         </Box>
 

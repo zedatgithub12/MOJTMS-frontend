@@ -1,15 +1,16 @@
 const Connections = {
     //local endpoints
-    api: 'http://localhost:8000/api/',
-    images: 'http://localhost:8000/api/images/',
-    thumbnails: 'http://localhost:8000/api/thumbnails/',
-    profiles: 'http://localhost:8000/api/profiles/',
+    // home: 'http://localhost:3000/',
+    // api: 'http://localhost:8000/api/',
+    // images: 'http://localhost:8000/api/images/',
+    // thumbnails: 'http://localhost:8000/api/thumbnails/',
+    // profiles: 'http://localhost:8000/api/profiles/',
 
     //remote endpoints
-    // api: 'https://tms.afrominadigitals.com/backend/api/',
-    // images: 'https://tms.afrominadigitals.com/backend/api/images/',
-    // thumbnails: 'https://tms.afrominadigitals.com/backend/api/thumbnails/',
-    // profiles: 'https://tms.afrominadigitals.com/backend/api/profiles/',
+    api: 'https://tms.afrominadigitals.com/backend/api/',
+    images: 'https://tms.afrominadigitals.com/backend/api/images/',
+    thumbnails: 'https://tms.afrominadigitals.com/backend/api/thumbnails/',
+    profiles: 'https://tms.afrominadigitals.com/backend/api/profiles/',
 
     signin: 'signin',
     forgotpassword: 'forgotpassword/',
@@ -17,7 +18,7 @@ const Connections = {
     refresh_token: 'refresh-token',
     changepass: 'changepassword/',
 
-    //a dashboard statistics report fetching api endpoint path
+    //A dashboard statistics report fetching api endpoint
     dashboard: 'dashboard',
 
     // users management api endpoints
@@ -64,6 +65,7 @@ const Connections = {
 
     trainingtrainees: 'training/trainees/',
     filledsurveys: 'training/filled/surveys/',
+    alltrainees: 'alltrainees',
 
     schedules: 'session-schedules',
     roundschedule: 'round-schedules/',
@@ -82,6 +84,11 @@ const Connections = {
 
     traineeassessment: 'trainee-assessments',
 
+    trainersurveys: 'trainer-surveys',
+    alltrainersurveys: 'trainer-surveys/all/',
+    trainerreview: 'trainer-review',
+    trainingreviews: 'training-review',
+    alltrainingsurvey: 'training-review/all/',
     trainingsurvey: 'training-surveys',
     sessionsurvey: 'training-surveys/session/',
 

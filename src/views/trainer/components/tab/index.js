@@ -1,9 +1,8 @@
 import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import { TabPanel } from './tabpanel';
-import { useTheme } from '@mui/material';
+import { Tabs, Tab, Box, useTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 function a11yProps(index) {
     return {
@@ -12,9 +11,9 @@ function a11yProps(index) {
     };
 }
 
-export default function TMSTab({ tabsfor }) {
+export default function TMSTab({ tabsfor, training, reviews }) {
+    const { t } = useTranslation();
     const [value, setValue] = React.useState(0);
-
     const theme = useTheme();
 
     const handleChange = (event, newValue) => {
@@ -26,16 +25,22 @@ export default function TMSTab({ tabsfor }) {
             <Box sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: theme.palette.secondary.light }}>
                 <Tabs value={value} onChange={handleChange} aria-label="tabs">
                     {tabsfor.map((tab, index) => (
-                        <Tab label={tab.name} {...a11yProps(index)} />
+                        <Tab key={index} label={t(tab.name)} {...a11yProps(index)} />
                     ))}
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-                Training list
+                {training}
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Traineer list
+                {reviews}
             </TabPanel>
         </Box>
     );
 }
+
+TMSTab.propTypes = {
+    tabsfor: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    training: PropTypes.node,
+    reviews: PropTypes.node
+};

@@ -1,0 +1,247 @@
+import { useState } from 'react';
+import { Box, Button, CircularProgress, Grid, IconButton, TextField, Typography, Divider, TablePagination } from '@mui/material';
+import { useQuery } from 'react-query';
+import { RefreshToken } from 'utils/token-refresh';
+import { FilterPanel } from 'ui-component/FilterPanel';
+import { ErrorPrompt } from 'utils/components/errorprompt';
+import { NoResult } from 'utils/components/noresult';
+import { IconX } from '@tabler/icons';
+import { useTranslation } from 'react-i18next';
+import errorImage from 'assets/images/error.jpg';
+import SortOutlinedIcon from '@mui/icons-material/SortOutlined';
+import Connections from 'api';
+import PropTypes from 'prop-types';
+import TrainerSurveyListing from './components/TrainerSurvey';
+
+const TrainersSurveys = ({ training_id }) => {
+    const { t } = useTranslation();
+    const [loading, setLoading] = useState(false);
+    const [assignedSurveys, setAssignedSurveys] = useState([]);
+
+    const [filters, setFilters] = useState({
+        round: '',
+        trainer: ''
+    });
+
+    const [counts, setCounts] = useState(0);
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 10,
+        page: 0
+    });
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAnchorEl(null);
+    };
+
+    const handleDataFetching = async () => {
+        const tokenExpiration = sessionStorage.getItem('tokenExpiration');
+        const currentTime = new Date().getTime();
+
+        if (tokenExpiration && currentTime >= tokenExpiration) {
+            await RefreshToken();
+            FetchAssignedSurvey();
+        } else {
+            FetchAssignedSurvey();
+        }
+    };
+
+    const FetchAssignedSurvey = async () => {
+        setLoading(true);
+        var Api = Connections.api + Connections.alltrainersurveys + training_id + `?round=${filters.round}&trainer=${filters.trainer}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            setLoading(false);
+            const data = parsed.data;
+            setAssignedSurveys(data.data);
+            setCounts(data.total);
+        } else {
+            setLoading(false);
+        }
+    };
+
+    const { error } = useQuery(['data', paginationModel], () => handleDataFetching(), {
+        refetchOnWindowFocus: false
+    });
+
+    const handleFilterChange = (event) => {
+        const { name, value } = event.target;
+
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [name]: value
+        }));
+    };
+
+    const handleClear = (name) => {
+        setFilters((prevFilters) => ({
+            ...prevFilters,
+            [name]: ''
+        }));
+    };
+
+    const handleApplyingFilter = () => {
+        handleClose();
+        FetchAssignedSurvey();
+    };
+
+    const handleReset = () => {
+        setFilters({
+            round: '',
+            trainer: ''
+        });
+    };
+
+    //handle the page change of the trainee listing table
+    const handleChangePage = (event, newPage) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: newPage
+        });
+    };
+
+    //handle the page size or row count number of the listing table
+    const handleChangeRowsPerPage = (event) => {
+        setPaginationModel({
+            ...paginationModel,
+            pageSize: parseInt(event.target.value, 10),
+            page: 0
+        });
+    };
+
+    return (
+        <Grid container>
+            <Grid item xs={12}>
+                <Grid container sx={{ paddingY: 2 }}>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <FilterPanel
+                            open={open}
+                            anchorEl={anchorEl}
+                            handleClose={handleClose}
+                            filterButton={
+                                <Button variant="outlined" startIcon={<SortOutlinedIcon />} onClick={handleMenuClick}>
+                                    {t('Filter')}
+                                </Button>
+                            }
+                        >
+                            <Box sx={{ minWidth: 340, paddingX: 3 }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <Typography variant="h4">{t('Filter Data')}</Typography>
+                                    <IconButton onClick={() => handleClose()}>
+                                        <IconX size={20} />
+                                    </IconButton>
+                                </Box>
+
+                                <Divider />
+
+                                <Box sx={{ minHeight: 80, display: 'flex', flexDirection: 'column', marginTop: 3 }}>
+                                    <TextField
+                                        name="round"
+                                        value={filters.round}
+                                        onChange={handleFilterChange}
+                                        label={t('Round')}
+                                        InputProps={{
+                                            endAdornment: filters.round && (
+                                                <IconButton onClick={() => handleClear('round')}>
+                                                    <IconX size={18} />
+                                                </IconButton>
+                                            )
+                                        }}
+                                    />
+
+                                    <TextField
+                                        name="trainer"
+                                        value={filters.trainer}
+                                        onChange={handleFilterChange}
+                                        label={t('Trainer')}
+                                        InputProps={{
+                                            endAdornment: filters.trainer && (
+                                                <IconButton onClick={() => handleClear('trainer')}>
+                                                    <IconX size={18} />
+                                                </IconButton>
+                                            )
+                                        }}
+                                        sx={{ marginY: 3 }}
+                                    />
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        justifyContent: 'flex-end',
+                                        marginTop: 1
+                                    }}
+                                >
+                                    <Button variant="text" color="primary" sx={{ marginRight: 2 }} onClick={() => handleReset()}>
+                                        {t('Reset')}
+                                    </Button>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{ minWidth: 120, paddingX: 1 }}
+                                        onClick={() => handleApplyingFilter()}
+                                    >
+                                        {t('Apply')}
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </FilterPanel>
+                    </Grid>
+                </Grid>
+
+                {loading ? (
+                    <Grid container>
+                        <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                            <CircularProgress size={20} />
+                        </Grid>
+                    </Grid>
+                ) : error ? (
+                    <ErrorPrompt
+                        image={errorImage}
+                        title="Server Error"
+                        message="Oooops... There is server error fetching filled surveys"
+                    />
+                ) : assignedSurveys.length === 0 ? (
+                    <NoResult title="" message="Oooops... No filled survey found" />
+                ) : (
+                    <div>
+                        <TrainerSurveyListing rows={assignedSurveys} />
+                        <TablePagination
+                            component="div"
+                            count={counts}
+                            page={paginationModel.page}
+                            onPageChange={handleChangePage}
+                            rowsPerPage={paginationModel.pageSize}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </div>
+                )}
+            </Grid>
+        </Grid>
+    );
+};
+
+TrainersSurveys.propTypes = {
+    training_id: PropTypes.number
+};
+
+export default TrainersSurveys;

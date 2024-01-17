@@ -1,28 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, useTheme, Pagination, CircularProgress } from '@mui/material';
-
 import { Box } from '@mui/system';
 // project imports
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
-import Connections from 'api';
 import { useQuery } from 'react-query';
 import { SearchFilterAdd } from 'ui-component/search-add';
 import { RefreshToken } from 'utils/token-refresh';
-import SplitButton from 'ui-component/Buttons/SplitButton';
 import { ErrorPrompt } from 'utils/components/errorprompt';
 import { NoResult } from 'utils/components/noresult';
+import { useTranslation } from 'react-i18next';
+import SplitButton from 'ui-component/Buttons/SplitButton';
+import Connections from 'api';
 import noresult from 'assets/images/no_result.png';
 import SurveyCard from './components/surveyCard';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| SURVEY PAGE ||============================== //
 
 const SurveyStatus = ['draft', 'active', 'archived'];
 
 const Survey = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
@@ -77,7 +89,7 @@ const Survey = () => {
         }
     };
 
-    const { isLoading, error } = useQuery(['data', paginationModel, status], () => handleDataFetching(), {
+    const { error } = useQuery(['data', paginationModel, status], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -176,7 +188,7 @@ const Survey = () => {
                             <CircularProgress size={22} />
                         </Box>
                     ) : error ? (
-                        <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to retrive the surveys!" />
+                        <ErrorPrompt image={noresult} title="Server Error" message="Oooops... unable to fetch the surveys!" />
                     ) : data.length === 0 ? (
                         <NoResult image={noresult} title="" message="Oooops... No survey found!" />
                     ) : (
@@ -184,11 +196,11 @@ const Survey = () => {
                             {data.map((item) => (
                                 <SurveyCard
                                     key={item.id}
+                                    type={item.type}
                                     title={item.title}
                                     description={item.description}
                                     onClick={() => navigate('/survey/view', { state: item })}
                                     status={item.status}
-                                    sx={{}}
                                 />
                             ))}
                             {rowCount > paginationModel.pageSize && (

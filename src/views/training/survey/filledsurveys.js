@@ -56,7 +56,7 @@ const FilledSurveys = ({ training_id }) => {
 
     const FetchFilledSurveys = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.filledsurveys + training_id + `?round=${filters.round}`;
+        var Api = Connections.api + Connections.alltrainingsurvey + training_id + `?round=${filters.round}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -104,10 +104,7 @@ const FilledSurveys = ({ training_id }) => {
 
     const handleReset = () => {
         setFilters({
-            age: '',
-            gender: '',
-            department: '',
-            job_title: ''
+            round: ''
         });
     };
 
@@ -208,7 +205,7 @@ const FilledSurveys = ({ training_id }) => {
                         message="Oooops... There is server error fetching filled surveys"
                     />
                 ) : filledSurveys.length === 0 ? (
-                    <NoResult title="" message="Oooops... No filled survey found" />
+                    <NoResult title="" message="Oooops... No assigned survey found" />
                 ) : (
                     <div>
                         <FilledSurveyTable rows={filledSurveys} />

@@ -1,26 +1,41 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // material-ui
 import { Grid, Box, Typography, useTheme, Divider, MenuItem, IconButton, Menu, CircularProgress } from '@mui/material';
 import { SearchFilterAdd } from './components/SearchFilterAdd';
 
 // project imports
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { UserColumn } from 'data/tables/columns/Users';
-import AddUser from './components/AddUser';
 import { View } from './components/View';
 import { IconDotsVertical } from '@tabler/icons';
+import { UserColumn } from 'data/tables/columns/Users';
 import { ChangeRole } from './components/ChangeRole';
 import { UpdateStatus } from './components/UpdateStatus';
 import { Delete } from 'ui-component/delete/Delete';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import Connections from 'api';
 import { useQuery } from 'react-query';
 import { MediumHeader } from 'ui-component/page-header/mediumHeader';
+import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router';
+import AddUser from './components/AddUser';
+import Connections from 'api';
+import CheckPathPermission from 'utils/path-checker';
 
 // ==============================|| USERS PAGE ||============================== //
 
 const Users = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
 
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
@@ -146,7 +161,7 @@ const Users = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -196,7 +211,7 @@ const Users = () => {
                 >
                     {error ? (
                         <Box>
-                            <Typography>There is error rendering users</Typography>
+                            <Typography>{t('There is error rendering users')}</Typography>
                         </Box>
                     ) : isLoading ? (
                         <CircularProgress size={24} />
@@ -270,14 +285,14 @@ const Users = () => {
                                             setStatusPanel(false), setRolePanel(true), setAnchorEl(false);
                                         }}
                                     >
-                                        Change role
+                                        {t('Change role')}
                                     </MenuItem>
                                     <MenuItem
                                         onClick={() => {
                                             setRolePanel(false), setStatusPanel(true), setAnchorEl(false);
                                         }}
                                     >
-                                        Update status
+                                        {t('Update status')}
                                     </MenuItem>
                                     <Divider />
                                     <MenuItem
@@ -285,7 +300,7 @@ const Users = () => {
                                             setDeleteUser(true), setAnchorEl(false);
                                         }}
                                     >
-                                        Delete user account
+                                        {t('Delete user account')}
                                     </MenuItem>
                                 </Menu>
                             </View>
@@ -337,7 +352,7 @@ const Users = () => {
                 <Delete
                     open={deleteUser}
                     title="Deleting user account"
-                    description={`Are you sure you want to delete ` + selectedUser.name}
+                    description={t(`Are you sure you want to delete `) + selectedUser.name}
                     onNo={() => setDeleteUser(false)}
                     onYes={() => DeleteUser()}
                     deleting={deleting}

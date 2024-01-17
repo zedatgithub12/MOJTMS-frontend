@@ -30,11 +30,14 @@ const icons = {
 
 // ==============================|| DASHBOARD MENU ITEMS ||============================== //
 
-const dashboard = {
-    id: 'dashboard',
-    title: '',
-    type: 'group',
-    children: [
+const getUserRole = () => {
+    const userString = sessionStorage.getItem('user');
+    const user = JSON.parse(userString);
+    return user?.user ? user.user.role : 'Coordinator';
+};
+
+const getDashboardItems = (role) => {
+    const adminTabs = [
         {
             id: 'default',
             title: 'Home',
@@ -62,7 +65,7 @@ const dashboard = {
         },
         {
             id: 'trainings',
-            title: 'Trainings',
+            title: 'Training',
             type: 'collapse',
             url: '/sample-page',
             icon: icons.IconSchool,
@@ -83,6 +86,13 @@ const dashboard = {
                     breadcrumbs: false
                 },
                 {
+                    id: 'training_trainees',
+                    title: 'Trainees',
+                    url: '/training/trainees',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
                     id: 'categories',
                     title: 'Categories',
                     url: '/categories',
@@ -93,7 +103,7 @@ const dashboard = {
         },
         {
             id: 'trainees',
-            title: 'Trainees',
+            title: 'Trainee Accounts',
             type: 'item',
             url: '/trainees',
             icon: icons.IconUsers,
@@ -133,7 +143,98 @@ const dashboard = {
             icon: icons.IconUserSearch,
             breadcrumbs: false
         }
-    ]
+    ];
+
+    const coordinatorTabs = [
+        {
+            id: 'default',
+            title: 'Home',
+            type: 'item',
+            url: '/',
+            icon: icons.IconHome,
+            breadcrumbs: false
+        },
+
+        {
+            id: 'trainings',
+            title: 'Training',
+            type: 'collapse',
+            url: '/sample-page',
+            icon: icons.IconSchool,
+            breadcrumbs: false,
+            children: [
+                {
+                    id: 'trainings',
+                    title: 'Trainings',
+                    url: '/trainings',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'trainers',
+                    title: 'Trainers',
+                    url: '/trainers',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'training_trainees',
+                    title: 'Trainees',
+                    url: '/training/trainees',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'categories',
+                    title: 'Categories',
+                    url: '/categories',
+                    type: 'item',
+                    breadcrumbs: false
+                }
+            ]
+        },
+        {
+            id: 'trainees',
+            title: 'Trainee Accounts',
+            type: 'item',
+            url: '/trainees',
+            icon: icons.IconUsers,
+            breadcrumbs: false
+        },
+
+        {
+            id: 'evaluations',
+            title: 'Evaluations',
+            type: 'collapse',
+            url: '/assessments',
+            icon: icons.IconTestPipe,
+            breadcrumbs: false,
+            children: [
+                {
+                    id: 'assessements',
+                    title: 'Assessments',
+                    url: '/assessments',
+                    type: 'item',
+                    breadcrumbs: false
+                },
+                {
+                    id: 'surveys',
+                    title: 'Surveys',
+                    url: '/survey',
+                    type: 'item',
+                    breadcrumbs: false
+                }
+            ]
+        }
+    ];
+
+    return role === 'Admin' ? adminTabs : coordinatorTabs;
+};
+
+const dashboard = {
+    id: 'dashboard',
+    type: 'group',
+    children: getDashboardItems(getUserRole())
 };
 
 export default dashboard;

@@ -14,22 +14,22 @@ import {
     IconButton
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
-import { TimeFormatter } from 'utils/functions';
-import ViewHeader from './components/viewHeader';
 import { IconArchive, IconArchiveOff, IconEdit, IconPlus, IconTrash } from '@tabler/icons';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import CreateQuestion from './components/createQuestion';
-import CreateOptions from './components/createOptions';
 import { useQuery } from 'react-query';
 import { Delete } from 'ui-component/delete/Delete';
+import { useTranslation } from 'react-i18next';
+import ViewHeader from './components/viewHeader';
+import Connections from 'api';
+import CreateQuestion from './components/createQuestion';
+import CreateOptions from './components/createOptions';
 
 const ViewAssessement = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
 
-    const [data, setData] = useState([]);
     const [publishing, setPublishing] = useState('init');
     const [questions, setQuestions] = useState([]);
     const [addQuestion, setAddQuestion] = useState(false);
@@ -68,9 +68,8 @@ const ViewAssessement = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            const data = parsed.data.assessment;
             const question = parsed.data.questions;
-            setData(data);
+
             setQuestions(question);
         }
     };
@@ -214,7 +213,7 @@ const ViewAssessement = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -242,8 +241,8 @@ const ViewAssessement = () => {
                     back={true}
                     name={state.assessment_name}
                     description={state.assessment_description}
-                    score={state.passing_score}
-                    duration={TimeFormatter(state.duration)}
+                    score={parseInt(state.passing_score)}
+                    duration={parseInt(state.duration)}
                     instruction={state.instructions}
                     option={true}
                     status={state.status}
@@ -256,14 +255,14 @@ const ViewAssessement = () => {
                                 <ListItemIcon>
                                     <IconPlus size={18} />
                                 </ListItemIcon>
-                                Create Question
+                                {t('Create Question')}
                             </MenuItem>
                             <Divider />
                             <MenuItem onClick={() => navigate('/assessment/update', { state: state })}>
                                 <ListItemIcon>
                                     <IconEdit size={18} />
                                 </ListItemIcon>
-                                Update
+                                {t('Update')}
                             </MenuItem>
                             <Divider />
                             {state.status === 'active' && (
@@ -271,7 +270,7 @@ const ViewAssessement = () => {
                                     <ListItemIcon>
                                         <IconArchive size={18} />
                                     </ListItemIcon>
-                                    Archive
+                                    {t('Archive')}
                                 </MenuItem>
                             )}
 
@@ -280,7 +279,7 @@ const ViewAssessement = () => {
                                     <ListItemIcon>
                                         <IconArchiveOff size={18} />
                                     </ListItemIcon>
-                                    Un archive
+                                    {t('Un archive')}
                                 </MenuItem>
                             )}
                         </Box>
@@ -329,7 +328,7 @@ const ViewAssessement = () => {
                             >
                                 <Typography variant="subtitle1">{(index += 1)}.</Typography>
                                 <Typography variant="subtitle1" marginLeft={1.6}>
-                                    {question.question_text}
+                                    {t(question.question_text)}
                                 </Typography>
                             </Box>
 
@@ -340,8 +339,9 @@ const ViewAssessement = () => {
 
                         <Box>
                             {question.question_type === 'multiple-choice' && question.options
-                                ? question.options.map((option) => (
+                                ? question.options.map((option, index) => (
                                       <Box
+                                          key={index}
                                           sx={{
                                               display: 'flex',
                                               flexDirection: 'row',
@@ -350,8 +350,10 @@ const ViewAssessement = () => {
                                       >
                                           <FormControlLabel
                                               key={option.id}
-                                              control={<Checkbox checked={option.is_correct} color="primary" />}
-                                              label={option.option_text}
+                                              control={
+                                                  <Checkbox checked={parseInt(option.is_correct) === 1 ? true : false} color="primary" />
+                                              }
+                                              label={t(option.option_text)}
                                           />
                                       </Box>
                                   ))
@@ -365,12 +367,13 @@ const ViewAssessement = () => {
                                           }}
                                       >
                                           <RadioGroup aria-label="selection" name="selection">
-                                              {question.options.map((option) => (
+                                              {question.options.map((option, index) => (
                                                   <FormControlLabel
+                                                      key={index}
                                                       value={option.option_text}
                                                       control={<Radio />}
-                                                      checked={option.is_correct}
-                                                      label={option.option_text}
+                                                      checked={parseInt(option.is_correct) === 1 ? true : false}
+                                                      label={t(option.option_text)}
                                                   />
                                               ))}
                                           </RadioGroup>

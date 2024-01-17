@@ -48,8 +48,10 @@ function CoordinatorTable({ rows, isLoading, error }) {
             <Table sx={{ minWidth: 650 }} aria-label="coordinator table">
                 <TableHead sx={{ backgroundColor: theme.palette.primary[200] }}>
                     <TableRow>
-                        {columns.map((item) => (
-                            <TableCell sx={{ minWidth: 100 }}>{t(item)}</TableCell>
+                        {columns.map((item, index) => (
+                            <TableCell key={index} sx={{ minWidth: 100 }}>
+                                {t(item)}
+                            </TableCell>
                         ))}
                     </TableRow>
                 </TableHead>

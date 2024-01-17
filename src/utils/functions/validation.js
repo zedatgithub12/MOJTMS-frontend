@@ -1,9 +1,14 @@
-import { sizes } from 'constants';
-
 export function validateFile(file) {
     const allowedImageTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-    const allowedDocumentTypes = ['application/msword', 'application/pdf', 'application/vnd.ms-excel', 'application/vnd.ms-powerpoint'];
-    const allowedVideoTypes = ['video/mp4'];
+    const allowedDocumentTypes = [
+        'application/msword',
+        'application/pdf',
+        'application/xlsx',
+        'application/vnd.ms-excel',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    ];
+    const allowedVideoTypes = ['video/mp4', 'video/webm'];
     const allowedAudioTypes = ['audio/mpeg', 'audio/mp3', 'audio/ogg', 'audio/opus', 'audio/mp4'];
 
     const maxFileSize = {

@@ -22,13 +22,14 @@ import {
 import { IconX } from '@tabler/icons';
 import { useFormik } from 'formik';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { DateFormatter } from 'utils/functions';
+import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import PropTypes from 'prop-types';
 import ListingComponent from './listingComponent';
 import * as Yup from 'yup';
 import ELevel from 'data/static/ELevel';
 import AnimateButton from 'ui-component/extended/AnimateButton';
-import { DateFormatter } from 'utils/functions';
 
 const validationSchema = Yup.object().shape({
     date_of_birth: Yup.date().required('Birth date is required'),
@@ -37,6 +38,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const TraineeInfo = ({ traineeInfo, onRefresh }) => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const [edit, setEdit] = useState(false);
 
@@ -95,7 +97,7 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -120,13 +122,13 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                         paddingX: 3
                     }}
                 >
-                    <Typography variant="h4">More details</Typography>
+                    <Typography variant="h4">{t('More details')}</Typography>
                     {edit ? (
                         <IconButton onClick={() => setEdit(!edit)}>
                             <IconX size={20} />
                         </IconButton>
                     ) : (
-                        <Button onClick={() => setEdit(!edit)}>Edit</Button>
+                        <Button onClick={() => setEdit(!edit)}>{t('Edit')}</Button>
                     )}
                 </Box>
                 <Divider />
@@ -141,20 +143,19 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                         error={formik.touched.date_of_birth && Boolean(formik.errors.date_of_birth)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="date_of_birth">Birth Date</InputLabel>
+                                        <InputLabel htmlFor="date_of_birth">{t('Birth Date')}</InputLabel>
                                         <OutlinedInput
                                             id="date_of_birth"
                                             type="date"
                                             name="date_of_birth"
-                                            label="date_of_birth"
+                                            label={t('Birth Date')}
                                             value={formik.values.date_of_birth}
                                             onChange={formik.handleChange}
                                             fullWidth
-                                            inputProps={{}}
                                         />
                                         {formik.touched.date_of_birth && formik.errors.date_of_birth && (
                                             <FormHelperText error id="standard-weight-helper-text-date_of_birth">
-                                                {formik.errors.date_of_birth}
+                                                {t(formik.errors.date_of_birth)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -162,7 +163,7 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
 
                                 <Grid item xs={12}>
                                     <FormControl error={formik.touched.gender && Boolean(formik.errors.gender)} sx={{ marginLeft: 1.4 }}>
-                                        <FormLabel id="gender">Gender</FormLabel>
+                                        <FormLabel id="gender">{t('Gender')}</FormLabel>
                                         <RadioGroup
                                             aria-labelledby="gender"
                                             name="gender"
@@ -174,8 +175,8 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                                 justifyContent: 'space-around'
                                             }}
                                         >
-                                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                            <FormControlLabel value="female" control={<Radio />} label="Female" />
+                                            <FormControlLabel value="male" control={<Radio />} label={t('Male')} />
+                                            <FormControlLabel value="female" control={<Radio />} label={t('Female')} />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
@@ -186,18 +187,18 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                         error={formik.touched.address && Boolean(formik.errors.address)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="trainee-address">Address </InputLabel>
+                                        <InputLabel htmlFor="trainee-address">{t('Address')} </InputLabel>
                                         <OutlinedInput
                                             id="trainee-address"
                                             name="address"
-                                            label="Address"
+                                            label={t('Address')}
                                             value={formik.values.address}
                                             onChange={formik.handleChange}
                                             fullWidth
                                         />
                                         {formik.touched.address && formik.errors.address && (
                                             <FormHelperText error id="standard-weight-helper-text-name">
-                                                {formik.errors.address}
+                                                {t(formik.errors.address)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -209,18 +210,18 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                         error={formik.touched.phone && Boolean(formik.errors.phone)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="trainee-phone">Phone </InputLabel>
+                                        <InputLabel htmlFor="trainee-phone">{t('Phone')} </InputLabel>
                                         <OutlinedInput
                                             id="trainee-phone"
                                             name="phone"
-                                            label="Phone"
+                                            label={t('Phone')}
                                             value={formik.values.phone}
                                             onChange={formik.handleChange}
                                             fullWidth
                                         />
                                         {formik.touched.phone && formik.errors.phone && (
                                             <FormHelperText error id="standard-weight-helper-text-name">
-                                                {formik.errors.phone}
+                                                {t(formik.errors.phone)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -232,19 +233,18 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                         error={formik.touched.job_title && Boolean(formik.errors.job_title)}
                                         sx={{ ...theme.typography.customInput }}
                                     >
-                                        <InputLabel htmlFor="trainee-position">Job Position</InputLabel>
+                                        <InputLabel htmlFor="trainee-position">{t('Job Title')}</InputLabel>
                                         <OutlinedInput
                                             id="trainee-job-title"
                                             name="job_title"
-                                            label="trainee Position"
+                                            label={t('Job Title')}
                                             value={formik.values.job_title}
                                             onChange={formik.handleChange}
                                             fullWidth
-                                            inputProps={{}}
                                         />
                                         {formik.touched.job_title && formik.errors.job_title && (
                                             <FormHelperText error id="standard-weight-helper-text-job_title">
-                                                {formik.errors.job_title}
+                                                {t(formik.errors.job_title)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -257,7 +257,7 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                         sx={{ ...theme.typography.customInput }}
                                     >
                                         <InputLabel htmlFor="outlined-adornment-education_level">
-                                            {formik.values.education_level ? '' : 'Education Level'}
+                                            {formik.values.education_level ? '' : t('Education Level')}
                                         </InputLabel>
                                         <Select
                                             value={formik.values.education_level}
@@ -267,12 +267,12 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                         >
                                             {ELevel.length == 0 ? (
                                                 <Typography variant="body2" sx={{ padding: 1 }}>
-                                                    Education level is not found
+                                                    {t('Education level is not found')}
                                                 </Typography>
                                             ) : (
                                                 ELevel.map((item, index) => (
                                                     <MenuItem key={index} value={item.value}>
-                                                        {item.value}
+                                                        {t(item.value)}
                                                     </MenuItem>
                                                 ))
                                             )}
@@ -280,7 +280,7 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
 
                                         {formik.touched.education_level && formik.errors.education_level && (
                                             <FormHelperText error id="standard-weight-helper-text-email-login">
-                                                {formik.errors.education_level}
+                                                {t(formik.errors.education_level)}
                                             </FormHelperText>
                                         )}
                                     </FormControl>
@@ -301,7 +301,7 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                                     {isSubmitting ? (
                                                         <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
                                                     ) : (
-                                                        'Done'
+                                                        t('Done')
                                                     )}
                                                 </Button>
                                             </AnimateButton>
@@ -315,7 +315,7 @@ const TraineeInfo = ({ traineeInfo, onRefresh }) => {
                                                 sx={{ py: 1, px: 4, my: 2 }}
                                                 onClick={() => setEdit(!edit)}
                                             >
-                                                Cancel
+                                                {t('Cancel')}
                                             </Button>
                                         </Grid>
                                     </Grid>

@@ -32,7 +32,7 @@ const TabOne = ({ training_id, session_id }) => {
         <React.Fragment>
             <Tabs value={tab} onChange={handleChange} aria-label="tabs" variant="scrollable" scrollButtons="auto">
                 {SessionsTabs.map((tab, index) => (
-                    <Tab label={t(tab.name)} {...a11yProps(index)} />
+                    <Tab key={index} label={t(tab.name)} {...a11yProps(index)} />
                 ))}
             </Tabs>
             <TabPanel value={tab} index={0}>

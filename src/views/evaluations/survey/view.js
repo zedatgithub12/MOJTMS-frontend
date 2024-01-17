@@ -15,15 +15,19 @@ import {
 } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { IconArchive, IconArchiveOff, IconEdit, IconPlus, IconTrash } from '@tabler/icons';
-import Connections from 'api';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
-import CreateQuestion from './components/createQuestion';
-import CreateOptions from './components/createOptions';
 import { useQuery } from 'react-query';
 import { Delete } from 'ui-component/delete/Delete';
+import { useTranslation } from 'react-i18next';
+import CreateQuestion from './components/createQuestion';
+import CreateOptions from './components/createOptions';
+import Connections from 'api';
 import SurveyViewHeader from './components/viewHeader';
 
+// ==============================|| VIEW SURVEY PAGE ||============================== //
+
 const ViewSurvey = () => {
+    const { t } = useTranslation();
     const theme = useTheme();
     const navigate = useNavigate();
     const { state } = useLocation();
@@ -67,14 +71,14 @@ const ViewSurvey = () => {
         const response = await fetch(Api, { method: 'GET', headers: headers });
         const parsed = await response.json();
         if (parsed.success) {
-            const data = parsed.data.surveys;
+            const data = parsed.data.survey;
             const question = parsed.data.questions;
             setData(data);
             setQuestions(question);
         }
     };
 
-    const { isLoading, error } = useQuery(['data'], () => handleDataFetching(), {
+    useQuery(['data'], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 
@@ -214,7 +218,7 @@ const ViewSurvey = () => {
 
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
-        enqueueSnackbar(message, { variant });
+        enqueueSnackbar(t(message), { variant });
     };
 
     return (
@@ -240,44 +244,44 @@ const ViewSurvey = () => {
             >
                 <SurveyViewHeader
                     back={true}
-                    title={state.title}
-                    description={state.description}
+                    type={data.type}
+                    title={data.title}
+                    description={data.description}
                     option={true}
-                    status={state.status}
+                    status={data.status}
                     onPublish={() => handleSurveyStatus('active')}
                     publishing={publishing}
-                    sx={{}}
                     optionChildrens={
                         <Box>
                             <MenuItem onClick={() => setAddQuestion(!addQuestion)}>
                                 <ListItemIcon>
                                     <IconPlus size={18} />
                                 </ListItemIcon>
-                                Create Question
+                                {t('Create Question')}
                             </MenuItem>
                             <Divider />
-                            <MenuItem onClick={() => navigate('/survey/update', { state: state })}>
+                            <MenuItem onClick={() => navigate('/survey/update', { state: data })}>
                                 <ListItemIcon>
                                     <IconEdit size={18} />
                                 </ListItemIcon>
-                                Update
+                                {t('Update')}
                             </MenuItem>
                             <Divider />
-                            {state.status === 'active' && (
+                            {data.status === 'active' && (
                                 <MenuItem onClick={() => handleSurveyStatus('archived')}>
                                     <ListItemIcon>
                                         <IconArchive size={18} />
                                     </ListItemIcon>
-                                    Archive
+                                    {t('Archive')}
                                 </MenuItem>
                             )}
 
-                            {state.status === 'archived' && (
+                            {data.status === 'archived' && (
                                 <MenuItem onClick={() => handleSurveyStatus('active')}>
                                     <ListItemIcon>
                                         <IconArchiveOff size={18} />
                                     </ListItemIcon>
-                                    Un archive
+                                    {t('Un archive')}
                                 </MenuItem>
                             )}
                         </Box>
@@ -299,6 +303,7 @@ const ViewSurvey = () => {
                             <CreateOptions question={QuestionInfo} handleSubmission={handleOptionSubmission} isSubmitting={addingOption} />
                         ) : (
                             <CreateQuestion
+                                type={state.type}
                                 isSubmitting={creatingQuestion}
                                 handleSubmission={handleCreatingQuestion}
                                 handleClose={() => setAddQuestion(false)}
@@ -308,7 +313,7 @@ const ViewSurvey = () => {
                 )}
 
                 {questions.map((question, index) => (
-                    <Box key={question.id} sx={{ marginTop: 6, paddingX: 1 }}>
+                    <Box key={index} sx={{ marginTop: 6, paddingX: 1 }}>
                         <Box
                             sx={{
                                 display: 'flex',
@@ -337,8 +342,9 @@ const ViewSurvey = () => {
 
                         <Box>
                             {question.question_type === 'multiple-choice' && question.surveyoptions ? (
-                                question.surveyoptions.map((option) => (
+                                question.surveyoptions.map((option, index) => (
                                     <Box
+                                        key={index}
                                         sx={{
                                             display: 'flex',
                                             flexDirection: 'row',
@@ -347,7 +353,9 @@ const ViewSurvey = () => {
                                     >
                                         <FormControlLabel
                                             key={option.id}
-                                            control={<Checkbox checked={option.is_correct} color="primary" />}
+                                            control={
+                                                <Checkbox checked={parseInt(option.is_correct) === 1 ? true : false} color="primary" />
+                                            }
                                             label={option.option_text}
                                         />
                                     </Box>
@@ -378,11 +386,12 @@ const ViewSurvey = () => {
                                         }}
                                     >
                                         <RadioGroup aria-label="selection" name="selection">
-                                            {question.surveyoptions.map((option) => (
+                                            {question.surveyoptions.map((option, index) => (
                                                 <FormControlLabel
+                                                    key={index}
                                                     value={option.option_text}
                                                     control={<Radio />}
-                                                    checked={option.is_correct}
+                                                    checked={parseInt(option.is_correct) === 1 ? true : false}
                                                     label={option.option_text}
                                                 />
                                             ))}

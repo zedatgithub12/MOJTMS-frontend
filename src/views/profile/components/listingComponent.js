@@ -1,7 +1,9 @@
 import { Box, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 const ListingComponent = ({ content, label }) => {
+    const { t } = useTranslation();
     return (
         <Box
             sx={{
@@ -13,9 +15,9 @@ const ListingComponent = ({ content, label }) => {
             }}
         >
             <Typography variant="subtitle1" sx={{ marginBottom: 0.5 }}>
-                {content}
+                {t(content)}
             </Typography>
-            <Typography color="grey"> {label} </Typography>
+            <Typography color="grey"> {t(label)} </Typography>
         </Box>
     );
 };

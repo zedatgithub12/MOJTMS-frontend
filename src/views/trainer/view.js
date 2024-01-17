@@ -1,31 +1,33 @@
 import { useState } from 'react';
 // material-ui
-import { Grid, Box, Typography, useTheme, MenuItem, ListItemIcon, Divider, Pagination } from '@mui/material';
+import { Grid, Box, useTheme, MenuItem, ListItemIcon, Divider, Pagination } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router';
 import { IconEdit, IconTrash } from '@tabler/icons';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { Delete } from 'ui-component/delete/Delete';
 import { MiniHeader } from 'ui-component/page-header/miniHeader';
-import { NoResult } from 'utils/components/noresult';
-import { ErrorPrompt } from 'utils/components/errorprompt';
 import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import Connections from 'api';
 import TrainerDetailCard from 'ui-component/cards/TrainerDetailCard';
-import TrainingSessionCard from 'ui-component/cards/TrainingSessionCard';
-import TrainingSessionSkel from 'ui-component/cards/Skeleton/TrainingSessionSkel';
-import errorImage from 'assets/images/error.jpg';
+import TMSTab from './components/tab';
+import TrainerTrainings from './components/Trainings';
+import TrainersSurveys from './trainerssurveys';
 
+const tabList = [{ name: 'Trainings' }, { name: 'Reviews' }];
 // ==============================|| VIEW TRAINER PAGE ||============================== //
 
 const ViewTrainer = () => {
     const { t } = useTranslation();
+    const { state } = useLocation();
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const ImageApi = Connections.profiles;
+    const userString = sessionStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const role = user.user.role;
 
-    const { state } = useLocation();
+    const ImageApi = Connections.profiles;
 
     const [loading, setLoading] = useState(false);
     const [trainerInfo, setTrainerInfo] = useState([]);
@@ -144,13 +146,17 @@ const ViewTrainer = () => {
                             {t('Update')}
                         </MenuItem>
 
-                        <Divider />
-                        <MenuItem onClick={() => setDeleteUser(true)}>
-                            <ListItemIcon>
-                                <IconTrash size={18} />
-                            </ListItemIcon>
-                            {t('Delete')}
-                        </MenuItem>
+                        {role === 'Admin' && (
+                            <div>
+                                <Divider />
+                                <MenuItem onClick={() => setDeleteUser(true)}>
+                                    <ListItemIcon>
+                                        <IconTrash size={18} />
+                                    </ListItemIcon>
+                                    {t('Delete')}
+                                </MenuItem>
+                            </div>
+                        )}
                     </Box>
                 }
                 sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
@@ -174,55 +180,26 @@ const ViewTrainer = () => {
                     />
                 </Grid>
 
-                <Grid item xs={12} sm={12} md={12} lg={8} xl={8} sx={{ alignItems: 'center', justifyContent: 'center', paddingY: 3 }}>
-                    <Typography variant="h4">{t('Trainings')} </Typography>
-                    <Typography variant="body2">
-                        {' '}
-                        {t('The training that given by')} <b> {state.name}</b>
-                    </Typography>
-                    {loading ? (
-                        <Grid container>
-                            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                                {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
-                                    <TrainingSessionSkel key={index} />
-                                ))}
-                            </Grid>
-                        </Grid>
-                    ) : error ? (
-                        <ErrorPrompt image={errorImage} title="" message="Oooops... There is server error fetching trainings!" />
-                    ) : trainings.length === 0 ? (
-                        <NoResult title="" message="Oooops... no training found" />
-                    ) : (
-                        <div>
-                            <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', paddingY: 3 }} spacing={1}>
-                                {trainings.map((training) => (
-                                    <TrainingSessionCard
-                                        isLoading={false}
-                                        status={training.session.status}
-                                        title={training.session.training_name}
-                                        round={training.session.round_number}
-                                        address={training.session.address}
-                                        capacity={training.session.maximum_capacity}
-                                        startdate={training.session.start_date}
-                                        enddate={training.session.end_date}
-                                        onPress={() => navigate('/training/session/detail', { state: training.session })}
-                                        sx={{ marginX: 1 }}
-                                    />
-                                ))}
-                            </Grid>
-                            {trainings.length > paginationModel.pageSize && (
-                                <Box sx={{ paddingY: 4 }}>
-                                    <Pagination
-                                        showFirstButton
-                                        showLastButton
-                                        count={count}
-                                        page={paginationModel.page}
-                                        onChange={handleChange}
-                                    />
-                                </Box>
-                            )}
-                        </div>
-                    )}
+                <Grid item xs={12} sm={12} md={12} lg={8} xl={8} sx={{ paddingY: 3 }}>
+                    <TMSTab
+                        tabsfor={tabList}
+                        training={
+                            <TrainerTrainings loading={loading} error={error} trainings={trainings} trainer_name={state.name}>
+                                {count > 1 && (
+                                    <Box sx={{ paddingY: 4 }}>
+                                        <Pagination
+                                            showFirstButton
+                                            showLastButton
+                                            count={count}
+                                            page={paginationModel.page}
+                                            onChange={handleChange}
+                                        />
+                                    </Box>
+                                )}
+                            </TrainerTrainings>
+                        }
+                        reviews={<TrainersSurveys trainer_id={state.id} />}
+                    />
                 </Grid>
                 <SnackbarProvider maxSnack={3} />
             </Grid>

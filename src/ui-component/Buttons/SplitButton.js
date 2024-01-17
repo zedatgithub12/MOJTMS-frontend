@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -10,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import MenuList from '@mui/material/MenuList';
 
 export default function SplitButton({ options, onPress, selectedIndex }) {
+    const { t } = useTranslation();
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
 
@@ -28,7 +30,7 @@ export default function SplitButton({ options, onPress, selectedIndex }) {
     return (
         <React.Fragment>
             <ButtonGroup variant="outlined" ref={anchorRef} aria-label="split button">
-                <Button>{options[selectedIndex]}</Button>
+                <Button>{t(options[selectedIndex])}</Button>
                 <Button
                     size="small"
                     aria-controls={open ? 'split-button-menu' : undefined}
@@ -67,7 +69,7 @@ export default function SplitButton({ options, onPress, selectedIndex }) {
                                             onClick={(event) => onPress(event, index)}
                                             sx={{ textTransform: 'capitalize' }}
                                         >
-                                            {option}
+                                            {t(option)}
                                         </MenuItem>
                                     ))}
                                 </MenuList>

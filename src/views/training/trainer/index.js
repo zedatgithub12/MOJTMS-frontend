@@ -6,15 +6,21 @@ import { RefreshToken } from 'utils/token-refresh';
 import { SnackbarProvider, enqueueSnackbar } from 'notistack';
 import { IconX } from '@tabler/icons';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router';
 import Connections from 'api';
 import PropTypes from 'prop-types';
 import TrainerListing from './components/TrainerListing';
 import AssignedListing from './components/AssignedListing';
+import AddTrainerSurvey from './components/AddTrainerSurvey';
 
-const TrainingTrainers = ({ session_id }) => {
+const TrainingTrainers = ({ session_id, canReview }) => {
     const { t } = useTranslation();
-    const ActiveUser = JSON.parse(sessionStorage.getItem('user'));
-    const role = ActiveUser.user.role;
+    const navigate = useNavigate();
+
+    const userString = sessionStorage.getItem('user');
+    const user = JSON.parse(userString);
+    const userID = user?.user?.id;
+    const role = user?.user?.role;
 
     const [assigned, setAssigned] = useState([]);
     const [allTrainers, setAllTrainers] = useState([]);
@@ -23,6 +29,17 @@ const TrainingTrainers = ({ session_id }) => {
 
     const [assigning, setAssigning] = useState(false);
     const [deleting, setDeleting] = useState(false);
+
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = (trainerid) => {
+        setSelectedTrainer(trainerid);
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleFetching = async () => {
         const tokenExpiration = sessionStorage.getItem('tokenExpiration');
@@ -38,7 +55,7 @@ const TrainingTrainers = ({ session_id }) => {
 
     const FetchTrainers = async () => {
         setLoading(true);
-        var Api = Connections.api + Connections.trainersofsession + session_id + `?role=${role}`;
+        var Api = Connections.api + Connections.trainersofsession + session_id + `?uid=${userID}&role=${role}`;
         const token = sessionStorage.getItem('token');
         var headers = {
             Authorization: `Bearer` + token,
@@ -78,11 +95,10 @@ const TrainingTrainers = ({ session_id }) => {
             'Content-Type': 'application/json'
         };
 
-        var assigned_by = ActiveUser.user.id;
         const data = {
             trainer_id: trainer,
             session_id: session_id,
-            assigned_by: assigned_by
+            assigned_by: userID
         };
 
         fetch(Api, { method: 'POST', headers: headers, body: JSON.stringify(data) })
@@ -109,7 +125,8 @@ const TrainingTrainers = ({ session_id }) => {
         setSelectedTrainer(trainerid);
         handleDeleting(trainerid);
     };
-    //the following function handles remove assigned trainer
+
+    //The following function handles remove assigned trainer
     const handleDeleting = (trainer) => {
         setDeleting(true);
 
@@ -142,6 +159,79 @@ const TrainingTrainers = ({ session_id }) => {
             });
     };
 
+    //fetch the assigned training from the trainer_surveys table
+    const handleFetchingAssignedSurvey = async (surveyid) => {
+        const Api = Connections.api + Connections.trainersurveys + '/' + surveyid;
+        const token = sessionStorage.getItem('token');
+
+        const headers = {
+            Authorization: 'Bearer' + token,
+            'Content-Type': 'application/json'
+        };
+
+        try {
+            const response = await fetch(Api, { method: 'GET', headers });
+            const data = await response.json();
+            if (data.success) {
+                return data;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
+        }
+    };
+
+    //handle survey trainer view
+    const handleViewSurvey = async (surveyid) => {
+        const userString = sessionStorage.getItem('user');
+        const user = JSON.parse(userString);
+        const role = user?.user?.role;
+
+        const response = await handleFetchingAssignedSurvey(surveyid);
+
+        if (response) {
+            switch (role) {
+                case 'Admin':
+                case 'Coordinator':
+                    navigate('/survey/view', { state: { id: response?.data?.survey_id } });
+                    break;
+                default:
+                    navigate('/training/trainer/survey', { state: response?.data });
+                    break;
+            }
+        }
+    };
+
+    //The following function handles remove assigned trainer survey
+    const handleRemoveSurvey = (surveyid) => {
+        let id = parseInt(surveyid);
+        var Api = Connections.api + Connections.trainersurveys + '/' + id;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, {
+            method: 'DELETE',
+            headers: headers
+        })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    handlePrompts(response.message, 'success');
+                    handleFetching();
+                } else {
+                    handlePrompts(response.message, 'error');
+                }
+            })
+            .catch((error) => {
+                handlePrompts(error.message, 'error');
+            });
+    };
+
     const handlePrompts = (message, variant) => {
         // variant could be success, error, warning, info, or default
         enqueueSnackbar(t(message), { variant });
@@ -168,9 +258,15 @@ const TrainingTrainers = ({ session_id }) => {
                         status={trainer.training_status}
                         isRemoving={
                             <IconButton onClick={() => handleDeleteInit(trainer.id)}>
-                                {trainer.id === selectedTrainer && deleting ? <CircularProgress size={18} /> : <IconX size={20} />}
+                                {trainer.id === selectedTrainer && deleting ? <CircularProgress size={18} /> : <IconX size={18} />}
                             </IconButton>
                         }
+                        onAddSurvey={() => handleOpen(trainer.trainer_id)}
+                        onView={() => handleViewSurvey(trainer.surveyAssigned)}
+                        surveyAssigned={trainer.surveyAssigned ? true : false}
+                        surveyStatus={trainer.surveyStatus}
+                        canReview={canReview}
+                        onRemoveSurvey={() => handleRemoveSurvey(trainer.surveyAssigned)}
                     />
                 ))
             )}
@@ -241,13 +337,23 @@ const TrainingTrainers = ({ session_id }) => {
                 </Box>
             ) : null}
 
+            {open && (
+                <AddTrainerSurvey
+                    open={open}
+                    handleClose={() => handleClose()}
+                    trainer_id={selectedTrainer}
+                    session_id={session_id}
+                    onRefresh={() => handleFetching()}
+                />
+            )}
             <SnackbarProvider maxSnack={3} />
         </Box>
     );
 };
 
 TrainingTrainers.propTypes = {
-    session_id: PropTypes.number
+    session_id: PropTypes.number,
+    canReview: PropTypes.bool
 };
 
 export default TrainingTrainers;

@@ -13,6 +13,10 @@ export const TrainingTabs = [
     },
     {
         id: 4,
-        name: 'Surveys'
+        name: 'Training Surveys'
+    },
+    {
+        id: 5,
+        name: 'Trainers Surveys'
     }
 ];
