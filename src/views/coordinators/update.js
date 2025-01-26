@@ -1,0 +1,321 @@
+import { useEffect, useState } from 'react';
+import {
+    Grid,
+    useTheme,
+    CircularProgress,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    FormHelperText,
+    FormLabel,
+    RadioGroup,
+    FormControlLabel,
+    Radio,
+    Select,
+    MenuItem,
+    Button,
+    Typography
+} from '@mui/material';
+import Connections from 'api';
+import { useFormik } from 'formik';
+import { SnackbarProvider, enqueueSnackbar } from 'notistack';
+import { useLocation, useNavigate } from 'react-router';
+import { MiniHeader } from 'ui-component/page-header/miniHeader';
+import { useTranslation } from 'react-i18next';
+import * as Yup from 'yup';
+import ELevel from 'data/static/ELevel';
+import AnimateButton from 'ui-component/extended/AnimateButton';
+import { useQuery } from 'react-query';
+
+const validationSchema = Yup.object().shape({
+    phone: Yup.string().required('Phone is required'),
+    gender: Yup.string().required('Gender is required')
+});
+
+const UpdateCoordinator = () => {
+    const { t } = useTranslation();
+    const theme = useTheme();
+    const navigate = useNavigate();
+    const { state } = useLocation();
+    const [department, setDepartment] = useState([]);
+
+    const handleSubmitting = (values) => {
+        setIsSubmitting(true);
+
+        const Api = Connections.api + Connections.coordinators + '/' + state.id;
+        const token = sessionStorage.getItem('token');
+        const headers = {
+            Authorization: 'Bearer' + token
+        };
+
+        const data = new FormData();
+
+        data.append('gender', values.gender);
+        data.append('phone', values.phone);
+        data.append('address', values.address);
+        data.append('education', values.education);
+        data.append('department_id', values.department);
+
+        fetch(Api, { method: 'POST', headers: headers, body: data })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setIsSubmitting(false);
+                    handlePrompts(response.message, 'success');
+                } else {
+                    setIsSubmitting(false);
+                    handlePrompts(response.error, 'error');
+                }
+            })
+            .catch((error) => {
+                setIsSubmitting(false);
+                handlePrompts(error, 'error');
+            });
+    };
+
+    const formik = useFormik({
+        initialValues: {
+            gender: state.gender ? state.gender : '',
+            phone: state.phone ? state.phone : '',
+            address: state.address ? state.address : '',
+            education: state.education ? state.education : '',
+            department: state.department_id ? state.department_id : ''
+        },
+        validationSchema: validationSchema,
+        onSubmit: (values) => {
+            handleSubmitting(values);
+        }
+    });
+
+    const [isSubmitting, setIsSubmitting] = useState(formik.isSubmitting);
+
+    const handlePrompts = (message, variant) => {
+        // variant could be success, error, warning, info, or default
+        enqueueSnackbar(message, { variant });
+    };
+
+    const FetchDepartments = async () => {
+        var Api = Connections.api + Connections.departments + `/select`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            const data = parsed.data;
+            setDepartment(data);
+        }
+    };
+
+    useQuery(['data'], () => FetchDepartments(), {
+        refetchOnWindowFocus: false
+    });
+
+    return (
+        <Grid
+            container
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center'
+            }}
+        >
+            <Grid
+                item
+                xs={11}
+                sm={10}
+                md={10}
+                lg={6}
+                xl={6}
+                sx={{
+                    marginBottom: 2,
+                    minHeight: '50vh',
+                    border: 1,
+                    borderColor: theme.palette.primary[200],
+                    borderRadius: 2
+                }}
+            >
+                <MiniHeader
+                    title="Update Profile"
+                    back={true}
+                    sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
+                />
+
+                <Grid container>
+                    <Grid item xs={12}>
+                        <form noValidate onSubmit={formik.handleSubmit}>
+                            <Grid container paddingX={5} paddingY={2} spacing={1}>
+                                <Grid item xs={12}>
+                                    <FormControl error={formik.touched.gender && Boolean(formik.errors.gender)} sx={{ marginLeft: 1.4 }}>
+                                        <FormLabel id="gender">{t('Gender')}</FormLabel>
+                                        <RadioGroup
+                                            aria-labelledby="gender"
+                                            name="gender"
+                                            value={formik.values.gender}
+                                            onChange={formik.handleChange}
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-around'
+                                            }}
+                                        >
+                                            <FormControlLabel value="male" control={<Radio />} label={t('Male')} />
+                                            <FormControlLabel value="female" control={<Radio />} label={t('Female')} />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <FormControl
+                                        fullWidth
+                                        error={formik.touched.address && Boolean(formik.errors.address)}
+                                        sx={{ ...theme.typography.customInput }}
+                                    >
+                                        <InputLabel htmlFor="trainee-address">{t('Address')} </InputLabel>
+                                        <OutlinedInput
+                                            id="trainee-address"
+                                            name="address"
+                                            label={t('Address')}
+                                            value={formik.values.address}
+                                            onChange={formik.handleChange}
+                                            fullWidth
+                                        />
+                                        {formik.touched.address && formik.errors.address && (
+                                            <FormHelperText error id="standard-weight-helper-text-name">
+                                                {t(formik.errors.address)}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <FormControl
+                                        fullWidth
+                                        error={formik.touched.phone && Boolean(formik.errors.phone)}
+                                        sx={{ ...theme.typography.customInput }}
+                                    >
+                                        <InputLabel htmlFor="trainee-phone">{t('Phone')} </InputLabel>
+                                        <OutlinedInput
+                                            id="trainee-phone"
+                                            name="phone"
+                                            label={t('Phone')}
+                                            value={formik.values.phone}
+                                            onChange={formik.handleChange}
+                                            fullWidth
+                                        />
+                                        {formik.touched.phone && formik.errors.phone && (
+                                            <FormHelperText error id="standard-weight-helper-text-name">
+                                                {t(formik.errors.phone)}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <FormControl
+                                        fullWidth
+                                        error={formik.touched.education && Boolean(formik.errors.education)}
+                                        sx={{ ...theme.typography.customInput }}
+                                    >
+                                        <InputLabel htmlFor="outlined-adornment-education">
+                                            {formik.values.education ? '' : t('Education Level')}
+                                        </InputLabel>
+                                        <Select
+                                            value={formik.values.education}
+                                            onChange={formik.handleChange}
+                                            name="education"
+                                            id="outlined-adornment-education"
+                                        >
+                                            {ELevel.length == 0 ? (
+                                                <Typography variant="body2" sx={{ padding: 1 }}>
+                                                    {t('Education level is not found')}
+                                                </Typography>
+                                            ) : (
+                                                ELevel.map((item, index) => (
+                                                    <MenuItem key={index} value={item.value}>
+                                                        {t(item.value)}
+                                                    </MenuItem>
+                                                ))
+                                            )}
+                                        </Select>
+
+                                        {formik.touched.education && formik.errors.education && (
+                                            <FormHelperText error id="standard-weight-helper-text-email-login">
+                                                {t(formik.errors.education)}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <FormControl
+                                        fullWidth
+                                        error={formik.touched.department && Boolean(formik.errors.department)}
+                                        sx={{ ...theme.typography.customInput }}
+                                    >
+                                        <InputLabel htmlFor="outlined-adornment-department">
+                                            {formik.values.department ? '' : t('Department')}
+                                        </InputLabel>
+                                        <Select
+                                            value={formik.values.department}
+                                            onChange={formik.handleChange}
+                                            id="outlined-adornment-department"
+                                            name="department"
+                                        >
+                                            {department.length === 0 ? (
+                                                <Typography variant="body2" sx={{ padding: 1 }}>
+                                                    {t('Department is not found')}
+                                                </Typography>
+                                            ) : (
+                                                department.map((item, index) => (
+                                                    <MenuItem key={index} value={item.id} sx={{ paddingY: 2 }}>
+                                                        {t(item.name)}
+                                                    </MenuItem>
+                                                ))
+                                            )}
+                                        </Select>
+                                        {formik.touched.department && formik.errors.department && (
+                                            <FormHelperText error id="standard-weight-helper-text">
+                                                {t(formik.errors.department)}
+                                            </FormHelperText>
+                                        )}
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row' }}>
+                                    <AnimateButton>
+                                        <Button
+                                            disabled={isSubmitting ? true : false}
+                                            type="submit"
+                                            variant="contained"
+                                            color="primary"
+                                            sx={{ minWidth: 180, py: 1, px: 4, my: 2 }}
+                                        >
+                                            {isSubmitting ? (
+                                                <CircularProgress size={22} sx={{ color: theme.palette.background.default }} />
+                                            ) : (
+                                                t('Submit')
+                                            )}
+                                        </Button>
+                                    </AnimateButton>
+
+                                    <Button variant="text" color="primary" sx={{ py: 1, px: 4, my: 2, mx: 4 }} onClick={() => navigate(-1)}>
+                                        {t('Cancel')}
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </Grid>
+                </Grid>
+            </Grid>
+
+            <SnackbarProvider maxSnack={3} />
+        </Grid>
+    );
+};
+
+export default UpdateCoordinator;

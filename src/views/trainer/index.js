@@ -1,0 +1,196 @@
+import { useEffect, useState } from 'react';
+// material-ui
+import { Grid, Box, useTheme, Pagination } from '@mui/material';
+// project imports
+import { useQuery } from 'react-query';
+import { useLocation, useNavigate } from 'react-router';
+import { SearchFilterAdd } from 'ui-component/search-add';
+import { RefreshToken } from 'utils/token-refresh';
+import { MiniHeader } from 'ui-component/page-header/miniHeader';
+import { NoResult } from 'utils/components/noresult';
+import { ErrorPrompt } from 'utils/components/errorprompt';
+import { useTranslation } from 'react-i18next';
+import TrainerCard from 'ui-component/cards/TrainerCard';
+import errorImage from 'assets/images/error.jpg';
+import TrainerCardSkel from 'ui-component/cards/Skeleton/TrainerCardSkel';
+import Connections from 'api';
+import CheckPathPermission from 'utils/path-checker';
+
+// ==============================|| TRAINERS PAGE ||============================== //
+
+const Trainers = () => {
+    const { t } = useTranslation();
+    const theme = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const path = location.pathname;
+        const isAllowedPath = CheckPathPermission(path);
+        if (!isAllowedPath) {
+            navigate('/');
+        }
+        return () => {};
+    }, []);
+
+    const ImageApi = Connections.profiles;
+
+    const [trainers, setTrainers] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState('');
+    const [searching, setSearching] = useState(false);
+    const [counts, setCounts] = useState(1);
+    const [paginationModel, setPaginationModel] = useState({
+        pageSize: 20,
+        page: 1
+    });
+
+    const handleDataFetching = async () => {
+        const tokenExpiration = sessionStorage.getItem('tokenExpiration');
+        const currentTime = new Date().getTime();
+
+        if (tokenExpiration && currentTime >= tokenExpiration) {
+            await RefreshToken();
+            FetchTrainers();
+        } else {
+            FetchTrainers();
+        }
+    };
+
+    const FetchTrainers = async () => {
+        setLoading(true);
+        var Api = Connections.api + Connections.trainers + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}`;
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        const response = await fetch(Api, { method: 'GET', headers: headers });
+        const parsed = await response.json();
+        if (parsed.success) {
+            setCounts(parsed.data.total);
+            const data = parsed.data.data;
+            setTrainers(data);
+            setLoading(false);
+        }
+    };
+
+    const { isLoading, error } = useQuery(['data', paginationModel], () => handleDataFetching(), {
+        refetchOnWindowFocus: false
+    });
+
+    const handleSearching = () => {
+        setSearching(true);
+        var Api =
+            Connections.api + Connections.trainersearch + `?page=${paginationModel.page}&limit=${paginationModel.pageSize}&query=${search}`;
+
+        const token = sessionStorage.getItem('token');
+        var headers = {
+            Authorization: `Bearer` + token,
+            accept: 'application/json',
+            'Content-Type': 'application/json'
+        };
+
+        fetch(Api, { method: 'GET', headers: headers })
+            .then((response) => response.json())
+            .then((response) => {
+                if (response.success) {
+                    setSearching(false);
+                    setTrainers(response.data.data);
+                } else {
+                    setSearching(false);
+                }
+            })
+            .catch((error) => {
+                setSearching(false);
+                handlePrompts(error, 'error');
+            });
+    };
+
+    const handleChange = (event, value) => {
+        setPaginationModel({
+            ...paginationModel,
+            page: value
+        });
+    };
+
+    return (
+        <Grid
+            container
+            sx={{
+                borderRadius: 4,
+                border: '1px solid',
+                borderColor: theme.palette.primary[200] + 25
+            }}
+        >
+            <MiniHeader
+                title="Trainers"
+                back={true}
+                sx={{ background: `linear-gradient(to right, ${theme.palette.primary[200]}, ${theme.palette.secondary.light})` }}
+            />
+
+            <Grid container sx={{ minHeight: 200, padding: 1 }}>
+                <SearchFilterAdd
+                    searchText={search}
+                    searching={searching}
+                    onTextChange={(event) => setSearch(event.target.value)}
+                    onSubmit={() => handleSearching()}
+                    addTitle={t('Add Trainer')}
+                    onAdd={() => navigate('/trainer/add')}
+                />
+
+                <Grid container>
+                    <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {loading ? (
+                            <Grid container>
+                                <Grid item xs={12} sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => (
+                                        <TrainerCardSkel key={index} />
+                                    ))}
+                                </Grid>
+                            </Grid>
+                        ) : error ? (
+                            <ErrorPrompt
+                                image={errorImage}
+                                title="Server Error"
+                                message="Oooops... There is server error fetching trainers!"
+                                buttontitle="Go Back"
+                                onPress={() => navigate(-1)}
+                            />
+                        ) : trainers.length == 0 ? (
+                            <NoResult title="" message="Oooops... no trainer found in the moment!" />
+                        ) : (
+                            trainers.map((trainer) => (
+                                <TrainerCard
+                                    key={trainer.id}
+                                    isLoading={isLoading}
+                                    image={trainer.photo ? ImageApi + trainer.photo : null}
+                                    title={trainer.specialisation}
+                                    email={trainer.email}
+                                    phone={trainer.phone}
+                                    qualification={trainer.qualifications}
+                                    name={trainer.name}
+                                    linkedin={trainer.linkedin_profile}
+                                    address={trainer.address}
+                                    gender={trainer.gender}
+                                    trainingcount={trainer.training}
+                                    rating={trainer.rating}
+                                    onPress={() => navigate('/trainer/view', { state: trainer })}
+                                />
+                            ))
+                        )}
+                    </Grid>
+                    {counts > paginationModel.pageSize && (
+                        <Box sx={{ paddingY: 4 }}>
+                            <Pagination showFirstButton showLastButton count={counts} page={paginationModel.page} onChange={handleChange} />
+                        </Box>
+                    )}
+                </Grid>
+            </Grid>
+        </Grid>
+    );
+};
+
+export default Trainers;
