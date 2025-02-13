@@ -77,7 +77,7 @@ const CreateSession = () => {
         }
     };
 
-    useQuery(['data'], () => handleDataFetching(), {
+    useQuery(['round'], () => handleDataFetching(), {
         refetchOnWindowFocus: false
     });
 

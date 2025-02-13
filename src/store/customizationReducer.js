@@ -10,7 +10,7 @@ export const initialState = {
     fontFamily: config.fontFamily,
     borderRadius: config.borderRadius,
     opened: true,
-    basicinfos: [], //an state that store the basic information needed while filtering or other purposed it contains job_title and department name list arrays
+    basicinfos: [], //an state that store the basic information needed while filtering, it contains job_title and department name list arrays
     assessmentAnswers: [],
     surveyresponse: []
 };

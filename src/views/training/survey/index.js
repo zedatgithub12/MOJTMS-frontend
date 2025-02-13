@@ -88,7 +88,7 @@ const TrainingSurvey = ({ session_id }) => {
 
         const data = {
             session_id: session_id,
-            survey_id: survey.id,
+            survey_id: survey?.id,
             added_by: assigned_by
         };
 

@@ -1,10 +1,10 @@
 const Connections = {
     //local endpoints
-    // home: 'http://localhost:3000/',
-    // api: 'http://localhost:8000/api/',
-    // images: 'http://localhost:8000/api/images/',
-    // thumbnails: 'http://localhost:8000/api/thumbnails/',
-    // profiles: 'http://localhost:8000/api/profiles/',
+    home: 'http://localhost:3000/',
+    api: 'http://localhost:8000/api/',
+    images: 'http://localhost:8000/api/images/',
+    thumbnails: 'http://localhost:8000/api/thumbnails/',
+    profiles: 'http://localhost:8000/api/profiles/',
 
     //afromina text endpoints
     // home: 'http://localhost:3000/',
@@ -14,10 +14,10 @@ const Connections = {
     // profiles: 'https://tms.afrominadigitals.com/backend/api/profiles/',
 
     //remote endpoints
-    api: 'http://tms.moj.gov.et/backend/api/',
-    images: 'http://tms.moj.gov.et/backend/api/images/',
-    thumbnails: 'http://tms.moj.gov.et/backend/api/thumbnails/',
-    profiles: 'http://tms.moj.gov.et/backend/api/profiles/',
+    // api: 'http://tms.moj.gov.et/backend/api/',
+    // images: 'http://tms.moj.gov.et/backend/api/images/',
+    // thumbnails: 'http://tms.moj.gov.et/backend/api/thumbnails/',
+    // profiles: 'http://tms.moj.gov.et/backend/api/profiles/',
 
     // url: 'http://tms.moj.gov.et/',
 
